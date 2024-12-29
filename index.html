@@ -129,7 +129,7 @@
   <h1>God-Exclusive Drops: Defensive CSV Parsing</h1>
 
   <div id="searchContainer">
-    <input type="text" id="searchInput" placeholder="Search enemy name..." />
+    <input type="text" id="searchInput" placeholder="Search enemy name or drops..." />
   </div>
 
   <table id="enemyTable">
@@ -574,7 +574,6 @@
           const decimalOdds = dropClassLabels[dropClass] || 0;
           const isAlways = dropClass === 'Always';
 
-          // If dropClass is e.g. "Common" => decimalOdds = 2.681 => 1 in 2.681 => ~ 37.3%
           // We'll store chance as a decimal from 0 to 1. "Always" = 1.0
           const chanceNum = isAlways ? 1.0 : decimalOdds > 0 ? (1 / decimalOdds) : 0;
 
@@ -744,13 +743,10 @@
 
     // A helper to convert decimalOdds => fraction for display
     function toMixedFraction(num) {
-      //  e.g. 2.681 => "2.6810"
-      //  or if close to 0.3333 => 1/3, etc.
       if (!num || num === 0) return '∞';
-      if (num < 1) return num.toFixed(4); // below 1 => Just show decimal
+      if (num < 1) return num.toFixed(4);
       const whole = Math.floor(num);
       const frac = num - whole;
-      // handle special fractions
       if (Math.abs(frac - 0.3333) < 0.01) {
         return `${whole} 1/3`;
       }
@@ -803,13 +799,99 @@
       populateTable(currentData);
     }
 
+    /***************************************************
+     * NEW: Fuzzy Matching Utilities (Levenshtein)
+     ***************************************************/
+    function levenshteinDistance(a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+
+      const dp = Array.from({ length: a.length + 1 }, () => []);
+      for (let i = 0; i <= a.length; i++) {
+        dp[i][0] = i;
+      }
+      for (let j = 0; j <= b.length; j++) {
+        dp[0][j] = j;
+      }
+
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          dp[i][j] = Math.min(
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1,
+            dp[i - 1][j - 1] + cost
+          );
+        }
+      }
+      return dp[a.length][b.length];
+    }
+
+    function fuzzyMatch(input, candidate, threshold = 2) {
+      // Quick substring check
+      if (candidate.toLowerCase().includes(input.toLowerCase())) {
+        return true;
+      }
+      // Otherwise use Levenshtein distance
+      return levenshteinDistance(input, candidate) <= threshold;
+    }
+
+    /**
+     * rowMatchesSearch:
+     * - Substring or fuzzy match for the enemy name
+     * - Substring or fuzzy match for *any* item in normal drops
+     * - Substring or fuzzy match for *any* item in the god drops (if this row is a god)
+     * - Substring or fuzzy match for *any* special drop linked to this enemy
+     */
+    function rowMatchesSearch(row, searchValue) {
+      if (row.length < 14) return false;
+      const mobName = (row[0] || '').toLowerCase();
+      const normalDrops = row[10] || '';
+
+      // 1) Check name
+      if (fuzzyMatch(searchValue, mobName)) {
+        return true;
+      }
+
+      // 2) Check normal drops
+      const parsedNormal = parseDrops(normalDrops);
+      for (const dropArr of parsedNormal) {
+        if (!dropArr.length) continue;
+        const [dropName] = dropArr; 
+        if (fuzzyMatch(searchValue, dropName)) {
+          return true;
+        }
+      }
+
+      // 3) Check special drops for this mob
+      const enemyName = (row[0] || '').trim();
+      const relevantSpecial = specialDrops.filter(sd => sd.droppedBy === enemyName);
+      for (const sd of relevantSpecial) {
+        if (fuzzyMatch(searchValue, sd.item)) {
+          return true;
+        }
+      }
+
+      // 4) Check god drops if this is a god
+      const godIndex = allGods.indexOf(enemyName);
+      if (godIndex !== -1) {
+        const theseGodDrops = allGodDrops[godIndex];
+        for (const gItem of theseGodDrops) {
+          if (fuzzyMatch(searchValue, gItem)) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
     function initSearch() {
       const input = document.getElementById('searchInput');
       input.addEventListener('input', () => {
-        const val = input.value.toLowerCase();
+        const val = input.value.trim().toLowerCase();
         const filtered = currentData.filter(row => {
-          if (row.length < 14) return false; // skip partial
-          return row[0].toLowerCase().includes(val);
+          return rowMatchesSearch(row, val);
         });
         populateTable(filtered);
       });
@@ -817,7 +899,7 @@
   </script>
 
   <footer>
-    <p>Version 1.4.2</p>
+    <p>Version 1.4.3</p>
   </footer>
 </body>
 </html>
