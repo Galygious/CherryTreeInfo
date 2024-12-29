@@ -1,7 +1,4 @@
-<!-- 
- File: index.html
--->
-
+<!-- File: index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -126,7 +123,7 @@
       border-top: 2px solid #272727;
       margin-top: 20px;
     }
-</style>
+  </style>
 </head>
 <body>
   <h1>God-Exclusive Drops: Defensive CSV Parsing</h1>
@@ -160,153 +157,149 @@
     /******************************************************
      * 1) GOD ARRAYS (Define extra drops for these enemies)
      ******************************************************/
-    // 1) allGods
     const allGods = [
-    "Amaran",
-    "Aurial",
-    "Cognium",
-    "Copina",
-    "Feroxi",
-    "Kynosian",
-    "Noctyra",
-    "Opulina"
+      "Amaran",
+      "Aurial",
+      "Cognium",
+      "Copina",
+      "Feroxi",
+      "Kynosian",
+      "Noctyra",
+      "Opulina"
     ];
 
-    // 2) allGodDrops
     const allGodDrops = [
-    [
-      "Shield of Amaran", 
-      "Ring of Life", 
-      "Necklace of Defence", 
-      "Necklace of Health", 
-      "Queens Armour Fragment", 
-      "Kings Armour Fragment", 
-      "Invincibility Potion", 
-      "Rock Skin Potion", 
-      "Dragon Platter", 
-      "Iridium Ore"
-    ],
-    [
-      "Scythe of Aurial", 
-      "Scythe of Demeter", 
-      "Restoration Fragment 2", 
-      "Magic Watering Can", 
-      "Farm Chest", 
-      "Farm Key", 
-      "Wine", 
-      "Eggplant", 
-      "Fruit Salad", 
-      "Lemon"
-    ],
-    [
-      "Sword of Cognium", 
-      "Ring of Speed", 
-      "Ring Fragments", 
-      "Sextant", 
-      "Steel Bar", 
-      "Cog", 
-      "Iron Ore"
-    ],
-    [
-      "Rod of Copina", 
-      "Knife of Copina", 
-      "Rabbits Foot", 
-      "Eagles Nest", 
-      "Book of Aroon", 
-      "Stone Tablet", 
-      "Ginkgo Log", 
-      "Shark", 
-      "Marlin", 
-      "Chestnut Log", 
-      "Large Fishing Net", 
-      "Rhodium Ore"
-    ],
-    [
-      "Shield of Feroxi", 
-      "Gloves of Feroxi", 
-      "Berserker Ring", 
-      "Extreme Power Stone", 
-      "Necklace of Strength", 
-      "Kings Weapon Fragment", 
-      "Queens Weapon Fragment", 
-      "Ultimate Power Potion", 
-      "Super Power Stone", 
-      "Tooth Necklace", 
-      "Super Power Potion", 
-      "Power Potion"
-    ],
-    [
-      "Quiver of Kynosian", 
-      "Kynosian Boots", 
-      "Kynosian Gloves", 
-      "Kynosian Arrows", 
-      "Elven Bow", 
-      "Elven Arrows", 
-      "Kings Bow", 
-      "Kings Arrows", 
-      "Queens Bow", 
-      "Queens Arrows", 
-      "Ginkgo Headless Arrows", 
-      "Ginkgo Arrow Shafts"
-    ],
-    [
-      "Mystic Staff", 
-      "Death Princess Rune", 
-      "Ancient Elven Book", 
-      "Ring of Death", 
-      "Book of Death", 
-      "Soul Gem", 
-      "Liquid Death Potion", 
-      "Dragon Skull", 
-      "Insta Kill Potion", 
-      "Big Dragon Bones", 
-      "Dragon Bones", 
-      "Bones"
-    ],
-    [
-      "Opulinas Robe Bottoms", 
-      "Gold Coin", 
-      "Gold Coin", 
-      "Golden Touch Potion", 
-      "Gold Coin", 
-      "Golden Scarab", 
-      "Pot of Gold", 
-      "Treasure Map", 
-      "Gold Coin", 
-      "Gold Bar", 
-      "Gold Feather", 
-      "Gold Ore"
-    ]
+      [
+        "Shield of Amaran", 
+        "Ring of Life", 
+        "Necklace of Defence", 
+        "Necklace of Health", 
+        "Queens Armour Fragment", 
+        "Kings Armour Fragment", 
+        "Invincibility Potion", 
+        "Rock Skin Potion", 
+        "Dragon Platter", 
+        "Iridium Ore"
+      ],
+      [
+        "Scythe of Aurial", 
+        "Scythe of Demeter", 
+        "Restoration Fragment 2", 
+        "Magic Watering Can", 
+        "Farm Chest", 
+        "Farm Key", 
+        "Wine", 
+        "Eggplant", 
+        "Fruit Salad", 
+        "Lemon"
+      ],
+      [
+        "Sword of Cognium", 
+        "Ring of Speed", 
+        "Ring Fragments", 
+        "Sextant", 
+        "Steel Bar", 
+        "Cog", 
+        "Iron Ore"
+      ],
+      [
+        "Rod of Copina", 
+        "Knife of Copina", 
+        "Rabbits Foot", 
+        "Eagles Nest", 
+        "Book of Aroon", 
+        "Stone Tablet", 
+        "Ginkgo Log", 
+        "Shark", 
+        "Marlin", 
+        "Chestnut Log", 
+        "Large Fishing Net", 
+        "Rhodium Ore"
+      ],
+      [
+        "Shield of Feroxi", 
+        "Gloves of Feroxi", 
+        "Berserker Ring", 
+        "Extreme Power Stone", 
+        "Necklace of Strength", 
+        "Kings Weapon Fragment", 
+        "Queens Weapon Fragment", 
+        "Ultimate Power Potion", 
+        "Super Power Stone", 
+        "Tooth Necklace", 
+        "Super Power Potion", 
+        "Power Potion"
+      ],
+      [
+        "Quiver of Kynosian", 
+        "Kynosian Boots", 
+        "Kynosian Gloves", 
+        "Kynosian Arrows", 
+        "Elven Bow", 
+        "Elven Arrows", 
+        "Kings Bow", 
+        "Kings Arrows", 
+        "Queens Bow", 
+        "Queens Arrows", 
+        "Ginkgo Headless Arrows", 
+        "Ginkgo Arrow Shafts"
+      ],
+      [
+        "Mystic Staff", 
+        "Death Princess Rune", 
+        "Ancient Elven Book", 
+        "Ring of Death", 
+        "Book of Death", 
+        "Soul Gem", 
+        "Liquid Death Potion", 
+        "Dragon Skull", 
+        "Insta Kill Potion", 
+        "Big Dragon Bones", 
+        "Dragon Bones", 
+        "Bones"
+      ],
+      [
+        "Opulinas Robe Bottoms", 
+        "Gold Coin", 
+        "Gold Coin", 
+        "Golden Touch Potion", 
+        "Gold Coin", 
+        "Golden Scarab", 
+        "Pot of Gold", 
+        "Treasure Map", 
+        "Gold Coin", 
+        "Gold Bar", 
+        "Gold Feather", 
+        "Gold Ore"
+      ]
     ];
 
-    // 3) allGodDropAmounts
     const allGodDropAmounts = [
-    ["1,1", "1,1", "1,1", "1,1", "4,5", "2,3", "1,3", "2,5", "15,25", "10,20"],
-    ["1,1", "1,1", "1,1", "1,1", "2,3", "2,3", "15,20", "10,15", "15,20", "15,20"],
-    ["1,1", "1,1", "1,2", "3,5", "15,20", "5,10", "20,30"],
-    ["1,1", "1,1", "1,1", "2,3", "4,5", "4,5", "20,25", "40,50", "50,60", "25,40", "5,10", "15,25"],
-    ["1,1", "1,1", "1,1", "1,2", "1,1", "2,3", "3,4", "2,5", "2,5", "3,5", "5,10", "10,15"],
-    ["1,1", "1,1", "1,1", "2,5", "1,1", "5,10", "1,1", "15,20", "1,1", "20,30", "25,40", "40,60"],
-    ["1,1", "1,1", "1,1", "1,1", "1,1", "1,1", "5,10", "5,10", "10,15", "15,20", "20,25", "30,40"],
-    ["1,1", "100,100", "25,25", "2,5", "15,15", "5,10", "5,10", "5,10", "5,5", "15,20", "25,30", "30,40"]
+      ["1,1", "1,1", "1,1", "1,1", "4,5", "2,3", "1,3", "2,5", "15,25", "10,20"],
+      ["1,1", "1,1", "1,1", "1,1", "2,3", "2,3", "15,20", "10,15", "15,20", "15,20"],
+      ["1,1", "1,1", "1,2", "3,5", "15,20", "5,10", "20,30"],
+      ["1,1", "1,1", "1,1", "2,3", "4,5", "4,5", "20,25", "40,50", "50,60", "25,40", "5,10", "15,25"],
+      ["1,1", "1,1", "1,1", "1,2", "1,1", "2,3", "3,4", "2,5", "2,5", "3,5", "5,10", "10,15"],
+      ["1,1", "1,1", "1,1", "2,5", "1,1", "5,10", "1,1", "15,20", "1,1", "20,30", "25,40", "40,60"],
+      ["1,1", "1,1", "1,1", "1,1", "1,1", "1,1", "5,10", "5,10", "10,15", "15,20", "20,25", "30,40"],
+      ["1,1", "100,100", "25,25", "2,5", "15,15", "5,10", "5,10", "5,10", "5,5", "15,20", "25,30", "30,40"]
     ];
 
-    // 4) allGodDropRates
     const allGodDropRates = [
-    [1, 4, 14, 24, 144, 384, 984, 2984, 7984, 17984],
-    [1, 3, 5, 13, 163, 313, 1313, 4313, 10313, 20313],
-    [1, 4, 19, 519, 3019, 8019, 18019],
-    [1, 2, 6, 106, 256, 406, 906, 1706, 4206, 8206, 14206, 24206],
-    [1, 2, 5, 11, 17, 67, 187, 937, 1937, 3937, 8937, 18937],
-    [1, 2, 3, 9, 24, 54, 204, 454, 954, 1704, 9204, 19204],
-    [1, 3, 6, 11, 16, 22, 522, 1272, 2772, 5772, 10772, 20772],
-    [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
+      [1, 4, 14, 24, 144, 384, 984, 2984, 7984, 17984],
+      [1, 3, 5, 13, 163, 313, 1313, 4313, 10313, 20313],
+      [1, 4, 19, 519, 3019, 8019, 18019],
+      [1, 2, 6, 106, 256, 406, 906, 1706, 4206, 8206, 14206, 24206],
+      [1, 2, 5, 11, 17, 67, 187, 937, 1937, 3937, 8937, 18937],
+      [1, 2, 3, 9, 24, 54, 204, 454, 954, 1704, 9204, 19204],
+      [1, 3, 6, 11, 16, 22, 522, 1272, 2772, 5772, 10772, 20772],
+      [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
     ];
 
     /**********************************************************
      * 2) CSV DATA: Example that includes gods & normal mobs
      **********************************************************/
-     const csvData = `
+    const csvData = `
      Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop %,Kills
      Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm,0.0006%,155340
      Crow,R.drawable.enemy_crow_01,20,5,4,5,Medium,12,Archery,1,"Bones,1,1,Always/Feathers,3,6,Always/Evergreen Arrow Shafts,5,10,Uncommon/Egg,1,1,Uncommon/Thread,1,3,Common/Coins,2,10,Uncommon/Birds Nest,1,2,Uncommon/Common Chest,1,1,Rare/Raw Shrimp,1,1,Uncommon",Farm,0.0007%,146789
@@ -380,81 +373,80 @@
      Kynosian,R.drawable.enemy_kynosian,9000000,80000,525000,36000,Insane,282060,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,8.8147%,12
      Noctyra,R.drawable.enemy_noctyra,8000000,100000,562500,67500,Insane,336510,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,10.1788%,10
      Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,7.6217%,14
-     `.trim(); // You can add more lines here, but ensure each row has 14 columns!
+    `.trim();
 
-    // specialDrops.js (or inline in your HTML)
+    // Special Drops
     const specialDrops = [
-    {
-      item: "Mystic Hat",
-      droppedBy: "Pig",
-      dropRate: "1/15,000",
-    },
-    {
-      item: "Super Power Stone",
-      droppedBy: "Ghost",
-      dropRate: "1/10,000",
-    },
-    {
-      item: "Ring of Speed",
-      droppedBy: "Orc King",
-      dropRate: "1/15,000",
-    },
-    {
-      item: "Ring of Life",
-      droppedBy: "Elite Pig",
-      dropRate: "1/25,000",
-    },
-    {
-      item: "Hatchet of the Gods",
-      droppedBy: "Sheep",
-      alternativeObtaining: "Treasure Chests: Eagles Nest",
-      dropRate: "1/11,133",
-    },
-    {
-      item: "Magic Watering Can",
-      droppedBy: "Elite Chicken",
-      dropRate: "1/125,000",
-      specialCondition: "Full Leather Armor Equipped",
-    },
-    {
-      item: "Necklace of Restoration – Fragment 1",
-      droppedBy: "Water Dragon",
-      dropRate: "1/25,000",
-    },
-    {
-      item: "Book of Death",
-      droppedBy: "Elven Archer",
-      dropRate: "1/40,000",
-    },
-    {
-      item: "Book of Necromancy",
-      droppedBy: "Elven King",
-      dropRate: "1/150,000",
-    },
-    {
-      item: "Ancient Elven Book",
-      droppedBy: "Elven Queen",
-      dropRate: "1/125,000",
-    },
-    {
-      item: "Ring of Souls",
-      droppedBy: "Elven Queen",
-      dropRate: "1/250,000",
-      specialCondition: "During a Slayer Task",
-    },
-    {
-      item: "Blessed Sacrifice",
-      droppedBy: "Living Armour King",
-      dropRate: "1/60,000",
-    },
+      {
+        item: "Mystic Hat",
+        droppedBy: "Pig",
+        dropRate: "1/15,000",
+      },
+      {
+        item: "Super Power Stone",
+        droppedBy: "Ghost",
+        dropRate: "1/10,000",
+      },
+      {
+        item: "Ring of Speed",
+        droppedBy: "Orc King",
+        dropRate: "1/15,000",
+      },
+      {
+        item: "Ring of Life",
+        droppedBy: "Elite Pig",
+        dropRate: "1/25,000",
+      },
+      {
+        item: "Hatchet of the Gods",
+        droppedBy: "Sheep",
+        alternativeObtaining: "Treasure Chests: Eagles Nest",
+        dropRate: "1/11,133",
+      },
+      {
+        item: "Magic Watering Can",
+        droppedBy: "Elite Chicken",
+        dropRate: "1/125,000",
+        specialCondition: "Full Leather Armor Equipped",
+      },
+      {
+        item: "Necklace of Restoration – Fragment 1",
+        droppedBy: "Water Dragon",
+        dropRate: "1/25,000",
+      },
+      {
+        item: "Book of Death",
+        droppedBy: "Elven Archer",
+        dropRate: "1/40,000",
+      },
+      {
+        item: "Book of Necromancy",
+        droppedBy: "Elven King",
+        dropRate: "1/150,000",
+      },
+      {
+        item: "Ancient Elven Book",
+        droppedBy: "Elven Queen",
+        dropRate: "1/125,000",
+      },
+      {
+        item: "Ring of Souls",
+        droppedBy: "Elven Queen",
+        dropRate: "1/250,000",
+        specialCondition: "During a Slayer Task",
+      },
+      {
+        item: "Blessed Sacrifice",
+        droppedBy: "Living Armour King",
+        dropRate: "1/60,000",
+      },
     ];
-
 
     let currentData = [];
     let sortDirections = {};
 
     /*********************************************************
-     * 3) MAIN SETUP: Parse CSV, init sorting/search, render  *
+     * 3) MAIN SETUP: Parse CSV, init sorting/search, render
      *********************************************************/
     document.addEventListener('DOMContentLoaded', () => {
       const { data } = parseCsv(csvData);
@@ -572,47 +564,59 @@
           <tbody></tbody>
         `;
         const dropBody = dropTable.querySelector('tbody');
-        const parsedDrops = parseDrops(dropsString || '');
-        const dropClassLabels = {
-          "Common": 2.681,
-          "Uncommon": 3.3333,
-          "Rare": 16.6667,
-          "Super Rare": 83.3333,
-          "Legendary": 1250,
-          "Mythical": 5000,
-          "Secret Rare": 16666.6667
-        };
 
-        parsedDrops.forEach((arr, index) => {
+        const parsedDrops = parseDrops(dropsString || '');
+
+        // Convert each normal drop into an object with a computed "chance" so we can sort
+        let dropObjects = [];
+        parsedDrops.forEach((arr) => {
           const [dropName, minQty, maxQty, dropClass] = arr;
-          const rowEl = dropBody.insertRow();
-        
-          // Add alternating row styles
-          rowEl.className = index % 2 === 0 ? 'row-even' : 'row-odd';
-        
-          // If dropClass is e.g. "Rare," we get decimalOdds => 16.6667
           const decimalOdds = dropClassLabels[dropClass] || 0;
-          const fractionOdds = toMixedFraction(decimalOdds); // e.g. "16 2/3"
-          const percentOdds = (1 / decimalOdds * 100).toFixed(4);
-        
-          // Format data into cleaner, separated columns
+          const isAlways = dropClass === 'Always';
+
+          // If dropClass is e.g. "Common" => decimalOdds = 2.681 => 1 in 2.681 => ~ 37.3%
+          // We'll store chance as a decimal from 0 to 1. "Always" = 1.0
+          const chanceNum = isAlways ? 1.0 : decimalOdds > 0 ? (1 / decimalOdds) : 0;
+
+          dropObjects.push({
+            dropName,
+            minQty,
+            maxQty,
+            dropClass,
+            decimalOdds,
+            chanceNum, // used for sorting descending
+          });
+        });
+
+        // Sort by chanceNum descending (Always at top, then biggest chance to smallest)
+        dropObjects.sort((a, b) => b.chanceNum - a.chanceNum);
+
+        // Now populate the table rows in sorted order
+        dropObjects.forEach((dObj, index) => {
+          const rowEl = dropBody.insertRow();
+          rowEl.className = index % 2 === 0 ? 'row-even' : 'row-odd';
+
+          const fractionOdds = toMixedFraction(dObj.decimalOdds);
+          const percentOdds = dObj.dropClass === 'Always'
+            ? ''
+            : `${(dObj.chanceNum * 100).toFixed(4)}%`;
+
           rowEl.innerHTML = `
-            <td>${dropName}</td>
-            <td>${minQty || 1}</td>
-            <td>${maxQty || 1}</td>
-            <td>${dropClass === 'Always' ? 'Always' : `1 in ${fractionOdds}`}</td>
-            <td>${dropClass === 'Always' ? '-' : `${percentOdds}%`}</td>
+            <td>${dObj.dropName}</td>
+            <td>${dObj.minQty || 1}</td>
+            <td>${dObj.maxQty || 1}</td>
+            <td>${dObj.dropClass}</td>
+            <td>${dObj.dropClass === 'Always' ? '1/1' : `1 in ${fractionOdds}`}</td>
+            <td>${dObj.dropClass === 'Always' ? '100%' : `${percentOdds}`}</td>
           `;
         });
         subCell.appendChild(dropTable);
 
-        // Check if it's a god => add second table
+        // Check if it's a god => add second (god) table
         const godIndex = allGods.indexOf((enemyName || '').trim());
         if (godIndex !== -1) {
           const godTable = document.createElement('table');
           godTable.className = 'drop-table';
-
-          // This MUST be godTable, not dropTable
           godTable.innerHTML = `
             <thead>
               <tr>
@@ -625,13 +629,14 @@
             </thead>
             <tbody></tbody>
           `;
-
           const godBody = godTable.querySelector('tbody');
 
           const theseDrops = allGodDrops[godIndex] || [];
           const theseAmounts = allGodDropAmounts[godIndex] || [];
           const theseRates = allGodDropRates[godIndex] || [];
 
+          // We'll transform into objects for sorting
+          let godObjects = [];
           const totalRate = theseRates.reduce((sum, rate) => sum + rate, 0);
 
           for (let i = 0; i < theseDrops.length; i++) {
@@ -639,20 +644,33 @@
             const rateVal = theseRates[i] || 0;
             const percentChance = (rateVal / totalRate) * 100;
 
+            godObjects.push({
+              dropName: theseDrops[i],
+              minQty: mnQ,
+              maxQty: mxQ,
+              rateVal,
+              totalRate,
+              percentChance
+            });
+          }
+
+          // Sort by percentChance DESC
+          godObjects.sort((a, b) => b.percentChance - a.percentChance);
+
+          godObjects.forEach((gObj) => {
             const row2 = godBody.insertRow();
             row2.innerHTML = `
-              <td>${theseDrops[i]}</td>
-              <td>${mnQ}</td>
-              <td>${mxQ}</td>
-              <td>${rateVal} in ${totalRate}</td>
-              <td>~${percentChance.toFixed(4)}%</td>
+              <td>${gObj.dropName}</td>
+              <td>${gObj.minQty}</td>
+              <td>${gObj.maxQty}</td>
+              <td>${gObj.rateVal} in ${gObj.totalRate}</td>
+              <td>~${gObj.percentChance.toFixed(4)}%</td>
             `;
-          }
+          });
 
           // Insert the God-exclusive table below the normal drop table
           dropTable.insertAdjacentElement('afterend', godTable);
         }
-
 
         //  *New* special-drops subtable:
         const relevantSpecialDrops = specialDrops.filter(sd => sd.droppedBy === (enemyName || '').trim());
@@ -681,10 +699,9 @@
               <td>${sd.specialCondition || '-'}</td>
             `;
           });
-          // Insert below the God table (or normal table) 
+          // Insert below the God table (or normal table)
           dropTable.insertAdjacentElement('afterend', specialTable);
         }
-
 
         subRow.appendChild(subCell);
 
@@ -714,20 +731,36 @@
       return cleaned.split('/').map(r => r.split(',').map(x=>x.trim()));
     }
 
-    // We create a helper
+    // We'll map known drop classes to approximate decimal odds
+    const dropClassLabels = {
+      "Common": 2.681,
+      "Uncommon": 3.3333,
+      "Rare": 16.6667,
+      "Super Rare": 83.3333,
+      "Legendary": 1250,
+      "Mythical": 5000,
+      "Secret Rare": 16666.6667
+    };
+
+    // A helper to convert decimalOdds => fraction for display
     function toMixedFraction(num) {
+      //  e.g. 2.681 => "2.6810"
+      //  or if close to 0.3333 => 1/3, etc.
+      if (!num || num === 0) return '∞';
+      if (num < 1) return num.toFixed(4); // below 1 => Just show decimal
       const whole = Math.floor(num);
       const frac = num - whole;
+      // handle special fractions
       if (Math.abs(frac - 0.3333) < 0.01) {
         return `${whole} 1/3`;
       }
       if (Math.abs(frac - 0.6667) < 0.01) {
         return `${whole} 2/3`;
       }
-      if (frac == .681) {
+      if (Math.abs(frac - 0.681) < 0.0001) {
         return `${whole} 5/8`;
       }
-      return num.toFixed(4);
+      return num.toFixed(0);
     }
 
     /**************************
@@ -749,8 +782,6 @@
     }
 
     function sortData(colIndex, ascending) {
-      // numeric columns => parseFloat
-      //  2,3,4,5,7,9,12,13
       const numericCols = [2, 3, 4, 5, 7, 9, 12, 13];
       currentData.sort((a, b) => {
         if (a.length < 14 || b.length < 14) return 0; 
@@ -763,7 +794,7 @@
             A = parseFloat(A||'0');
             B = parseFloat(B||'0');
           }
-          return ascending ? (A-B) : (B-A);
+          return ascending ? (A - B) : (B - A);
         } else {
           const cmp = (A||'').localeCompare(B||'');
           return ascending ? cmp : -cmp;
@@ -777,7 +808,7 @@
       input.addEventListener('input', () => {
         const val = input.value.toLowerCase();
         const filtered = currentData.filter(row => {
-          if (row.length<14) return false; // skip partial
+          if (row.length < 14) return false; // skip partial
           return row[0].toLowerCase().includes(val);
         });
         populateTable(filtered);
@@ -786,9 +817,7 @@
   </script>
 
   <footer>
-    <p>This version checks row lengths to avoid "undefined.replace(...)" errors. 
-    Add more CSV lines ensuring 14 columns each. Then test God subtable expansions 
-    for "Amaran," "Aurial," "Copina," etc.</p>
+    <p>Version 1.4.2</p>
   </footer>
 </body>
 </html>
