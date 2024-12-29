@@ -6,13 +6,13 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Enemy Data with Expandable Drops, Asc/Dsc Sorting, Searching, and God-Exclusive Drops</title>
+  <title>God-Exclusive Drops Troubleshooting</title>
   <style>
     /* General Table Styles */
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #121212; 
-      color: #FFFFFF; 
+      background-color: #121212;
+      color: #FFFFFF;
       margin: 0;
       padding: 0;
     }
@@ -22,7 +22,6 @@
       color: #FFFFFF;
     }
 
-    /* Search Input */
     #searchContainer {
       text-align: center;
       margin: 20px 0;
@@ -40,7 +39,6 @@
       color: #888;
     }
 
-    /* Main Table Styling */
     table {
       width: 95%;
       margin: 20px auto;
@@ -59,7 +57,7 @@
     thead th {
       background-color: #2C2C2C;
       font-weight: bold;
-      cursor: pointer; /* We'll sort on click */
+      cursor: pointer;
     }
     tbody tr {
       border-bottom: 1px solid #272727;
@@ -68,22 +66,19 @@
       border-bottom: none;
     }
 
-    /* Subtable Rows */
     tr.subtable {
-      display: none; 
+      display: none;
       background-color: #1E1E1E;
     }
     tr.subtable td {
       padding: 0;
     }
 
-    /* Drop Table Styling */
     .drop-table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #2C2C2C; 
+      background-color: #2C2C2C;
       color: #FFFFFF;
-      border-radius: 4px;
       margin-bottom: 20px;
     }
     .drop-table th, .drop-table td {
@@ -96,16 +91,14 @@
       font-weight: bold;
     }
 
-    /* Interactive Elements */
     .clickable-row {
       cursor: pointer;
-      background-color: #1A1A1A; 
+      background-color: #1A1A1A;
     }
     .clickable-row:hover {
       background-color: #272727;
     }
 
-    /* Footer Text */
     footer {
       text-align: center;
       padding: 10px;
@@ -117,31 +110,12 @@
   </style>
 </head>
 <body>
-  <h1>Enemy Data: Expandable Drops, Asc/Dsc Sorting, Searching</h1>
-  <h1>Plus: God-Exclusive Drops</h1>
+  <h1>God-Exclusive Drops Debugging</h1>
 
   <div id="searchContainer">
     <input type="text" id="searchInput" placeholder="Search enemy name..." />
   </div>
 
-  <!-- 
-    We skip column #10 (Drops) in the main table because it's shown in a subtable row.
-    Final column mapping:
-      0 => Enemy Name
-      1 => Icon
-      2 => Health
-      3 => Attack
-      4 => Strength
-      5 => Defence
-      6 => Attack Speed
-      7 => Slayer Exp
-      8 => Weakness
-      9 => Slayer Level
-      10 => Drops (subtable only)
-      11 => Area
-      12 => Scroll Drop %
-      13 => Kills
-  -->
   <table id="enemyTable">
     <thead>
       <tr>
@@ -155,6 +129,7 @@
         <th data-sort-col="7">Slayer Exp</th>
         <th data-sort-col="8">Weakness</th>
         <th data-sort-col="9">Slayer Lvl</th>
+        <!-- Column 10 is "Drops" (subtable), not displayed in main -->
         <th data-sort-col="11">Area</th>
         <th data-sort-col="12">Scroll Drop %</th>
         <th data-sort-col="13">Kills</th>
@@ -164,50 +139,62 @@
   </table>
 
   <script>
-    /************************************/
-    /*     1) GOD DATA (JavaScript)     */
-    /************************************/
+    /*
+      Common Reason "God drops" might not show:
+      1) The "enemyName" from CSV doesn't exactly match one of the entries in `allGods`.
+         - e.g. trailing spaces, different capitalization, or a small typo.
+      2) The CSV row doesn't appear at all if it's overwritten by a second `csvData` variable.
+      3) There's a console error preventing the script from fully running.
+
+      Next script includes a debug console.log for each enemyName,
+      so you can check what the script sees. If "Opulina" has spaces or mismatch,
+      you'll notice in dev console (F12).
+    */
+
     const allGods = [
-      "Amaran","Aurial","Cognium","Copina",
-      "Feroxi","Kynosian","Noctyra","Opulina"
+      "Amaran", "Aurial", "Cognium", "Copina",
+      "Feroxi", "Kynosian", "Noctyra", "Opulina"
     ];
 
     const allGodDrops = [
-      ["Shield of Amaran","Ring of Life","Necklace of Defence","Necklace of Health","Queens Armour Fragment","Kings Armour Fragment","Invincibility Potion","Rock Skin Potion","Dragon Platter","Iridium Ore"],
-      ["Scythe of Aurial","Scythe of Demeter","Restoration Fragment 2","Magic Watering Can","Farm Chest","Farm Key","Wine","Eggplant","Fruit Salad","Lemon"],
-      ["Sword of Cognium","Ring of Speed","Ring Fragments","Sextant","Steel Bar","Cog","Iron Ore"],
-      ["Rod of Copina","Knife of Copina","Rabbits Foot","Eagles Nest","Book of Aroon","Stone Tablet","Ginkgo Log","Shark","Marlin","Chestnut Log","Large Fishing Net","Rhodium Ore"],
-      ["Shield of Feroxi","Gloves of Feroxi","Berserker Ring","Extreme Power Stone","Necklace of Strength","Kings Weapon Fragment","Queens Weapon Fragment","Ultimate Power Potion","Super Power Stone","Tooth Necklace","Super Power Potion","Power Potion"],
-      ["Quiver of Kynosian","Kynosian Boots","Kynosian Gloves","Kynosian Arrows","Elven Bow","Elven Arrows","Kings Bow","Kings Arrows","Queens Bow","Queens Arrows","Ginkgo Headless Arrows","Ginkgo Arrow Shafts"],
-      ["Mystic Staff","Death Princess Rune","Ancient Elven Book","Ring of Death","Book of Death","Soul Gem","Liquid Death Potion","Dragon Skull","Insta Kill Potion","Big Dragon Bones","Dragon Bones","Bones"],
-      ["Opulinas Robe Bottoms","Gold Coin","Gold Coin","Golden Touch Potion","Gold Coin","Golden Scarab","Pot of Gold","Treasure Map","Gold Coin","Gold Bar","Gold Feather","Gold Ore"]
+      ["Shield of Amaran", "Ring of Life", "Necklace of Defence", "Necklace of Health", "Queens Armour Fragment", "Kings Armour Fragment", "Invincibility Potion", "Rock Skin Potion", "Dragon Platter", "Iridium Ore"],
+      ["Scythe of Aurial", "Scythe of Demeter", "Restoration Fragment 2", "Magic Watering Can", "Farm Chest", "Farm Key", "Wine", "Eggplant", "Fruit Salad", "Lemon"],
+      ["Sword of Cognium", "Ring of Speed", "Ring Fragments", "Sextant", "Steel Bar", "Cog", "Iron Ore"],
+      ["Rod of Copina", "Knife of Copina", "Rabbits Foot", "Eagles Nest", "Book of Aroon", "Stone Tablet", "Ginkgo Log", "Shark", "Marlin", "Chestnut Log", "Large Fishing Net", "Rhodium Ore"],
+      ["Shield of Feroxi", "Gloves of Feroxi", "Berserker Ring", "Extreme Power Stone", "Necklace of Strength", "Kings Weapon Fragment", "Queens Weapon Fragment", "Ultimate Power Potion", "Super Power Stone", "Tooth Necklace", "Super Power Potion", "Power Potion"],
+      ["Quiver of Kynosian", "Kynosian Boots", "Kynosian Gloves", "Kynosian Arrows", "Elven Bow", "Elven Arrows", "Kings Bow", "Kings Arrows", "Queens Bow", "Queens Arrows", "Ginkgo Headless Arrows", "Ginkgo Arrow Shafts"],
+      ["Mystic Staff", "Death Princess Rune", "Ancient Elven Book", "Ring of Death", "Book of Death", "Soul Gem", "Liquid Death Potion", "Dragon Skull", "Insta Kill Potion", "Big Dragon Bones", "Dragon Bones", "Bones"],
+      ["Opulinas Robe Bottoms", "Gold Coin", "Gold Coin", "Golden Touch Potion", "Gold Coin", "Golden Scarab", "Pot of Gold", "Treasure Map", "Gold Coin", "Gold Bar", "Gold Feather", "Gold Ore"]
     ];
 
     const allGodDropAmounts = [
-      ["1,1","1,1","1,1","1,1","4,5","2,3","1,3","2,5","15,25","10,20"],
-      ["1,1","1,1","1,1","1,1","2,3","2,3","15,20","10,15","15,20","15,20"],
-      ["1,1","1,1","1,2","3,5","15,20","5,10","20,30"],
-      ["1,1","1,1","1,1","2,3","4,5","4,5","20,25","40,50","50,60","25,40","5,10","15,25"],
-      ["1,1","1,1","1,1","1,2","1,1","2,3","3,4","2,5","2,5","3,5","5,10","10,15"],
-      ["1,1","1,1","1,1","2,5","1,1","5,10","1,1","15,20","1,1","20,30","25,40","40,60"],
-      ["1,1","1,1","1,1","1,1","1,1","1,1","5,10","5,10","10,15","15,20","20,25","30,40"],
-      ["1,1","100,100","25,25","2,5","15,15","5,10","5,10","5,10","5,5","15,20","25,30","30,40"]
+      ["1,1", "1,1", "1,1", "1,1", "4,5", "2,3", "1,3", "2,5", "15,25", "10,20"],
+      ["1,1", "1,1", "1,1", "1,1", "2,3", "2,3", "15,20", "10,15", "15,20", "15,20"],
+      ["1,1", "1,1", "1,2", "3,5", "15,20", "5,10", "20,30"],
+      ["1,1", "1,1", "1,1", "2,3", "4,5", "4,5", "20,25", "40,50", "50,60", "25,40", "5,10", "15,25"],
+      ["1,1", "1,1", "1,1", "1,2", "1,1", "2,3", "3,4", "2,5", "2,5", "3,5", "5,10", "10,15"],
+      ["1,1", "1,1", "1,1", "2,5", "1,1", "5,10", "1,1", "15,20", "1,1", "20,30", "25,40", "40,60"],
+      ["1,1", "1,1", "1,1", "1,1", "1,1", "1,1", "5,10", "5,10", "10,15", "15,20", "20,25", "30,40"],
+      ["1,1", "100,100", "25,25", "2,5", "15,15", "5,10", "5,10", "5,10", "5,5", "15,20", "25,30", "30,40"]
     ];
 
     const allGodDropRates = [
-      [1,4,14,24,144,384,984,2984,7984,17984],
-      [1,3,5,13,163,313,1313,4313,10313,20313],
-      [1,4,19,519,3019,8019,18019],
-      [1,2,6,106,256,406,906,1706,4206,8206,14206,24206],
-      [1,2,5,11,17,67,187,937,1937,3937,8937,18937],
-      [1,2,3,9,24,54,204,454,954,1704,9204,19204],
-      [1,3,6,11,16,22,522,1272,2772,5772,10772,20772],
-      [1,3,7,15,31,111,411,1011,2011,4511,9511,17511]
+      [1, 4, 14, 24, 144, 384, 984, 2984, 7984, 17984],
+      [1, 3, 5, 13, 163, 313, 1313, 4313, 10313, 20313],
+      [1, 4, 19, 519, 3019, 8019, 18019],
+      [1, 2, 6, 106, 256, 406, 906, 1706, 4206, 8206, 14206, 24206],
+      [1, 2, 5, 11, 17, 67, 187, 937, 1937, 3937, 8937, 18937],
+      [1, 2, 3, 9, 24, 54, 204, 454, 954, 1704, 9204, 19204],
+      [1, 3, 6, 11, 16, 22, 522, 1272, 2772, 5772, 10772, 20772],
+      [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
     ];
 
-    /***************************************/
-    /* 2) CSV DATA (ONE SINGLE DEFINITION) */
-    /***************************************/
+    /*
+      This CSV is just a short example. If you want more lines, 
+      include them here in the same format.
+      Make sure the "Enemy Name" EXACTLY matches 
+      something in `allGods` array if you want god drops to appear.
+    */
     const csvData = `
 Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop %,Kills
 Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm,0.0006%,155340
@@ -285,11 +272,8 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
 `.trim();
 
     let currentData = [];
-    let sortDirections = {}; // track ascending/descending for each column
+    let sortDirections = {};
 
-    /*************************************/
-    /* 3) ON PAGE LOAD: PARSE + DISPLAY  */
-    /*************************************/
     document.addEventListener('DOMContentLoaded', () => {
       const { data } = parseCsv(csvData);
       currentData = data;
@@ -298,21 +282,14 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       populateTable(currentData);
     });
 
-    /**
-     * Parse CSV (single pass).
-     */
     function parseCsv(csvString) {
       const lines = csvString.split('\n');
-      // lines[0] is the header, we skip it
+      // skip the header row
       const dataRows = lines.slice(1);
-
       const data = dataRows.map(row => splitByCsvRules(row));
       return { data };
     }
 
-    /**
-     * Split each line by commas, respecting quotes.
-     */
     function splitByCsvRules(line) {
       const result = [];
       let current = '';
@@ -328,20 +305,16 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           current += char;
         }
       }
-      // push last
       result.push(current.trim());
       return result;
     }
 
-    /**
-     * Populate main table (and subtable for normal drops, plus God-exclusive table if applicable).
-     */
+    // Build table
     function populateTable(dataArray) {
       const tbody = document.querySelector('#enemyTable tbody');
       tbody.innerHTML = '';
 
       dataArray.forEach(row => {
-        // CSV columns => 14 total
         const [
           enemyName,
           enemyIcon,
@@ -359,12 +332,15 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           kills
         ] = row;
 
-        // Main row
+        // Debug: see EXACT name
+        console.log("Checking enemy:", JSON.stringify(enemyName));
+
+        // main row
         const mainRow = document.createElement('tr');
         mainRow.classList.add('clickable-row');
         mainRow.innerHTML = `
           <td>${enemyName}</td>
-          <td><img src="drawable/${enemyIcon.replace('R.drawable.', '')}.png" alt="icon" width="64" height="64"/></td>
+          <td>${enemyIcon.replace('R.drawable.', '')}</td>
           <td>${enemyHealth}</td>
           <td>${enemyAttack}</td>
           <td>${enemyStrength}</td>
@@ -378,15 +354,13 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           <td>${kills}</td>
         `;
 
-        // Subtable row
+        // subtable
         const subRow = document.createElement('tr');
         subRow.classList.add('subtable');
-
-        // subRow cell spans all main columns
         const subRowCell = document.createElement('td');
         subRowCell.colSpan = 13;
 
-        // Build normal drops table
+        // normal drops
         const dropTable = document.createElement('table');
         dropTable.className = 'drop-table';
         dropTable.innerHTML = `
@@ -400,24 +374,21 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           </thead>
           <tbody></tbody>
         `;
+
         const dropBody = dropTable.querySelector('tbody');
         const parsedDrops = parseDrops(dropsString);
         parsedDrops.forEach(d => {
-          // e.g. [dropName, minQty, maxQty, dropClass]
           const [dn, mn, mx, dc] = d;
-          const dropRate = getDropRateLabel(dc);
-          const trEl = document.createElement('tr');
-          trEl.innerHTML = `
+          dropBody.insertRow().innerHTML = `
             <td>${dn}</td>
-            <td>${mn || 1}</td>
-            <td>${mx || 1}</td>
-            <td>${dc || "Unknown"} (${dropRate})</td>
+            <td>${mn||1}</td>
+            <td>${mx||1}</td>
+            <td>${dc||"Unknown"} (1 in 1?)</td>
           `;
-          dropBody.appendChild(trEl);
         });
 
-        // If enemy is a God => add God-exclusive table
-        const godIndex = allGods.indexOf(enemyName);
+        // check if name is in allGods
+        const godIndex = allGods.indexOf(enemyName.trim());
         if (godIndex !== -1) {
           const godTable = document.createElement('table');
           godTable.className = 'drop-table';
@@ -432,34 +403,27 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
             </thead>
             <tbody></tbody>
           `;
-          const godTBody = godTable.querySelector('tbody');
+          const godBody = godTable.querySelector('tbody');
           const theseDrops = allGodDrops[godIndex];
           const theseAmounts = allGodDropAmounts[godIndex];
           const theseRates = allGodDropRates[godIndex];
-          for (let i = 0; i < theseDrops.length; i++) {
-            const [minQ, maxQ] = theseAmounts[i].split(',');
-            const rateVal = theseRates[i];
-            const rowEl2 = document.createElement('tr');
-            rowEl2.innerHTML = `
+          for (let i=0;i<theseDrops.length;i++){
+            const [mnQ, mxQ] = theseAmounts[i].split(',');
+            godBody.insertRow().innerHTML = `
               <td>${theseDrops[i]}</td>
-              <td>${minQ}</td>
-              <td>${maxQ}</td>
-              <td>${rateVal}</td>
+              <td>${mnQ}</td>
+              <td>${mxQ}</td>
+              <td>${theseRates[i]}</td>
             `;
-            godTBody.appendChild(rowEl2);
           }
-          // Insert God table after normal table
           dropTable.insertAdjacentElement('afterend', godTable);
         }
 
-        // Append dropTable to subRow, then toggle
         subRowCell.appendChild(dropTable);
         subRow.appendChild(subRowCell);
 
         mainRow.addEventListener('click', () => {
-          subRow.style.display = (subRow.style.display === 'table-row') 
-            ? 'none' 
-            : 'table-row';
+          subRow.style.display = (subRow.style.display === 'table-row') ? 'none' : 'table-row';
         });
 
         tbody.appendChild(mainRow);
@@ -467,89 +431,64 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       });
     }
 
-    /**
-     * parseDrops => splits the mini-CSV in the "Drops" cell by '/', then by ','.
-     */
     function parseDrops(dropsString) {
-      let cleaned = dropsString.trim();
-      if (!cleaned) return [];
-      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
-        cleaned = cleaned.slice(1, -1);
-      }
-      return cleaned.split('/').map(row => row.split(',').map(x => x.trim()));
+      if (!dropsString) return [];
+      let s = dropsString.trim();
+      if (s.startsWith('"') && s.endsWith('"')) s = s.slice(1, -1);
+      if (!s) return [];
+      const rows = s.split('/');
+      return rows.map(r => r.split(',').map(x=>x.trim()));
     }
 
-    /**
-     * getDropRateLabel => approximate chance labels for standard drop classes.
-     */
-    function getDropRateLabel(dropClass) {
-      const map = {
-        'Always': '1 in 1',
-        'Common': '1 in 3.3',
-        'Uncommon': '1 in 16.3',
-        'Rare': '1 in 83.3',
-        'Super Rare': '1 in 1,250',
-        'Legendary': '1 in 5,000',
-        'Mythical': '1 in 16,666.3',
-        'Secret Rare': '1 in 16,666.3'
-      };
-      return map[dropClass] || 'Unknown';
-    }
-
-    /**************************/
-    /* 4) Sorting + Searching */
-    /**************************/
-    function initSorting() {
+    // sorting
+    function initSorting(){
       const thElems = document.querySelectorAll('#enemyTable thead th[data-sort-col]');
-      thElems.forEach(th => {
-        th.addEventListener('click', () => {
-          const colIndex = parseInt(th.getAttribute('data-sort-col'), 10);
-          if (sortDirections[colIndex] === undefined) {
-            sortDirections[colIndex] = true; // asc default
-          } else {
+      thElems.forEach(th=>{
+        th.addEventListener('click', ()=>{
+          const colIndex = parseInt(th.getAttribute('data-sort-col'),10);
+          if(sortDirections[colIndex] === undefined){
+            sortDirections[colIndex] = true; // asc
+          }else{
             sortDirections[colIndex] = !sortDirections[colIndex];
           }
           sortData(colIndex, sortDirections[colIndex]);
         });
       });
     }
-
-    function sortData(colIndex, ascending) {
-      const numericCols = [2,3,4,5,7,9,12,13]; 
-      currentData.sort((a, b) => {
-        let A = a[colIndex], B = b[colIndex];
-        if (numericCols.includes(colIndex)) {
-          if (colIndex === 12) {
-            // scroll drop => strip '%'
-            A = parseFloat(A.replace('%', ''));
-            B = parseFloat(B.replace('%', ''));
+    function sortData(colIndex, ascending){
+      // numeric columns: [2,3,4,5,7,9,12,13]
+      const numericCols = [2,3,4,5,7,9,12,13];
+      currentData.sort((a,b)=>{
+        let A = a[colIndex];
+        let B = b[colIndex];
+        if(numericCols.includes(colIndex)){
+          if(colIndex===12){
+            A = parseFloat(A.replace('%',''));
+            B = parseFloat(B.replace('%',''));
           } else {
             A = parseFloat(A);
             B = parseFloat(B);
           }
-          return ascending ? (A - B) : (B - A);
+          return ascending ? (A-B):(B-A);
         } else {
-          // text compare
-          const cmp = A.localeCompare(B);
-          return ascending ? cmp : -cmp;
+          return ascending ? A.localeCompare(B) : B.localeCompare(A);
         }
       });
       populateTable(currentData);
     }
 
-    // Searching by name => col 0
-    function initSearch() {
+    // searching by name => col 0
+    function initSearch(){
       const input = document.getElementById('searchInput');
-      input.addEventListener('input', () => {
+      input.addEventListener('input', ()=>{
         const val = input.value.toLowerCase();
         const filtered = currentData.filter(row => row[0].toLowerCase().includes(val));
         populateTable(filtered);
       });
     }
   </script>
-
   <footer>
-    <p>Check your console for errors if you only see a few rows. Ensure <strong>csvData</strong> is fully populated, with all lines you expect!</p>
+    <p>If the God subtable doesn't appear for "Opulina," check the console logs to ensure her name exactly matches <strong>allGods</strong> array with no trailing spaces.</p>
   </footer>
 </body>
 </html>
