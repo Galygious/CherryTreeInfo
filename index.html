@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enemy Data with Expandable Drops and Sorting</title>
+  <title>Enemy Data with Expandable Drops and Scroll Drop Chance</title>
   <style>
     /* General Table Styles */
     body {
@@ -117,7 +117,7 @@
   </style>
 </head>
 <body>
-  <h1>Enemy Data with Expandable Drops and Sorting</h1>
+  <h1>Enemy Data with Expandable Drops and Scroll Drop Chance</h1>
   <input type="text" id="searchInput" placeholder="Search by name...">
   <table id="enemyTable">
     <thead>
@@ -133,6 +133,8 @@
         <th onclick="sortTable(8)">Enemy Weakness</th>
         <th onclick="sortTable(9)">Enemy Slayer Level</th>
         <th onclick="sortTable(10)">Enemy Area</th>
+        <th onclick="sortTable(11)">Scroll Drop Chance</th>
+        <th onclick="sortTable(12)">Scroll Drop Count</th>
       </tr>
     </thead>
     <tbody>
@@ -208,4 +210,4 @@ Orc King,R.drawable.enemy_orc_04,400000,15000,7200,8500,Insane,21545,Archery,1,"
 Elven Fairy,R.drawable.enemy_elvenfairy,100000,8000,6000,10000,Fast,6210,Archery,1,"Coins,8000,10000,Always/Elven Armour Fragment,1,1,Legendary/Blue Silk,5,10,Common/Compass,1,1,Rare/Treasure Map,1,1,Rare/Extreme Power Potion,1,1,Rare/Safflower,1,3,Uncommon/Dragon Tail,1,3,Legendary/Elven Crystal,1,1,Rare",Immortal Realm
 Elven Warrior,R.drawable.enemy_elvenwarrior,150000,9000,8000,12000,Fast,8960,Archery,1,"Coins,10000,15000,Always/Elven Weapon Fragment,1,1,Legendary/Compass,1,3,Rare/Sunburst Flower,1,3,Uncommon/Dragon Skull,1,3,Legendary/Raw Ray,1,1,Common/Pirates Hat,1,1,Super Rare/Elven Crystal,1,3,Rare",Immortal Realm
 Elven Archer,R.drawable.enemy_elvenarcher,300000,12000,10000,14000,Very Fast,16810,Melee,1,"Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",Immortal Realm
-Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,Very Fast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Un
+Elven Mage,R.drawable.enemy_elvenmage,400
