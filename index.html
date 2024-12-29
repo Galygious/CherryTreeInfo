@@ -1,147 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Expandable Subtable Example</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enemy Data with Expandable Drops and Sorting</title>
   <style>
     /* General Table Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #121212; /* Dark background */
-  color: #FFFFFF; /* White text */
-  margin: 0;
-  padding: 0;
-}
-
-h1 {
-  text-align: center;
-  margin-top: 20px;
-  color: #FFFFFF;
-}
-
-/* Main Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  background-color: #1A1A1A; /* Slightly lighter background */
-  color: #FFFFFF;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-  border: 1px solid #272727;
-}
-
-thead th {
-  background-color: #2C2C2C;
-  font-weight: bold;
-}
-
-tbody tr {
-  border-bottom: 1px solid #272727;
-}
-
-tbody tr:last-child {
-  border-bottom: none;
-}
-
-tr.subtable {
-  display: none; /* Hide subtables by default */
-  background-color: #1E1E1E;
-}
-
-tr.subtable td {
-  padding: 0;
-}
-
-/* Drop Table Styling */
-.drop-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #2C2C2C; /* Slightly lighter background */
-  color: #FFFFFF;
-  border-radius: 8px;
-}
-
-.drop-table th, .drop-table td {
-  padding: 8px;
-  text-align: left;
-  border: 1px solid #272727;
-}
-
-.drop-table th {
-  background-color: #3A3A3A;
-  font-weight: bold;
-}
-
-/* Interactive Elements */
-.clickable-row {
-  cursor: pointer;
-  background-color: #1A1A1A; /* Default background */
-}
-
-.clickable-row:hover {
-  background-color: #272727; /* Hover effect */
-}
-
-tr.subtable:hover {
-  background-color: #222222;
-}
-
-/* Enemy Icon Styling */
-img {
-  border-radius: 4px;
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-}
-
-/* Footer Text */
-footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #1A1A1A;
-  color: #A0A0A0;
-  border-top: 2px solid #272727;
-}
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212; /* Dark background */
+      color: #FFFFFF; /* White text */
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #FFFFFF;
+    }
+    /* Main Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #1A1A1A; /* Slightly lighter background */
+      color: #FFFFFF;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #272727;
+    }
+    thead th {
+      background-color: #2C2C2C;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    tbody tr {
+      border-bottom: 1px solid #272727;
+    }
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+    tr.subtable {
+      display: none; /* Hide subtables by default */
+      background-color: #1E1E1E;
+    }
+    tr.subtable td {
+      padding: 0;
+    }
+    /* Drop Table Styling */
+    .drop-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #2C2C2C; /* Slightly lighter background */
+      color: #FFFFFF;
+      border-radius: 8px;
+    }
+    .drop-table th, .drop-table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #272727;
+    }
+    .drop-table th {
+      background-color: #3A3A3A;
+      font-weight: bold;
+    }
+    /* Interactive Elements */
+    .clickable-row {
+      cursor: pointer;
+      background-color: #1A1A1A; /* Default background */
+    }
+    .clickable-row:hover {
+      background-color: #272727; /* Hover effect */
+    }
+    tr.subtable:hover {
+      background-color: #222222;
+    }
+    /* Enemy Icon Styling */
+    img {
+      border-radius: 4px;
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+    }
+    /* Search and Pagination Styling */
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      margin-bottom: 10px;
+      background-color: #2C2C2C;
+      color: #FFFFFF;
+      border: 1px solid #272727;
+      border-radius: 4px;
+    }
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .pagination button {
+      padding: 8px 12px;
+      margin: 0 5px;
+      cursor: pointer;
+      background-color: #2C2C2C;
+      color: #FFFFFF;
+      border: 1px solid #272727;
+      border-radius: 4px;
+    }
+    .pagination button.active {
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
   </style>
 </head>
 <body>
+  <h1>Enemy Data with Expandable Drops and Sorting</h1>
+  <input type="text" id="searchInput" placeholder="Search by name...">
+  <table id="enemyTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Enemy Name</th>
+        <th>Enemy Icon</th>
+        <th onclick="sortTable(2)">Enemy Health</th>
+        <th onclick="sortTable(3)">Enemy Attack</th>
+        <th onclick="sortTable(4)">Enemy Strength</th>
+        <th onclick="sortTable(5)">Enemy Defence</th>
+        <th onclick="sortTable(6)">Enemy Attack Speed</th>
+        <th onclick="sortTable(7)">Enemy Slayer Exp</th>
+        <th onclick="sortTable(8)">Enemy Weakness</th>
+        <th onclick="sortTable(9)">Enemy Slayer Level</th>
+        <th onclick="sortTable(10)">Enemy Area</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows get dynamically added here -->
+    </tbody>
+  </table>
+  <div class="pagination" id="pagination">
+    <!-- Pagination buttons will be added here -->
+  </div>
 
-<h1>Enemy Data with Expandable Drops</h1>
-
-<table id="enemyTable">
-  <thead>
-    <tr>
-      <th>Enemy Name</th>
-      <th>Enemy Icon</th>
-      <th>Enemy Health</th>
-      <th>Enemy Attack</th>
-      <th>Enemy Strength</th>
-      <th>Enemy Defence</th>
-      <th>Enemy Attack Speed</th>
-      <th>Enemy Slayer Exp</th>
-      <th>Enemy Weakness</th>
-      <th>Enemy Slayer Level</th>
-      <th>Enemy Area</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Rows get dynamically added here -->
-  </tbody>
-</table>
-
-<script>
-/*
- * Example CSV data:
- *   Notice that the 11th column (Drops) has a mini-CSV
- *   using '/' as the row delimiter for each drop.
- */
-const csvData = `
+  <script>
+    // Dataset
+    const csvData = `
 Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area
 Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm
 Crow,R.drawable.enemy_crow_01,20,5,4,5,Medium,12,Archery,1,"Bones,1,1,Always/Feathers,3,6,Always/Evergreen Arrow Shafts,5,10,Uncommon/Egg,1,1,Uncommon/Thread,1,3,Common/Coins,2,10,Uncommon/Birds Nest,1,2,Uncommon/Common Chest,1,1,Rare/Raw Shrimp,1,1,Uncommon",Farm
@@ -204,210 +208,4 @@ Orc King,R.drawable.enemy_orc_04,400000,15000,7200,8500,Insane,21545,Archery,1,"
 Elven Fairy,R.drawable.enemy_elvenfairy,100000,8000,6000,10000,Fast,6210,Archery,1,"Coins,8000,10000,Always/Elven Armour Fragment,1,1,Legendary/Blue Silk,5,10,Common/Compass,1,1,Rare/Treasure Map,1,1,Rare/Extreme Power Potion,1,1,Rare/Safflower,1,3,Uncommon/Dragon Tail,1,3,Legendary/Elven Crystal,1,1,Rare",Immortal Realm
 Elven Warrior,R.drawable.enemy_elvenwarrior,150000,9000,8000,12000,Fast,8960,Archery,1,"Coins,10000,15000,Always/Elven Weapon Fragment,1,1,Legendary/Compass,1,3,Rare/Sunburst Flower,1,3,Uncommon/Dragon Skull,1,3,Legendary/Raw Ray,1,1,Common/Pirates Hat,1,1,Super Rare/Elven Crystal,1,3,Rare",Immortal Realm
 Elven Archer,R.drawable.enemy_elvenarcher,300000,12000,10000,14000,Very Fast,16810,Melee,1,"Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",Immortal Realm
-Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,Very Fast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Uncommon/Dragon Leather,15,20,Super Rare/Raw Octopus,1,1,Common/Dragon Ore,1,3,Super Rare/Dragon Platter,1,1,Rare/Elven Crystal,1,3,Uncommon",Immortal Realm
-Elven King,R.drawable.enemy_elvenking,600000,24000,25000,18000,Insane,33360,Melee,1,"Coins,30000,50000,Always/Elven Armour Fragment,1,2,Uncommon/Ember Fern,3,5,Uncommon/Dragon Tail,5,10,Legendary/Dragon Ore,3,5,Super Rare/Golden Scarab,3,5,Super Rare/Dragon Platter,3,5,Rare/Elven Crystal,1,1,Common",Immortal Realm
-Elven Queen,R.drawable.enemy_elvenqueen,750000,30000,40000,25000,Insane,42260,Melee,1,"Coins,50000,100000,Always/Elven Weapon Fragment,1,2,Uncommon/Ember Fern,15,20,Uncommon/Dragon Skull,5,10,Legendary/Queens Weapon Fragment,1,1,Super Rare/Queens Armour Fragment,1,1,Super Rare/Dragon Platter,5,10,Uncommon/Elven Crystal,1,3,Common",Immortal Realm
-Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,Very Fast,371885,None,1,"Gold Coin,5,10,Always",Kingdom of the Gods
-Aurial,R.drawable.enemy_aurial,4000000,60000,225000,36000,Fast,216060,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Cognium,R.drawable.enemy_cognium,8000000,80000,450000,54000,Insane,329210,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Copina,R.drawable.enemy_copina,9000000,60000,225000,40500,Fast,266285,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,Very Fast,360785,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Kynosian,R.drawable.enemy_kynosian,9000000,80000,525000,36000,Insane,282060,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Noctyra,R.drawable.enemy_noctyra,8000000,100000,562500,67500,Insane,336510,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods
-`;
-
-/** 
- * 1) Parse the CSV data into a structured array.
- *    This is a simple CSV parser that splits by lines and commas.
- *    For more complex CSV data (with escaped quotes, etc.), 
- *    you’d want a robust parser like PapaParse or similar.
- */
-function parseCsv(csvString) {
-  // Split into lines
-  const lines = csvString.trim().split('\n');
-  const headers = lines[0].split(',');
-  
-  // The rest are data lines
-  const data = lines.slice(1).map(line => {
-    // Very naive split on commas - for demonstration only
-    // If your data has commas within quotes, use a robust parser instead
-    const cells = splitByCsvRules(line);
-    return cells;
-  });
-
-  return { headers, data };
-}
-
-/**
- * A simple approach to splitting CSV lines that can handle quotes.
- * This is still a simplified approach, but better than naive split.
- */
-function splitByCsvRules(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-
-    if (char === '"' ) {
-      // Toggle inQuotes status
-      inQuotes = !inQuotes;
-    } else if (char === ',' && !inQuotes) {
-      // Split point
-      result.push(current.trim());
-      current = '';
-    } else {
-      current += char;
-    }
-  }
-  result.push(current.trim()); // push last
-
-  return result;
-}
-
-
-/**
- * 2) Convert our CSV data into table rows.
- *    - The 10th column is the "Drops" column, which we must parse further.
- *    - We’ll store that "drops" data in a separate array for each row.
- */
-function populateTable() {
-  const { headers, data } = parseCsv(csvData);
-  const tbody = document.getElementById('enemyTable').querySelector('tbody');
-
-  data.forEach((row, rowIndex) => {
-    // Extract main columns
-    const [
-      enemyName,
-      enemyIcon,
-      enemyHealth,
-      enemyAttack,
-      enemyStrength,
-      enemyDefence,
-      enemyAttackSpeed,
-      enemySlayerExp,
-      enemyWeakness,
-      enemySlayerLevel,
-      dropsString,
-      enemyArea
-    ] = row;
-
-    // Create the main row
-    const mainRow = document.createElement('tr');
-    mainRow.classList.add('clickable-row');
-
-    // Fill main row cells
-    mainRow.innerHTML = `
-      <td>${enemyName}</td>
-	    <td><img src="drawable/${enemyIcon.replace('R.drawable.', '')}.png" width="64" height="64"/></td>
-      <td>${enemyHealth}</td>
-      <td>${enemyAttack}</td>
-      <td>${enemyStrength}</td>
-      <td>${enemyDefence}</td>
-      <td>${enemyAttackSpeed}</td>
-      <td>${enemySlayerExp}</td>
-      <td>${enemyWeakness}</td>
-      <td>${enemySlayerLevel}</td>
-      <td>${enemyArea}</td>
-    `;
-
-    // Create sub-row (for the drop table)
-    const subRow = document.createElement('tr');
-    subRow.classList.add('subtable');
-    // Create a cell that spans all columns in the main table
-    const subRowCell = document.createElement('td');
-    subRowCell.colSpan = headers.length - 1; // subtract 1 if you want to exclude "Drops" or keep all columns
-
-    // Parse the mini CSV in the "Drops" column
-    // We assume it's something like: "Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon"
-    const dropsArray = parseDrops(dropsString);
-
-    // Build a small table for the drops
-    const dropTable = document.createElement('table');
-    dropTable.className = 'drop-table';
-
-    // Drop table headers
-    dropTable.innerHTML = `
-      <thead>
-        <tr>
-          <th>Drop Name</th>
-          <th>Min Range</th>
-          <th>Max Range</th>
-          <th>Chance Class</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    `;
-
-    const dropTableBody = dropTable.querySelector('tbody');
-    dropsArray.forEach(drop => {
-      // Each drop is [Drop name, Minimum Range, Maximum Range, Drop Chance Class]
-      const [dropName, minRange, maxRange, dropChanceClass] = drop;
-      const dropRow = document.createElement('tr');
-      dropRow.innerHTML = `
-        <td>${dropName}</td>
-        <td>${minRange}</td>
-        <td>${maxRange}</td>
-        <td>${dropChanceClass} (${{
-          'Always': '1 in 1',
-          'Common': '1 in 3.3',
-          'Uncommon': '1 in 16.3',
-          'Rare': '1 in 83.3',
-          'Super Rare': '1 in 1,250',
-          'Legendary': '1 in 5,000',
-          'Mythical': '1 in 16,666.3',
-          'Secret Rare': '1 in 16,666.3'
-        }[dropChanceClass] || 'Unknown'})</td>
-      `;
-      dropTableBody.appendChild(dropRow);
-    });
-
-    // Insert drop table into subRow
-    subRowCell.appendChild(dropTable);
-    subRow.appendChild(subRowCell);
-
-    // Add click listener to toggle subRow display
-    mainRow.addEventListener('click', () => {
-      // Toggle the display of the subRow
-      if (subRow.style.display === 'table-row') {
-        subRow.style.display = 'none';
-      } else {
-        subRow.style.display = 'table-row';
-      }
-    });
-
-    // Append the mainRow and subRow to the table
-    tbody.appendChild(mainRow);
-    tbody.appendChild(subRow);
-  });
-}
-
-/**
- * Parse the mini CSV that’s in the "Drops" column, 
- * where each drop is separated by '/', and each field is separated by ','.
- */
-function parseDrops(dropsString) {
-  // Remove surrounding quotes if present
-  let cleaned = dropsString.trim();
-  if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
-    cleaned = cleaned.slice(1, -1);
-  }
-
-  // Each drop row is separated by '/', e.g. "Bones,1,1,Always/Feathers,1,3,Always/..."
-  const dropRows = cleaned.split('/');
-
-  const dropsArray = dropRows.map(dropRow => {
-    // split by comma
-    return dropRow.split(',').map(item => item.trim());
-  });
-  return dropsArray;
-}
-
-// Once the page is loaded, run our populate function
-document.addEventListener('DOMContentLoaded', populateTable);
-
-</script>
-</body>
-</html>
+Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,Very Fast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Un
