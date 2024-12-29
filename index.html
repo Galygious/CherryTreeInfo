@@ -6,7 +6,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Merged Expandable Table with Proper Asc/Dsc Sorting & Searching</title>
+  <title>God Drops Integration with Expandable Table & Sorting</title>
   <style>
     /* General Table Styles */
     body {
@@ -84,6 +84,7 @@
       background-color: #2C2C2C; 
       color: #FFFFFF;
       border-radius: 4px;
+      margin-bottom: 20px;
     }
     .drop-table th, .drop-table td {
       padding: 8px;
@@ -116,16 +117,16 @@
   </style>
 </head>
 <body>
-  <h1>Enemy Data with Expandable Drops & Correct Asc/Dsc Sorting</h1>
+  <h1>God Drops Integration Example</h1>
 
   <div id="searchContainer">
     <input type="text" id="searchInput" placeholder="Search enemy name..." />
   </div>
 
   <!-- 
-      IMPORTANT: We skip displaying column #10 (Drops) in the main table,
-      because those details go into the subtable.
-      So the main table columns match indexes in the data array as follows:
+      We skip the "Drops" column (CSV index #10) in the main table 
+      because it’s displayed in a subtable row. 
+      Indices: 
         0  => Enemy Name
         1  => Icon
         2  => Health
@@ -136,7 +137,7 @@
         7  => Slayer Exp
         8  => Weakness
         9  => Slayer Level
-        10 => (Drops) => Shown in subtable only
+        10 => Drops (subtable only)
         11 => Area
         12 => Scroll Drop %
         13 => Kills
@@ -166,105 +167,65 @@
 
   <script>
     /*
-      Corrected indexing for "Scroll Drop %" so that it sorts numerically
-      (removing the '%' part). Also we skip column #10 (Drops) in the main table
-      because it’s displayed as a subtable on row click.
+      1) CSV data for normal enemies (including "Gods" with no built-in drops).
+      2) Additional "God-only" drop data in Java-like structures, converted to JavaScript. 
+         If the enemy name is one of the “allGods,” 
+         we’ll show an additional sub-subtable with God-exclusive drops.
     */
 
-    // CSV columns:
-    //  0:  Enemy Name
-    //  1:  Enemy Icon
-    //  2:  Health
-    //  3:  Attack
-    //  4:  Strength
-    //  5:  Defence
-    //  6:  Attack Speed
-    //  7:  Slayer Exp
-    //  8:  Weakness
-    //  9:  Slayer Level
-    // 10:  Drops (not shown in main table)
-    // 11:  Area
-    // 12:  Scroll Drop %
-    // 13:  Kills
+    // God data (converted to JavaScript form)
+    const allGods = [
+      "Amaran", "Aurial", "Cognium", "Copina", 
+      "Feroxi", "Kynosian", "Noctyra", "Opulina"
+    ];
 
+    // For each god, an array of drop names
+    const allGodDrops = [
+      ["Shield of Amaran", "Ring of Life", "Necklace of Defence", "Necklace of Health", "Queens Armour Fragment", "Kings Armour Fragment", "Invincibility Potion", "Rock Skin Potion", "Dragon Platter", "Iridium Ore"],
+      ["Scythe of Aurial", "Scythe of Demeter", "Restoration Fragment 2", "Magic Watering Can", "Farm Chest", "Farm Key", "Wine", "Eggplant", "Fruit Salad", "Lemon"],
+      ["Sword of Cognium", "Ring of Speed", "Ring Fragments", "Sextant", "Steel Bar", "Cog", "Iron Ore"],
+      ["Rod of Copina", "Knife of Copina", "Rabbits Foot", "Eagles Nest", "Book of Aroon", "Stone Tablet", "Ginkgo Log", "Shark", "Marlin", "Chestnut Log", "Large Fishing Net", "Rhodium Ore"],
+      ["Shield of Feroxi", "Gloves of Feroxi", "Berserker Ring", "Extreme Power Stone", "Necklace of Strength", "Kings Weapon Fragment", "Queens Weapon Fragment", "Ultimate Power Potion", "Super Power Stone", "Tooth Necklace", "Super Power Potion", "Power Potion"],
+      ["Quiver of Kynosian", "Kynosian Boots", "Kynosian Gloves", "Kynosian Arrows", "Elven Bow", "Elven Arrows", "Kings Bow", "Kings Arrows", "Queens Bow", "Queens Arrows", "Ginkgo Headless Arrows", "Ginkgo Arrow Shafts"],
+      ["Mystic Staff", "Death Princess Rune", "Ancient Elven Book", "Ring of Death", "Book of Death", "Soul Gem", "Liquid Death Potion", "Dragon Skull", "Insta Kill Potion", "Big Dragon Bones", "Dragon Bones", "Bones"],
+      ["Opulinas Robe Bottoms", "Gold Coin", "Gold Coin", "Golden Touch Potion", "Gold Coin", "Golden Scarab", "Pot of Gold", "Treasure Map", "Gold Coin", "Gold Bar", "Gold Feather", "Gold Ore"]
+    ];
+
+    // For each god, an array of "min,max" strings
+    const allGodDropAmounts = [
+      ["1,1", "1,1", "1,1", "1,1", "4,5", "2,3", "1,3", "2,5", "15,25", "10,20"],
+      ["1,1", "1,1", "1,1", "1,1", "2,3", "2,3", "15,20", "10,15", "15,20", "15,20"],
+      ["1,1", "1,1", "1,2", "3,5", "15,20", "5,10", "20,30"],
+      ["1,1", "1,1", "1,1", "2,3", "4,5", "4,5", "20,25", "40,50", "50,60", "25,40", "5,10", "15,25"],
+      ["1,1", "1,1", "1,1", "1,2", "1,1", "2,3", "3,4", "2,5", "2,5", "3,5", "5,10", "10,15"],
+      ["1,1", "1,1", "1,1", "2,5", "1,1", "5,10", "1,1", "15,20", "1,1", "20,30", "25,40", "40,60"],
+      ["1,1", "1,1", "1,1", "1,1", "1,1", "1,1", "5,10", "5,10", "10,15", "15,20", "20,25", "30,40"],
+      ["1,1", "100,100", "25,25", "2,5", "15,15", "5,10", "5,10", "5,10", "5,5", "15,20", "25,30", "30,40"]
+    ];
+
+    // For each god, an array of "long" drop rates
+    // (representing rarity or approximate 1 in X chance)
+    const allGodDropRates = [
+      [1, 4, 14, 24, 144, 384, 984, 2984, 7984, 17984],
+      [1, 3, 5, 13, 163, 313, 1313, 4313, 10313, 20313],
+      [1, 4, 19, 519, 3019, 8019, 18019],
+      [1, 2, 6, 106, 256, 406, 906, 1706, 4206, 8206, 14206, 24206],
+      [1, 2, 5, 11, 17, 67, 187, 937, 1937, 3937, 8937, 18937],
+      [1, 2, 3, 9, 24, 54, 204, 454, 954, 1704, 9204, 19204],
+      [1, 3, 6, 11, 16, 22, 522, 1272, 2772, 5772, 10772, 20772],
+      [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
+    ];
+
+    // CSV Data
     const csvData = `
 Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop %,Kills
-Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm,0.0006%,155340
-Crow,R.drawable.enemy_crow_01,20,5,4,5,Medium,12,Archery,1,"Bones,1,1,Always/Feathers,3,6,Always/Evergreen Arrow Shafts,5,10,Uncommon/Egg,1,1,Uncommon/Thread,1,3,Common/Coins,2,10,Uncommon/Birds Nest,1,2,Uncommon/Common Chest,1,1,Rare/Raw Shrimp,1,1,Uncommon",Farm,0.0007%,146789
-Rat,R.drawable.enemy_rat_01,30,5,10,8,Medium,13,Melee,1,"Bones,1,1,Always/Coins,1,5,Uncommon/Stone Arrowheads,5,10,Uncommon/Common Chest,1,1,Rare/Thread,2,5,Common/Raw Shrimp,1,1,Uncommon/Emerald,1,1,Super Rare",Farm,0.0007%,141593
-Sheep,R.drawable.enemy_sheep_01,50,10,15,15,Slow,15,Melee,1,"Bones,1,1,Always/Coins,5,10,Uncommon/Wool,1,1,Common/Akomeric,1,1,Rare/Common Chest,1,1,Rare/Thread,2,6,Common/Raw Snail,1,1,Uncommon/Raw Shrimp,1,1,Common",Farm,0.0008%,130082
-Goat,R.drawable.enemy_goat_01,75,10,25,15,Slow,16,Melee,1,"Bones,1,1,Always/Milk,1,1,Uncommon/Oak Arrow Shafts,15,30,Rare/Coins,5,10,Uncommon/Common Chest,1,1,Rare/Thread,5,10,Common/Raw Carp,1,1,Uncommon",Farm,0.0008%,122138
-Pig,R.drawable.enemy_pig_01,100,15,15,25,Medium,18,Melee,1,"Bones,1,1,Always/Bacon,1,1,Common/Coins,10,20,Uncommon/Common Chest,1,1,Rare/Raw Minnows,1,1,Uncommon/Emerald,1,1,Super Rare",Farm,0.0009%,115108
-Ox,R.drawable.enemy_ox_01,150,25,30,40,Slow,22,Melee,1,"Bones,1,1,Always/Milk,1,1,Common/Coins,20,40,Common/Hide,1,1,Common/Common Chest,1,1,Uncommon/Thread,10,15,Common/Raw Perch,1,1,Uncommon",Farm,0.0010%,99379
-Young Goblin,R.drawable.enemy_goblin_01,35,10,15,5,Medium,13,Archery,1,"Bones,1,1,Always/Coins,5,10,Common/Evergreen Bow,1,1,Rare/Akomeric,1,1,Uncommon/Bloodroot,1,1,Rare/Hyssop,1,1,Rare/Red Chest,1,1,Super Rare/Oak,1,3,Common",Abandoned Village,0.0007%,137932
-Goblin Grump,R.drawable.enemy_goblin_02,75,15,15,10,Medium,16,Melee,1,"Bones,1,1,Always/Coins,5,10,Common/Copper Arrowheads,5,10,Rare/Akomeric,1,1,Uncommon/Bloodroot,1,1,Rare/Hyssop,1,1,Rare/Hide,1,1,Common/Red Chest,1,1,Super Rare",Abandoned Village,0.0008%,124032
-Goblin Guard,R.drawable.enemy_goblin_03,135,25,20,35,Medium,21,Melee,1,"Bones,1,1,Always/Coins,10,15,Common/Oak Bow,1,1,Rare/Red Chest,1,1,Rare/Wood,1,1,Common/Iron Ore,1,1,Common/Bloodroot,1,1,Common/Akomeric,1,1,Common",Abandoned Village,0.0010%,103897
-Goblin Chief,R.drawable.enemy_goblin_04,225,45,60,50,Fast,29,Archery,1,"Bones,1,1,Always/Coins,20,30,Common/Red Chest,1,1,Rare/Goblin Cleaver,1,1,Legendary/Bloodroot,1,1,Common/Akomeric,1,1,Common/Hyssop,1,1,Common/Ancient Rod,1,1,Secret Rare",Abandoned Village,0.0012%,82052
-Jin,R.drawable.enemy_jin,375,70,65,70,VeryFast,39,Melee,1,"Bones,1,1,Always/Coins,50,100,Uncommon/Maple Bow,1,1,Rare/Red Chest,1,1,Uncommon/Raw Crab,1,1,Rare/Raw Lobster,1,1,Rare/Empty Vial,5,10,Common/Oak,3,5,Common/Cauldron,1,1,Secret Rare",Abandoned Village,0.0015%,65307
-Red Ghoul,R.drawable.enemy_red_ghoul_01,600,80,90,85,VeryFast,53,Archery,1,"Bones,1,1,Always/Coins,60,100,Uncommon/Red Chest,1,1,Uncommon/Raw Crab,1,1,Uncommon/Raw Lobster,1,1,Rare/Emerald,1,1,Super Rare",Abandoned Village,0.0020%,50956
-Grey Wolf,R.drawable.enemy_greywolf_02,90,35,50,40,Fast,21,Melee,1,"Bones,1,1,Always/Akomeric,1,1,Always/Hide,1,5,Uncommon/Leather,1,2,Rare/Iron Ore,1,1,Uncommon/Emerald,1,1,Super Rare",Caves,0.0010%,103897
-Cyclops,R.drawable.enemy_cyclop_01,150,60,75,70,Slow,28,Archery,1,"Bones,1,1,Always/Akomeric,1,1,Always/Maple Log,1,1,Uncommon/Bloodroot,1,1,Uncommon/Stone,1,3,Uncommon/Wood,2,5,Uncommon/Rope,1,3,Rare/Mithril Boots,1,1,Super Rare/Mithril Ore,1,5,Rare",Caves,0.0012%,84657
-Cave Demon,R.drawable.enemy_demon_06,300,75,65,60,Medium,35,Melee,1,"Bones,1,1,Always/Empty Vial,1,3,Common/Fir Bow,1,1,Rare/Nails,1,5,Uncommon/Bloodroot,1,1,Uncommon/Fishing Potion,1,1,Rare/Honey,1,1,Uncommon",Caves,0.0014%,71112
-Banshee,R.drawable.enemy_banshee,450,75,80,70,Fast,44,Archery,1,"Bones,1,1,Always/Empty Vial,1,3,Common/Strength Potion,1,1,Uncommon/Mithril Top,1,1,Super Rare/Mithril Greaves,1,1,Super Rare/Mithril Boots,1,1,Super Rare/Safflower,1,1,Rare",Caves,0.0017%,59480
-Cave Beast,R.drawable.enemy_beest_02,675,80,80,80,Fast,56,Melee,1,"Bones,1,1,Always/Tooth Necklace,1,1,Rare/Empty Vial,1,3,Common/Hyssop,1,1,Common/Safflower,1,1,Uncommon/Hide,1,10,Uncommon/Raw Catfish,1,5,Rare/Large Fishing Net,1,1,Super Rare/Fishing Net,3,5,Rare",Caves,0.0021%,48633
-Giant Cave Spider,R.drawable.enemy_spider_01,1000,90,95,85,VeryFast,74,Archery,1,"Bones,1,1,Always/Stone Tablet,1,1,Legendary/Hide,5,10,Uncommon/Thread,10,20,Uncommon/Leather,1,5,Rare/Rope,5,10,Super Rare/Wolfmint,1,1,Super Rare/Vissinel,1,1,Super Rare/Coins,200,500,Rare",Caves,0.0026%,38278
-Wild Dog,R.drawable.enemy_dog_01,180,50,65,55,Fast,28,Melee,1,"Bones,1,1,Always/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Iron Ore,1,5,Uncommon/Wood,1,3,Common/Emerald,1,1,Super Rare",GreatPlains,0.0012%,85107
-Crocodile,R.drawable.enemy_crocodile_01,360,65,70,50,Slow,37,Archery,1,"Bones,1,1,Always/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Cog,1,1,Common/Thread,5,10,Common/Hide,1,5,Uncommon/Fishing Net,1,3,Rare",GreatPlains,0.0015%,67797
-Lion,R.drawable.enemy_lion_01,570,70,75,60,Fast,49,Melee,1,"Bones,1,1,Always/Ram Skull,1,1,Super Rare/Fir Log,1,1,Uncommon/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Thread,5,10,Common/Yarn,1,5,Uncommon/Emerald,1,1,Rare",GreatPlains,0.0018%,54422
-Brown Bear,R.drawable.enemy_bear_01,750,80,90,85,Slow,60,Melee,1,"Bones,1,1,Always/Ram Skull,1,1,Super Rare/Honey,1,1,Common/Nefrit Chest,1,1,Rare/Nefrit Key,1,1,Rare/Coins,200,500,Rare/Pot of Gold,1,1,Rare/Thread,10,20,Uncommon/Yarn,5,10,Common",GreatPlains,0.0022%,45585
-Skeletal Bear,R.drawable.enemy_bear,1200,95,120,100,Slow,86,Melee,1,"Bones,1,1,Always/Gold Ring,1,1,Legendary/Rhodium Ore,1,1,Super Rare/Nefrit Chest,1,1,Uncommon/Nefrit Key,1,1,Uncommon/Coins,500,1000,Rare/Thread,20,50,Rare/Oak,5,10,Common",GreatPlains,0.0030%,33403
-Baby Red Dragon,R.drawable.enemy_dragon_10,999,120,120,120,Medium,68,Archery,1,"Dragon Bones,1,1,Always/Dragon Leather,1,1,Rare/Dragon Skull,1,1,Legendary/Crystal Chest,1,1,Super Rare/Dragon Ore,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",DragonIsland,0.0024%,41026
-Baby Blue Dragon,R.drawable.enemy_dragon_11,1000,150,150,130,Medium,82,Archery,1,"Dragon Bones,1,1,Always/Dragon Leather,1,1,Rare/Dragon Skull,1,1,Legendary/Crystal Key,1,1,Super Rare/Dragon Ore,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",DragonIsland,0.0029%,34935
-Undead Dragon,R.drawable.enemy_dragon_08,1600,180,220,140,Fast,117,Archery,1,"Dragon Bones,1,1,Always/Dragon Leather,1,1,Uncommon/Dragon Skull,1,1,Legendary/Crystal Chest,1,1,Super Rare/Dragon Ore,1,2,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",DragonIsland,0.0040%,25197
-Ancient Dragon,R.drawable.enemy_dragon_07,2800,200,280,300,Fast,192,Archery,1,"Dragon Bones,1,1,Always/Dragon Arrowheads,15,25,Rare/Dragon Leather,1,1,Uncommon/Dragon Skull,1,1,Legendary/Golden Necklace,1,1,Legendary/Crystal Key,1,1,Super Rare/Dragon Ore,1,2,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,1000,2500,Rare",DragonIsland,0.0063%,15874
-Green Dragon,R.drawable.enemy_dragon_04,4000,300,350,240,Fast,255,Archery,1,"Dragon Bones,1,1,Always/Dragon Leather,1,2,Uncommon/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Necklace,1,1,Legendary/Crystal Chest,1,1,Rare/Dragon Ore,1,2,Super Rare/Dragon Wing Battleaxe,1,1,Legendary/Dragon Scimitar,1,1,Super Rare/Coins,1000,2500,Rare",DragonIsland,0.0083%,12094
-Water Dragon,R.drawable.enemy_dragon_05,5200,350,350,300,VeryFast,320,Archery,1,"Dragon Bones,1,1,Always/Dragon Leather,1,2,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Crystal Key,1,1,Rare/Dragon Ore,1,1,Rare/Trident of the Seas,1,1,Legendary/Dragon Wing Battleaxe,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,2500,5000,Rare",DragonIsland,0.0103%,9697
-King Dragon,R.drawable.enemy_dragon_01,8000,1000,450,450,VeryFast,475,Archery,1,"Big Dragon Bones,1,1,Always/Dragon Leather,2,5,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Crystal Key,1,1,Rare/Dragon Ore,1,2,Rare/Dragon Wing Battleaxe,1,1,Super Rare/Dragon Scimitar,1,1,Rare/Coins,5000,10000,Rare/Kings Chest,1,1,Mythical/Kings Key,1,1,Mythical",DragonIsland,0.0152%,6598
-Dragon Queen,R.drawable.enemy_dragon_06,15000,999,750,2000,VeryFast,938,Archery,1,"Big Dragon Bones,1,2,Always/Dragon Leather,5,10,Common/Dragon Skull,1,1,Super Rare/Dragon Tail,1,1,Super Rare/Golden Scarab,1,1,Super Rare/Queens Chest,1,1,Mythical/Queens Key,1,1,Mythical/Dragon Ore,2,5,Rare/Dragon Scimitar,1,1,Rare/Coins,5000,10000,Rare",DragonIsland,0.0296%,3377
-Elite Chicken,R.drawable.enemy_chicken_01,10000,300,300,200,Fast,550,Melee,1,"Bones,5,5,Always/Coins,1000,2500,Always/Cedar Log,1,1,Rare/Feathers,10,30,Always/Egg,5,10,Uncommon/Chicken Knife,1,1,Legendary/Farm Chest,1,1,Legendary/Farmour Fragment,1,1,Legendary",EliteFarm,0.0175%,5715
-Elite Crow,R.drawable.enemy_crow_01,15000,500,1000,300,Fast,820,Archery,1,"Bones,5,5,Always/Coins,1500,2500,Always/Feathers,5,10,Always/Egg,1,3,Uncommon/Thread,5,10,Common/Birds Nest,2,5,Uncommon/Farm Key,1,1,Legendary/Dagger Fragment,1,1,Mythical",EliteFarm,0.0259%,3856
-Elite Rat,R.drawable.enemy_rat_01,20000,1000,450,200,Fast,1063,Melee,1,"Bones,5,5,Always/Coins,2000,3000,Always/Platinum Ore,1,1,Rare/Emerald,1,3,Rare/Farm Chest,1,1,Super Rare/Farmour Fragment,1,2,Legendary",EliteFarm,0.0335%,2984
-Elite Sheep,R.drawable.enemy_sheep_01,25000,600,600,1000,Fast,1340,Melee,1,"Bones,5,5,Always/Coins,2500,3000,Always/Wool,2,5,Common/Farm Key,1,1,Super Rare/Dagger Fragment,1,3,Mythical",EliteFarm,0.0422%,2371
-Elite Goat,R.drawable.enemy_goat_01,30000,750,750,600,VeryFast,1615,Melee,1,"Bones,5,5,Always/Coins,3000,4000,Always/Cedar Bow,1,1,Super Rare/Milk,2,5,Uncommon/Farm Chest,1,1,Rare/Farmour Fragment,1,3,Legendary",EliteFarm,0.0508%,1970
-Elite Pig,R.drawable.enemy_pig_01,50000,900,900,750,VeryFast,2638,Melee,1,"Bones,5,5,Always/Coins,3500,4500,Always/Bacon,2,5,Common/Farm Key,1,1,Rare/Dagger Fragment,2,5,Mythical",EliteFarm,0.0827%,1209
-Elite Ox,R.drawable.enemy_ox_01,75000,1200,1200,1000,VeryFast,3930,Melee,1,"Bones,5,5,Always/Coins,4000,5000,Always/Hide,2,5,Common/Ginkgo Bow,1,1,Legendary/Ginkgo Log,1,1,Uncommon/Farm Chest,1,2,Rare/Farm Key,1,2,Rare/Farmour Fragment,2,5,Legendary/Dagger Fragment,1,1,Legendary",EliteFarm,0.1231%,813
-Training Dummy,R.drawable.enemy_dummy_01,35,10,10,10,Slow,13,Melee,10,"Wood,1,1,Always/Hide,1,1,Uncommon/Redwood Log,1,1,Super Rare/Thread,1,3,Common/Common Key,1,1,Rare/Oak,1,3,Uncommon/Iron Ore,1,3,Uncommon",SlayerDungeon,0.0007%,137932
-Ghost,R.drawable.enemy_ghost_01,75,30,25,20,Medium,18,Melee,20,"Akomeric,1,1,Common/Mushroom,1,1,Common/Stone,1,5,Common/Common Key,1,1,Rare/Common Chest,1,1,Rare",SlayerDungeon,0.0009%,115943
-Phoenix,R.drawable.enemy_phoenix_01,100,50,60,50,Fast,31,Archery,30,"Bones,1,1,Always/Bloodroot,1,1,Common/Red Chest,1,1,Rare/Red Key,1,1,Rare/Thread,10,20,Common/Yarn,1,5,Common/Ruby,1,1,Rare/Gold Ore,1,1,Legendary/Sextant,1,1,Super Rare/Mystery Egg,1,1,Secret Rare",SlayerDungeon,0.0013%,78818
-Nightmare,R.drawable.enemy_nightmare_01,200,60,70,75,Fast,40,Archery,45,"Hyssop,1,1,Common/Red Key,1,1,Rare/Red Chest,1,1,Rare/Book of Aroon,1,1,Legendary/Thread,25,50,Rare/Hide,10,25,Uncommon/Iron Ore,1,3,Common",SlayerDungeon,0.0016%,63746
-Orc Captain,R.drawable.enemy_orc_05,600,70,80,75,Fast,51,Melee,60,"Bones,1,1,Always/Thread,10,25,Common/Sage Leaf,1,5,Common/Wood,10,20,Uncommon/Mithril Ore,5,10,Rare/Iron Ore,10,25,Rare/Barbarian Boots,1,1,Legendary/Barbarian Gloves,1,1,Legendary/Barbarian Top,1,1,Legendary/Barbarian Helm,1,1,Legendary/Barbarian Greaves,1,1,Legendary/Barbarian Cape,1,1,Legendary",SlayerDungeon,0.0019%,52288
-Cobra,R.drawable.enemy_snake_01,750,80,90,85,VeryFast,60,Melee,65,"Bones,1,1,Always/Safflower,1,1,Common/Sunburst Flower,1,1,Super Rare/Spiked Chest,1,1,Rare/Spiked Key,1,1,Rare/Hide,10,25,Uncommon/Mithril Ore,1,5,Rare/Iron Ore,10,25,Common/Yarn,5,10,Rare/Emerald,1,1,Rare",SlayerDungeon,0.0022%,45585
-Skeletal Hound,R.drawable.enemy_hound,1500,140,160,120,Fast,106,Melee,75,"Bones,1,1,Always/Sage Leaf,1,1,Common/Redwood Bow,1,1,Super Rare/Mithril Ore,5,10,Uncommon/Rope,5,10,Uncommon/Cog,1,1,Rare/Iron Ore,5,10,Common/Blue Silk,15,20,Super Rare",SlayerDungeon,0.0036%,27587
-Necromancer,R.drawable.enemy_skeleton_05,2500,200,250,200,Fast,168,Melee,85,"Bones,1,5,Always/Thread,10,15,Common/Vissinel,1,1,Common/Wood,10,20,Uncommon/Mithril Ore,5,10,Rare/Iron Ore,10,20,Rare/Necromancer Boots,1,1,Legendary/Necromancer Gloves,1,1,Legendary/Necromancer Top,1,1,Legendary/Necromancer Helm,1,1,Legendary/Necromancer Greaves,1,1,Legendary/Necromancer Cape,1,1,Legendary",SlayerDungeon,0.0056%,18019
-Fluffy,R.drawable.enemy_spider_03,5000,250,300,350,VeryFast,305,Archery,90,"Bones,1,1,Always/Wolfmint,1,1,Common/Ember Fern,1,1,Super Rare/Chestnut Log,1,1,Rare/Crystal Chest,1,2,Super Rare/Thread,25,50,Uncommon/Rope,10,15,Rare/Yarn,5,10,Rare/Gold Ring,1,1,Legendary/Iron Ore,10,20,Common",SlayerDungeon,0.0098%,10159
-Blue Devil,R.drawable.enemy_tentacle_01,8000,350,500,1000,Fast,473,Archery,95,"Bones,1,1,Always/Vissinel,1,1,Always/Crystal Key,1,1,Rare/Chestnut Bow,1,1,Super Rare/Stone Tablet,1,1,Legendary/Gold Ring,1,1,Legendary/Thread,50,100,Uncommon/Rope,15,20,Rare/Blue Thread,1,1,Common",SlayerDungeon,0.0151%,6631
-Ancient Tribal Leader,R.drawable.enemy_mask_01,12000,600,999,850,VeryFast,723,Melee,99,"Bones,5,5,Always/Vissinel,3,5,Always/Crystal Chest,1,3,Rare/Ancient Dagger,1,1,Mythical/Blue Thread,3,5,Common/Blue Silk,1,3,Uncommon/Coin Purse,1,1,Super Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare",SlayerDungeon,0.0229%,4369
-Dummy Queen,R.drawable.enemy_doll_01,50000,2000,999,850,VeryFast,2693,Melee,1,"Coins,100,200,Always/Queens Chest,1,1,Super Rare/Wood,10,20,Always/Hide,10,20,Uncommon/Thread,10,30,Common/Queens Armour Fragment,1,1,Legendary",RealmoftheKings,0.0845%,1185
-Scarab Queen,R.drawable.enemy_bug,75000,2400,1400,1000,VeryFast,4000,Archery,1,"Coins,150,250,Always/Queens Key,1,1,Super Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare/Queens Armour Fragment,1,2,Legendary/Golden Scarab,1,1,Super Rare",RealmoftheKings,0.1253%,799
-Spider Queen,R.drawable.enemy_spider_02,100000,3000,2000,1500,VeryFast,5335,Archery,1,"Coins,250,500,Always/Queens Chest,1,1,Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare/Wolfmint,1,1,Common/Ember Fern,1,1,Rare/Thread,50,100,Uncommon/Gold Ring,1,1,Legendary/Queens Armour Fragment,1,3,Legendary",RealmoftheKings,0.1670%,599
-Undead Dragon Queen,R.drawable.enemy_dragon_13,150000,3750,2400,1700,Insane,7903,Archery,1,"Coins,500,750,Always/Queens Key,1,1,Rare/Big Dragon Bones,2,3,Always/Dragon Leather,2,5,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Queens Weapon Fragment,1,1,Legendary",RealmoftheKings,0.2473%,405
-Bone King,R.drawable.enemy_bone_beast,200000,5000,3600,2500,VeryFast,10565,Melee,1,"Sunburst Flower,1,1,Always/Coins,750,1000,Always/Kings Chest,1,1,Super Rare/Kings Armour Fragment,1,1,Legendary",RealmoftheKings,0.3305%,303
-Skeletal King,R.drawable.enemy_skeleton_04,250000,7500,4800,3800,VeryFast,13315,Melee,1,"Sunburst Flower,1,1,Always/Coins,1000,1500,Always/Kings Key,1,1,Super Rare/Kings Armour Fragment,1,2,Legendary",RealmoftheKings,0.4164%,241
-Living Armour King,R.drawable.enemy_living_armor_03,300000,10000,6000,5000,VeryFast,16060,Melee,1,"Ember Fern,1,1,Always/Coins,2000,3000,Always/Kings Chest,1,1,Rare/Kings Armour Fragment,1,3,Legendary",RealmoftheKings,0.5022%,200
-Orc King,R.drawable.enemy_orc_04,400000,15000,7200,8500,Insane,21545,Archery,1,"Ember Fern,1,1,Always/Coins,3000,5000,Always/Kings Key,1,1,Rare/Kings Weapon Fragment,1,1,Legendary",RealmoftheKings,0.6736%,149
-Elven Fairy,R.drawable.enemy_elvenfairy,100000,8000,6000,10000,Fast,6210,Archery,1,"Coins,8000,10000,Always/Elven Armour Fragment,1,1,Legendary/Blue Silk,5,10,Common/Compass,1,1,Rare/Treasure Map,1,1,Rare/Extreme Power Potion,1,1,Rare/Safflower,1,3,Uncommon/Dragon Tail,1,3,Legendary/Elven Crystal,1,1,Rare",ImmortalRealm,0.1944%,515
-Elven Warrior,R.drawable.enemy_elvenwarrior,150000,9000,8000,12000,Fast,8960,Archery,1,"Coins,10000,15000,Always/Elven Weapon Fragment,1,1,Legendary/Compass,1,3,Rare/Sunburst Flower,1,3,Uncommon/Dragon Skull,1,3,Legendary/Raw Ray,1,1,Common/Pirates Hat,1,1,Super Rare/Elven Crystal,1,3,Rare",ImmortalRealm,0.2803%,357
-Elven Archer,R.drawable.enemy_elvenarcher,300000,12000,10000,14000,VeryFast,16810,Melee,1,"Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",ImmortalRealm,0.5256%,191
-Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,VeryFast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Uncommon/Dragon Leather,15,20,Super Rare/Raw Octopus,1,1,Common/Dragon Ore,1,3,Super Rare/Dragon Platter,1,1,Rare/Elven Crystal,1,3,Uncommon",ImmortalRealm,0.6975%,144
-Elven King,R.drawable.enemy_elvenking,600000,24000,25000,18000,Insane,33360,Melee,1,"Coins,30000,50000,Always/Elven Armour Fragment,1,2,Uncommon/Ember Fern,3,5,Uncommon/Dragon Tail,5,10,Legendary/Dragon Ore,3,5,Super Rare/Golden Scarab,3,5,Super Rare/Dragon Platter,3,5,Rare/Elven Crystal,1,1,Common",ImmortalRealm,1.0428%,96
-Elven Queen,R.drawable.enemy_elvenqueen,750000,30000,40000,25000,Insane,42260,Melee,1,"Coins,50000,100000,Always/Elven Weapon Fragment,1,2,Uncommon/Ember Fern,15,20,Uncommon/Dragon Skull,5,10,Legendary/Queens Weapon Fragment,1,1,Super Rare/Queens Armour Fragment,1,1,Super Rare/Dragon Platter,5,10,Uncommon/Elven Crystal,1,3,Common",ImmortalRealm,1.3209%,76
-Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,VeryFast,371885,None,1,"Gold Coin,5,10,Always",KingdomoftheGods,11.6217%,9
+Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon",Farm,0.0006%,155340
 Aurial,R.drawable.enemy_aurial,4000000,60000,225000,36000,Fast,216060,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,6.7522%,15
-Cognium,R.drawable.enemy_cognium,8000000,80000,450000,54000,Insane,329210,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,10.2881%,10
-Copina,R.drawable.enemy_copina,9000000,60000,225000,40500,Fast,266285,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,8.3217%,13
+Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,VeryFast,371885,None,1,"Gold Coin,5,10,Always",KingdomoftheGods,11.6217%,9
 Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,11.2748%,9
-Kynosian,R.drawable.enemy_kynosian,9000000,80000,525000,36000,Insane,282060,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,8.8147%,12
-Noctyra,R.drawable.enemy_noctyra,8000000,100000,562500,67500,Insane,336510,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,10.1788%,10
-Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,7.6217%,14
 `.trim();
 
     let currentData = [];
-    // Track the sort direction for each column
     let sortDirections = {};
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -275,10 +236,10 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       populateTable(currentData);
     });
 
-    // Parse CSV with quotes
+    // Parse CSV
     function parseCsv(csvString) {
       const lines = csvString.split('\n');
-      lines[0]; // headers row (unused in table, but kept for reference)
+      lines[0]; // headers row (unused for display, but kept for reference)
       const dataRows = lines.slice(1);
 
       const data = dataRows.map((row) => splitByCsvRules(row));
@@ -304,26 +265,27 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       return result;
     }
 
+    // Build the table
     function populateTable(dataArray) {
       const tbody = document.querySelector('#enemyTable tbody');
       tbody.innerHTML = '';
 
       dataArray.forEach(row => {
         const [
-          enemyName,          // 0
-          enemyIcon,          // 1
-          enemyHealth,        // 2
-          enemyAttack,        // 3
-          enemyStrength,      // 4
-          enemyDefence,       // 5
-          enemyAttackSpeed,   // 6
-          enemySlayerExp,     // 7
-          enemyWeakness,      // 8
-          enemySlayerLevel,   // 9
-          dropsString,        // 10 (subtable)
-          enemyArea,          // 11
-          scrollChance,       // 12
-          kills               // 13
+          enemyName,
+          enemyIcon,
+          enemyHealth,
+          enemyAttack,
+          enemyStrength,
+          enemyDefence,
+          enemyAttackSpeed,
+          enemySlayerExp,
+          enemyWeakness,
+          enemySlayerLevel,
+          dropsString,
+          enemyArea,
+          scrollChance,
+          kills
         ] = row;
 
         // Main row
@@ -345,14 +307,13 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           <td>${kills}</td>
         `;
 
-        // Sub-row for drops
+        // Subtable row
         const subRow = document.createElement('tr');
         subRow.classList.add('subtable');
         const subRowCell = document.createElement('td');
-        // We have 13 displayed columns, so:
-        subRowCell.colSpan = 13;
+        subRowCell.colSpan = 13; // We have 13 displayed columns
 
-        // Build the drops table
+        // Build the main drop table from CSV
         const dropTable = document.createElement('table');
         dropTable.className = 'drop-table';
         dropTable.innerHTML = `
@@ -366,47 +327,92 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           </thead>
           <tbody></tbody>
         `;
-
         const dropTableBody = dropTable.querySelector('tbody');
         const dropsArray = parseDrops(dropsString);
         dropsArray.forEach(drop => {
+          // CSV "Drops" is mini-CSV: name,min,max,class
           const [dropName, minQty, maxQty, dropClass] = drop;
-          const dropRate = getDropRate(dropClass); 
+          const dropRate = getDropRateLabel(dropClass); 
           const rowEl = document.createElement('tr');
           rowEl.innerHTML = `
             <td>${dropName}</td>
-            <td>${minQty}</td>
-            <td>${maxQty}</td>
-            <td>${dropClass} (${dropRate})</td>
+            <td>${minQty || 1}</td>
+            <td>${maxQty || 1}</td>
+            <td>${dropClass || "Unknown"} (${dropRate})</td>
           `;
           dropTableBody.appendChild(rowEl);
         });
 
+        // Check if this enemy is one of the gods
+        const godIndex = allGods.indexOf(enemyName);
+        // If found, add a separate table for "God-Exclusive" drops
+        if (godIndex !== -1) {
+          // Create a second table
+          const godTable = document.createElement('table');
+          godTable.className = 'drop-table';
+          godTable.innerHTML = `
+            <thead>
+              <tr>
+                <th>God-Exclusive Drop</th>
+                <th>Min Qty</th>
+                <th>Max Qty</th>
+                <th>Drop Rate (1 in X)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          `;
+          const godTableBody = godTable.querySelector('tbody');
+
+          const theseDrops = allGodDrops[godIndex];        // e.g. ["Shield of Amaran", "Ring of Life", ...]
+          const theseAmounts = allGodDropAmounts[godIndex]; // e.g. ["1,1", "1,1", ...]
+          const theseRates = allGodDropRates[godIndex];    // e.g. [1,4,14,24,...]
+
+          for (let i = 0; i < theseDrops.length; i++) {
+            const [minQ, maxQ] = theseAmounts[i].split(',');
+            const rateVal = theseRates[i];
+            const rowEl2 = document.createElement('tr');
+            rowEl2.innerHTML = `
+              <td>${theseDrops[i]}</td>
+              <td>${minQ}</td>
+              <td>${maxQ}</td>
+              <td>${rateVal}</td>
+            `;
+            godTableBody.appendChild(rowEl2);
+          }
+
+          // Append this second table
+          dropTable.insertAdjacentElement('afterend', godTable);
+        }
+
+        // Append the first table
         subRowCell.appendChild(dropTable);
         subRow.appendChild(subRowCell);
 
-        // Toggle subtable visibility
+        // Toggle subtable
         mainRow.addEventListener('click', () => {
           subRow.style.display = (subRow.style.display === 'table-row') ? 'none' : 'table-row';
         });
 
+        // Add rows
         tbody.appendChild(mainRow);
         tbody.appendChild(subRow);
       });
     }
 
-    // Helper to parse "Drops" mini-CSV
+    // Parse the mini CSV in "Drops" from the main CSV
     function parseDrops(dropsString) {
       let cleaned = dropsString.trim();
       if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         cleaned = cleaned.slice(1, -1);
       }
+      if (!cleaned) return []; // if empty
+      // Each drop separated by '/', each field separated by ','
       const dropRows = cleaned.split('/');
-      return dropRows.map(row => row.split(',').map(x => x.trim()));
+      return dropRows.map(r => r.split(',').map(x => x.trim()));
     }
 
-    // Approximate drop chances
-    function getDropRate(dropClass) {
+    // Just a mock mapping for standard drop classes
+    function getDropRateLabel(dropClass) {
       const map = {
         'Always': '1 in 1',
         'Common': '1 in 3.3',
@@ -443,7 +449,6 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       // Numeric columns:
       //  2 (Health), 3 (Attack), 4 (Strength), 5 (Defence), 7 (SlayerExp)
       //  9 (SlayerLevel), 12 (ScrollDrop%), 13 (Kills)
-      //  => parseFloat or special parse if colIndex=12 (strip "%")
       const numericCols = [2, 3, 4, 5, 7, 9, 12, 13];
 
       currentData.sort((a, b) => {
@@ -481,10 +486,11 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
         populateTable(filtered);
       });
     }
+
   </script>
 
   <footer>
-    <p>Expandable subtable, correct asc/dsc sorting (including scroll drop %), and searching — all client-side!</p>
+    <p>God-exclusive drops are merged into the subtable for enemies matching a name in "allGods". Sorting and searching remain intact.</p>
   </footer>
 </body>
 </html>
