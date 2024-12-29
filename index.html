@@ -641,15 +641,72 @@
       populateTable(currentData);
     }
 
+    // File: src/utils/search.js
     function initSearch() {
       const input = document.getElementById('searchInput');
+
+      // Helper function to calculate Levenshtein distance
+      function levenshteinDistance(a, b) {
+          const lenA = a.length;
+          const lenB = b.length;
+
+          // Create a 2D array to store distances
+          const dp = Array.from({ length: lenA + 1 }, () => Array(lenB + 1).fill(0));
+
+          for (let i = 0; i <= lenA; i++) {
+              for (let j = 0; j <= lenB; j++) {
+                  if (i === 0) {
+                      dp[i][j] = j; // Insertions needed
+                  } else if (j === 0) {
+                      dp[i][j] = i; // Deletions needed
+                  } else if (a[i - 1] === b[j - 1]) {
+                      dp[i][j] = dp[i - 1][j - 1]; // No cost if characters match
+                  } else {
+                      dp[i][j] = 1 + Math.min(
+                          dp[i - 1][j - 1], // Substitution
+                          dp[i - 1][j],     // Deletion
+                          dp[i][j - 1]      // Insertion
+                      );
+                  }
+              }
+          }
+
+          return dp[lenA][lenB];
+      }
+
       input.addEventListener('input', () => {
-        const val = input.value.toLowerCase();
-        const filtered = currentData.filter(row => {
-          if (row.length<14) return false; // skip partial
-          return row[0].toLowerCase().includes(val);
-        });
-        populateTable(filtered);
+          const val = input.value.toLowerCase();
+          const maxDistance = 1; // Set threshold for Levenshtein distance
+
+          let filtered;
+
+          if (val === "") {
+              // If input is empty, show all data
+              filtered = currentData;
+          } else {
+              filtered = currentData.filter(row => {
+                  if (row.length < 14) return false; // Skip partial rows
+
+                  const rowText = row[0].toLowerCase();
+
+                  // Check for direct substring match
+                  if (rowText.includes(val)) {
+                      return true;
+                  }
+
+                  // Check for fuzzy match using Levenshtein distance
+                  const distance = levenshteinDistance(rowText, val);
+                  if (distance <= maxDistance) {
+                      return true;
+                  }
+
+                  // Check for fuzzy match within individual words in the row
+                  const words = rowText.split(' ');
+                  return words.some(word => levenshteinDistance(word, val) <= maxDistance);
+              });
+          }
+
+          populateTable(filtered);
       });
     }
   </script>
