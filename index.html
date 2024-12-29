@@ -6,7 +6,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Merged Expandable Table with Sorting, Searching, Pagination, and Scroll Drop Chance</title>
+  <title>Merged Expandable Table with Sorting (Asc/Dsc) & Searching, No Pagination</title>
   <style>
     /* General Table Styles */
     body {
@@ -28,7 +28,6 @@
       text-align: center;
       margin: 20px 0;
     }
-
     #searchInput {
       padding: 8px;
       font-size: 14px;
@@ -106,26 +105,7 @@
       background-color: #272727; /* Hover effect */
     }
 
-    /* Pagination */
-    .pagination {
-      text-align: center;
-      margin: 20px auto;
-    }
-    .pagination button {
-      background-color: #2C2C2C;
-      color: #FFFFFF;
-      border: 1px solid #333;
-      margin: 2px;
-      padding: 6px 12px;
-      cursor: pointer;
-    }
-    .pagination button.active {
-      background-color: #666666;
-      font-weight: bold;
-    }
-    .pagination button:hover {
-      background-color: #444444;
-    }
+    /* (No Pagination - removed) */
 
     /* Footer Text */
     footer {
@@ -139,7 +119,7 @@
   </style>
 </head>
 <body>
-  <h1>Enemy Data with Expandable Drops & Scroll Drop Chance</h1>
+  <h1>Enemy Data with Expandable Drops, Sorting (Asc/Dsc), and Searching</h1>
 
   <div id="searchContainer">
     <input type="text" id="searchInput" placeholder="Search enemy name..." />
@@ -158,10 +138,9 @@
         <th data-sort-col="7">Slayer Exp</th>
         <th data-sort-col="8">Weakness</th>
         <th data-sort-col="9">Slayer Lvl</th>
-        <!-- The subtable (Drops) is not sorted by the same routine, so no data-sort-col -->
         <th>Area</th>
-        <th data-sort-col="12">Scroll Drop %</th>
-        <th data-sort-col="13">Kills</th>
+        <th data-sort-col="11">Scroll Drop %</th>
+        <th data-sort-col="12">Kills</th>
       </tr>
     </thead>
     <tbody>
@@ -169,43 +148,30 @@
     </tbody>
   </table>
 
-  <div class="pagination" id="pagination">
-    <!-- Pagination buttons get dynamically added here -->
-  </div>
-
   <script>
     /*
-      We’re combining two data sources here:
-        1) The main CSV data that includes enemy stats + drop tables.
-        2) The scroll drop chance data (with kill counts).
-
-      We'll merge them on "Enemy Name" before displaying in the table.
+      Removed pagination entirely; we will just display all rows at once.
+      Added toggling between ascending/descending sort when clicking a column header.
     */
 
-    // 1) The main CSV data with columns:
-    //    Enemy Name, Icon, Health, Attack, Strength, Defence, AttackSpeed, SlayerExp, Weakness, SlayerLevel, Drops, Area
-    // 2) We'll add two extra columns: ScrollDropChance, Kills
-
-    // The CSV now has 14 columns in total:
-    //   1  Enemy Name
-    //   2  Enemy Icon
-    //   3  Enemy Health
-    //   4  Enemy Attack
-    //   5  Enemy Strength
-    //   6  Enemy Defence
-    //   7  Enemy Attack Speed
-    //   8  Enemy Slayer Exp
-    //   9  Enemy Weakness
-    //   10 Enemy Slayer Level
-    //   11 Enemy Drops
-    //   12 Enemy Area
-    //   13 Scroll Drop Chance
-    //   14 Kills
-    //
-    // We'll parse all columns, then display them in the table + handle the subtable for Drops.
+    // CSV includes columns:
+    //   0 - Enemy Name
+    //   1 - Icon
+    //   2 - Health
+    //   3 - Attack
+    //   4 - Strength
+    //   5 - Defence
+    //   6 - Attack Speed
+    //   7 - Slayer Exp
+    //   8 - Weakness
+    //   9 - Slayer Level
+    //  10 - Drops
+    //  11 - Area
+    //  12 - Scroll Drop Chance
+    //  13 - Kills
 
     const csvData = `
-Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop Chance,Kills
+Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop %,Kills
 Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm,0.0006%,155340
 Crow,R.drawable.enemy_crow_01,20,5,4,5,Medium,12,Archery,1,"Bones,1,1,Always/Feathers,3,6,Always/Evergreen Arrow Shafts,5,10,Uncommon/Egg,1,1,Uncommon/Thread,1,3,Common/Coins,2,10,Uncommon/Birds Nest,1,2,Uncommon/Common Chest,1,1,Rare/Raw Shrimp,1,1,Uncommon",Farm,0.0007%,146789
 Rat,R.drawable.enemy_rat_01,30,5,10,8,Medium,13,Melee,1,"Bones,1,1,Always/Coins,1,5,Uncommon/Stone Arrowheads,5,10,Uncommon/Common Chest,1,1,Rare/Thread,2,5,Common/Raw Shrimp,1,1,Uncommon/Emerald,1,1,Super Rare",Farm,0.0007%,141593
@@ -261,47 +227,50 @@ Scarab Queen,R.drawable.enemy_bug,75000,2400,1400,1000,Very Fast,4000,Archery,1,
 Spider Queen,R.drawable.enemy_spider_02,100000,3000,2000,1500,Very Fast,5335,Archery,1,"Coins,250,500,Always/Queens Chest,1,1,Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare/Wolfmint,1,1,Common/Ember Fern,1,1,Rare/Thread,50,100,Uncommon/Gold Ring,1,1,Legendary/Queens Armour Fragment,1,3,Legendary",Realm of the Kings,0.1670%,599
 Undead Dragon Queen,R.drawable.enemy_dragon_13,150000,3750,2400,1700,Insane,7903,Archery,1,"Coins,500,750,Always/Queens Key,1,1,Rare/Big Dragon Bones,2,3,Always/Dragon Leather,2,5,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Queens Weapon Fragment,1,1,Legendary",Realm of the Kings,0.2473%,405
 Bone King,R.drawable.enemy_bone_beast,200000,5000,3600,2500,Very Fast,10565,Melee,1,"Sunburst Flower,1,1,Always/Coins,750,1000,Always/Kings Chest,1,1,Super Rare/Kings Armour Fragment,1,1,Legendary",Realm of the Kings,0.3305%,303
-Skeletal King,R.drawable.enemy_skeleton_04,250000,7500,4800,3800,Very Fast,13315,Melee,1,"Sunburst Flower,1,1,Always/Coins,1000,1500,Always/Kings Key,1,1,Super Rare/Kings Armour Fragment,1,2,Legendary",Realm of the Kings,0.4164%,241
-Living Armour King,R.drawable.enemy_living_armor_03,300000,10000,6000,5000,Very Fast,16060,Melee,1,"Ember Fern,1,1,Always/Coins,2000,3000,Always/Kings Chest,1,1,Rare/Kings Armour Fragment,1,3,Legendary",Realm of the Kings,0.5022%,200
+Skeletal King,R.drawable.enemy_skeleton_04,250000,7500,4800,3800,VeryFast,13315,Melee,1,"Sunburst Flower,1,1,Always/Coins,1000,1500,Always/Kings Key,1,1,Super Rare/Kings Armour Fragment,1,2,Legendary",Realm of the Kings,0.4164%,241
+Living Armour King,R.drawable.enemy_living_armor_03,300000,10000,6000,5000,VeryFast,16060,Melee,1,"Ember Fern,1,1,Always/Coins,2000,3000,Always/Kings Chest,1,1,Rare/Kings Armour Fragment,1,3,Legendary",Realm of the Kings,0.5022%,200
 Orc King,R.drawable.enemy_orc_04,400000,15000,7200,8500,Insane,21545,Archery,1,"Ember Fern,1,1,Always/Coins,3000,5000,Always/Kings Key,1,1,Rare/Kings Weapon Fragment,1,1,Legendary",Realm of the Kings,0.6736%,149
 Elven Fairy,R.drawable.enemy_elvenfairy,100000,8000,6000,10000,Fast,6210,Archery,1,"Coins,8000,10000,Always/Elven Armour Fragment,1,1,Legendary/Blue Silk,5,10,Common/Compass,1,1,Rare/Treasure Map,1,1,Rare/Extreme Power Potion,1,1,Rare/Safflower,1,3,Uncommon/Dragon Tail,1,3,Legendary/Elven Crystal,1,1,Rare",Immortal Realm,0.1944%,515
 Elven Warrior,R.drawable.enemy_elvenwarrior,150000,9000,8000,12000,Fast,8960,Archery,1,"Coins,10000,15000,Always/Elven Weapon Fragment,1,1,Legendary/Compass,1,3,Rare/Sunburst Flower,1,3,Uncommon/Dragon Skull,1,3,Legendary/Raw Ray,1,1,Common/Pirates Hat,1,1,Super Rare/Elven Crystal,1,3,Rare",Immortal Realm,0.2803%,357
-Elven Archer,R.drawable.enemy_elvenarcher,300000,12000,10000,14000,Very Fast,16810,Melee,1,"Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",Immortal Realm,0.5256%,191
-Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,Very Fast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Uncommon/Dragon Leather,15,20,Super Rare/Raw Octopus,1,1,Common/Dragon Ore,1,3,Super Rare/Dragon Platter,1,1,Rare/Elven Crystal,1,3,Uncommon",Immortal Realm,0.6975%,144
+Elven Archer,R.drawable.enemy_elvenarcher,300000,12000,10000,14000,VeryFast,16810,Melee,1,"Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",Immortal Realm,0.5256%,191
+Elven Mage,R.drawable.enemy_elvenmage,400000,15000,15000,16000,VeryFast,22310,Archery,1,"Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Uncommon/Dragon Leather,15,20,Super Rare/Raw Octopus,1,1,Common/Dragon Ore,1,3,Super Rare/Dragon Platter,1,1,Rare/Elven Crystal,1,3,Uncommon",Immortal Realm,0.6975%,144
 Elven King,R.drawable.enemy_elvenking,600000,24000,25000,18000,Insane,33360,Melee,1,"Coins,30000,50000,Always/Elven Armour Fragment,1,2,Uncommon/Ember Fern,3,5,Uncommon/Dragon Tail,5,10,Legendary/Dragon Ore,3,5,Super Rare/Golden Scarab,3,5,Super Rare/Dragon Platter,3,5,Rare/Elven Crystal,1,1,Common",Immortal Realm,1.0428%,96
 Elven Queen,R.drawable.enemy_elvenqueen,750000,30000,40000,25000,Insane,42260,Melee,1,"Coins,50000,100000,Always/Elven Weapon Fragment,1,2,Uncommon/Ember Fern,15,20,Uncommon/Dragon Skull,5,10,Legendary/Queens Weapon Fragment,1,1,Super Rare/Queens Armour Fragment,1,1,Super Rare/Dragon Platter,5,10,Uncommon/Elven Crystal,1,3,Common",Immortal Realm,1.3209%,76
-Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,Very Fast,371885,None,1,"Gold Coin,5,10,Always",Kingdom of the Gods,11.6217%,9
+Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,VeryFast,371885,None,1,"Gold Coin,5,10,Always",Kingdom of the Gods,11.6217%,9
 Aurial,R.drawable.enemy_aurial,4000000,60000,225000,36000,Fast,216060,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,6.7522%,15
 Cognium,R.drawable.enemy_cognium,8000000,80000,450000,54000,Insane,329210,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,10.2881%,10
 Copina,R.drawable.enemy_copina,9000000,60000,225000,40500,Fast,266285,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,8.3217%,13
-Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,Very Fast,360785,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,11.2748%,9
+Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,11.2748%,9
 Kynosian,R.drawable.enemy_kynosian,9000000,80000,525000,36000,Insane,282060,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,8.8147%,12
 Noctyra,R.drawable.enemy_noctyra,8000000,100000,562500,67500,Insane,336510,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,10.1788%,10
 Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130,"Gold Coin,5,10,Always",Kingdom of the Gods,7.6217%,14
 `.trim();
 
-    // -- Settings for pagination
-    let currentPage = 1;
-    const rowsPerPage = 10;
+    // Keep the entire CSV data in memory
     let currentData = [];
 
-    /**
-     * Parse CSV lines into an array of objects
-     * Each row -> array of columns
-     */
+    // Track the sort direction for each column.
+    // 'true' => ascending, 'false' => descending
+    let sortDirections = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const { data } = parseCsv(csvData);
+      currentData = data; // array of arrays
+      initSorting();
+      initSearch();
+      populateTable(currentData);
+    });
+
+    // 1) Parse CSV
     function parseCsv(csvString) {
       const lines = csvString.split('\n');
       const headers = lines[0].split(',');
       const dataRows = lines.slice(1);
-      const data = dataRows.map((row) => {
-        return splitByCsvRules(row);
-      });
+      const data = dataRows.map((row) => splitByCsvRules(row));
       return { headers, data };
     }
 
-    /**
-     * A more robust CSV-splitting approach that respects quotes.
-     */
+    // 2) Handle quotes properly
     function splitByCsvRules(line) {
       const result = [];
       let current = '';
@@ -321,48 +290,12 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
       return result;
     }
 
-    /**
-     * Parse the mini CSV stored in the "Drops" column.
-     * Example: "Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon"
-     * We'll split on '/' for each drop, then split by comma for details.
-     */
-    function parseDrops(dropsString) {
-      let cleaned = dropsString.trim();
-      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
-        cleaned = cleaned.slice(1, -1);
-      }
-      const dropRows = cleaned.split('/');
-      return dropRows.map(dropRow => dropRow.split(',').map(item => item.trim()));
-    }
-
-    /**
-     * Populate the main table (including pagination).
-     */
-    function populateTable(dataArray, page = 1) {
-      const tbody = document.getElementById('enemyTable').querySelector('tbody');
+    // 3) Populate table (no pagination)
+    function populateTable(dataArray) {
+      const tbody = document.querySelector('#enemyTable tbody');
       tbody.innerHTML = '';
 
-      const startIndex = (page - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const pageData = dataArray.slice(startIndex, endIndex);
-
-      pageData.forEach((rowData, rowIndex) => {
-        // CSV columns
-        //  0: Name
-        //  1: Icon
-        //  2: Health
-        //  3: Attack
-        //  4: Strength
-        //  5: Defence
-        //  6: Attack Speed
-        //  7: Slayer Exp
-        //  8: Weakness
-        //  9: Slayer Level
-        // 10: Drops
-        // 11: Area
-        // 12: Scroll Drop Chance
-        // 13: Kills
-
+      dataArray.forEach(row => {
         const [
           enemyName,
           enemyIcon,
@@ -378,15 +311,15 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           enemyArea,
           scrollChance,
           kills
-        ] = rowData;
+        ] = row;
 
         // Main row
         const mainRow = document.createElement('tr');
         mainRow.classList.add('clickable-row');
-
         mainRow.innerHTML = `
           <td>${enemyName}</td>
-          <td><img src="drawable/${enemyIcon.replace('R.drawable.', '')}.png" alt="icon" width="64" height="64"/></td>
+          <td><img src="drawable/${enemyIcon.replace('R.drawable.', '')}.png" 
+               alt="icon" width="64" height="64"/></td>
           <td>${enemyHealth}</td>
           <td>${enemyAttack}</td>
           <td>${enemyStrength}</td>
@@ -400,16 +333,16 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           <td>${kills}</td>
         `;
 
-        // Subtable row
+        // Sub-row
         const subRow = document.createElement('tr');
         subRow.classList.add('subtable');
         const subRowCell = document.createElement('td');
-        subRowCell.colSpan = 13; // we have 13 visible columns in the main table
-        // parse drops
-        const parsedDrops = parseDrops(dropsString);
-        const dropTable = document.createElement('table');
-        dropTable.classList.add('drop-table');
+        // The main table has 13 columns, so colSpan = 13
+        subRowCell.colSpan = 13;
 
+        // Create the drop-table
+        const dropTable = document.createElement('table');
+        dropTable.className = 'drop-table';
         dropTable.innerHTML = `
           <thead>
             <tr>
@@ -421,27 +354,14 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
           </thead>
           <tbody></tbody>
         `;
-
         const dropTableBody = dropTable.querySelector('tbody');
-        parsedDrops.forEach((drop) => {
-          const [dropName, minQty, maxQty, dropClass] = drop;
-          // Some approximate rates (just for display) 
-          // You can map them differently if needed
-          const rateMap = {
-            'Always': '1 in 1',
-            'Common': '1 in 3.3',
-            'Uncommon': '1 in 16.3',
-            'Rare': '1 in 83.3',
-            'Super Rare': '1 in 1,250',
-            'Legendary': '1 in 5,000',
-            'Mythical': '1 in 16,666.3',
-            'Secret Rare': '1 in 16,666.3'
-          };
-          const dropRate = rateMap[dropClass] || 'Unknown';
-
+        const parsedDrops = parseDrops(dropsString);
+        parsedDrops.forEach(drop => {
+          const [name, minQty, maxQty, dropClass] = drop;
+          const dropRate = getDropRate(dropClass);
           const dropRow = document.createElement('tr');
           dropRow.innerHTML = `
-            <td>${dropName}</td>
+            <td>${name}</td>
             <td>${minQty}</td>
             <td>${maxQty}</td>
             <td>${dropClass} (${dropRate})</td>
@@ -452,118 +372,115 @@ Opulina,R.drawable.enemy_opulina,4500000,70000,262500,45000,Fast,243885,None,130
         subRowCell.appendChild(dropTable);
         subRow.appendChild(subRowCell);
 
-        // Toggle subtable display
+        // Toggle subtable
         mainRow.addEventListener('click', () => {
-          if (subRow.style.display === 'table-row') {
-            subRow.style.display = 'none';
-          } else {
-            subRow.style.display = 'table-row';
-          }
+          subRow.style.display = (subRow.style.display === 'table-row') ? 'none' : 'table-row';
         });
 
         tbody.appendChild(mainRow);
         tbody.appendChild(subRow);
       });
-
-      updatePagination(dataArray.length);
     }
 
-    /**
-     * Update pagination buttons.
-     */
-    function updatePagination(totalRows) {
-      const paginationDiv = document.getElementById('pagination');
-      paginationDiv.innerHTML = '';
-      const totalPages = Math.ceil(totalRows / rowsPerPage);
-
-      for (let i = 1; i <= totalPages; i++) {
-        const button = document.createElement('button');
-        button.textContent = i;
-        if (i === currentPage) {
-          button.classList.add('active');
-        }
-        button.addEventListener('click', () => {
-          currentPage = i;
-          populateTable(currentData, currentPage);
-        });
-        paginationDiv.appendChild(button);
+    // 4) Parse drops
+    function parseDrops(dropsString) {
+      let str = dropsString.trim();
+      if (str.startsWith('"') && str.endsWith('"')) {
+        str = str.slice(1, -1);
       }
+      const drops = str.split('/');
+      return drops.map(drop => drop.split(',').map(d => d.trim()));
     }
 
-    /**
-     * Simple string/numeric sort.
-     * columnIndex is based on how we mapped them in the <th data-sort-col="..."> tags.
-     */
-    function sortData(columnIndex) {
-      // We'll copy the array so we don’t mutate the original
-      // Sort depends on whether the data is numeric or string
-      currentData.sort((a, b) => {
-        const A = a[columnIndex];
-        const B = b[columnIndex];
-
-        // Numeric columns (2..5,7..9,10,13) or special columns
-        const numericCols = [2, 3, 4, 5, 7, 9, 10, 13];
-        if (numericCols.includes(columnIndex)) {
-          return parseFloat(A) - parseFloat(B);
-        }
-        // For scroll chance % (12), strip the '%' and convert
-        if (columnIndex === 12) {
-          const numA = parseFloat(A.replace('%', ''));
-          const numB = parseFloat(B.replace('%', ''));
-          return numA - numB;
-        }
-        // Everything else => string
-        return A.localeCompare(B);
-      });
-      populateTable(currentData, currentPage);
+    // 5) Approximate drop rate legend
+    function getDropRate(dropClass) {
+      const map = {
+        'Always': '1 in 1',
+        'Common': '1 in 3.3',
+        'Uncommon': '1 in 16.3',
+        'Rare': '1 in 83.3',
+        'Super Rare': '1 in 1,250',
+        'Legendary': '1 in 5,000',
+        'Mythical': '1 in 16,666.3',
+        'Secret Rare': '1 in 16,666.3'
+      };
+      return map[dropClass] || 'Unknown';
     }
 
-    /**
-     * Initialization
-     */
-    document.addEventListener('DOMContentLoaded', () => {
-      // Parse CSV
-      const { headers, data } = parseCsv(csvData);
-      // We'll store the entire CSV data in currentData
-      currentData = data;
-      populateTable(currentData, currentPage);
-      initSorting();
-      initSearching();
-    });
-
-    /**
-     * Setup column-header click events for sorting.
-     */
+    // 6) Sorting
     function initSorting() {
+      // Add click listeners on <th> elements with data-sort-col
       const thElems = document.querySelectorAll('#enemyTable thead th[data-sort-col]');
       thElems.forEach((th) => {
         th.addEventListener('click', () => {
           const colIndex = parseInt(th.getAttribute('data-sort-col'), 10);
-          sortData(colIndex);
+
+          // Toggle direction
+          if (sortDirections[colIndex] === undefined) {
+            // default to ascending if not set
+            sortDirections[colIndex] = true;
+          } else {
+            // flip it
+            sortDirections[colIndex] = !sortDirections[colIndex];
+          }
+          sortData(colIndex, sortDirections[colIndex]);
         });
       });
     }
 
-    /**
-     * Setup real-time searching on "Enemy Name" (column 0).
-     */
-    function initSearching() {
+    function sortData(colIndex, ascending) {
+      currentData.sort((a, b) => {
+        const A = a[colIndex];
+        const B = b[colIndex];
+
+        // Certain columns are numeric
+        // 2: Health, 3: Attack, 4: Strength, 5: Defence, 7: SlayerExp
+        // 9: SlayerLevel, 12: ScrollDrop%, 13: Kills
+        const numericCols = [2, 3, 4, 5, 7, 9, 12, 13];
+
+        // If scroll drop % -> strip '%' 
+        if (colIndex === 11) {
+          // Actually, in this CSV, "Scroll Drop %" is at index 11 in the *header*, 
+          // but in the data array it's index 12. We used "Enemy Area" at 11, so be mindful:
+          // We'll keep "numericCols" for the real data index, which is 12.
+        }
+
+        let comparison = 0;
+        if (numericCols.includes(colIndex)) {
+          // handle '%' for scroll chance
+          const valA = (colIndex === 12) 
+            ? parseFloat(A.replace('%', '')) 
+            : parseFloat(A);
+          const valB = (colIndex === 12)
+            ? parseFloat(B.replace('%', ''))
+            : parseFloat(B);
+
+          comparison = valA - valB;
+        } else {
+          // string compare
+          comparison = A.localeCompare(B);
+        }
+
+        return ascending ? comparison : -comparison;
+      });
+
+      // re-render
+      populateTable(currentData);
+    }
+
+    // 7) Searching on name (index 0)
+    function initSearch() {
       const searchInput = document.getElementById('searchInput');
       searchInput.addEventListener('input', (e) => {
         const val = e.target.value.toLowerCase();
-        // Filter by name (col 0)
-        const filtered = currentData.filter((row) => {
-          const nameVal = row[0].toLowerCase();
-          return nameVal.includes(val);
-        });
-        currentPage = 1; // reset page on new search
-        populateTable(filtered, currentPage);
+        const filtered = currentData.filter(row => row[0].toLowerCase().includes(val));
+        populateTable(filtered);
       });
     }
   </script>
 
   <footer>
-    <p>Expandable subtable, sorting, searching, pagination, and scroll-drop data — all client-side!</p>
+    <p>Expandable subtable, sorting (asc/dsc), searching — fully client-side!</p>
   </footer>
 </body>
 </html>
