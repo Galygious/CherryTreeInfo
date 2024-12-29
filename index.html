@@ -8,95 +8,126 @@
   <meta charset="utf-8" />
   <title>God-Exclusive Drops: Defensive Checks for CSV Rows</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #121212;
-      color: #FFFFFF;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-      color: #FFFFFF;
-    }
-    #searchContainer {
-      text-align: center;
-      margin: 20px 0;
-    }
-    #searchInput {
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 4px;
-      border: 1px solid #333;
-      background-color: #1A1A1A;
-      color: #FFFFFF;
-      width: 250px;
-    }
-    table {
-      width: 95%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background-color: #1A1A1A;
-      color: #FFFFFF;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border: 1px solid #272727;
-      vertical-align: middle;
-    }
-    thead th {
-      background-color: #2C2C2C;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    tbody tr {
-      border-bottom: 1px solid #272727;
-    }
-    tbody tr:last-child {
-      border-bottom: none;
-    }
-    tr.subtable {
-      display: none;
-      background-color: #1E1E1E;
-    }
-    tr.subtable td {
-      padding: 0;
-    }
-    .drop-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #2C2C2C;
-      margin-bottom: 20px;
-    }
-    .drop-table th, .drop-table td {
-      padding: 8px;
-      text-align: left;
-      border: 1px solid #272727;
-    }
-    .drop-table th {
-      background-color: #3A3A3A;
-      font-weight: bold;
-    }
-    .clickable-row {
-      cursor: pointer;
-      background-color: #1A1A1A;
-    }
-    .clickable-row:hover {
-      background-color: #272727;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      background-color: #1A1A1A;
-      color: #A0A0A0;
-      border-top: 2px solid #272727;
-      margin-top: 20px;
-    }
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #121212;
+        color: #FFFFFF;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+        margin-top: 20px;
+        color: #FFFFFF;
+      }
+
+      #searchContainer {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      #searchInput {
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #333;
+        background-color: #1A1A1A;
+        color: #FFFFFF;
+        width: 250px;
+      }
+
+      table {
+        width: 95%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #1A1A1A;
+        color: #FFFFFF;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #272727;
+        vertical-align: middle;
+      }
+
+      thead th {
+        background-color: #2C2C2C;
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 2px solid #3A3A3A;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid #272727;
+      }
+
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      tbody tr:nth-child(odd) {
+        background-color: #1A1A1A; /* Darker row background */
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #1E1E1E; /* Lighter row background */
+      }
+
+      tbody tr:hover {
+        background-color: #272727; /* Highlight on hover */
+      }
+
+      tr.subtable {
+        display: none;
+        background-color: #1E1E1E;
+      }
+
+      tr.subtable td {
+        padding: 0;
+      }
+
+      .drop-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #2C2C2C;
+        margin-bottom: 20px;
+      }
+
+      .drop-table th, .drop-table td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #272727;
+      }
+
+      .drop-table th {
+        background-color: #3A3A3A;
+        font-weight: bold;
+      }
+
+      .clickable-row {
+        cursor: pointer;
+        background-color: #1A1A1A;
+      }
+
+      .clickable-row:hover {
+        background-color: #272727;
+      }
+
+      footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #1A1A1A;
+        color: #A0A0A0;
+        border-top: 2px solid #272727;
+        margin-top: 20px;
+      }
   </style>
+
 </head>
 <body>
   <h1>God-Exclusive Drops: Defensive CSV Parsing</h1>
@@ -467,6 +498,8 @@
               <th>Min Qty</th>
               <th>Max Qty</th>
               <th>Drop Class</th>
+              <th>Rate (X in Total)</th>
+              <th>Rate (~Percent)</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -483,27 +516,29 @@
           "Secret Rare": 16666.6667
         };
 
-        parsedDrops.forEach(arr => {
+        parsedDrops.forEach((arr, index) => {
           const [dropName, minQty, maxQty, dropClass] = arr;
           const rowEl = dropBody.insertRow();
+        
+          // Add alternating row styles
+          rowEl.className = index % 2 === 0 ? 'row-even' : 'row-odd';
         
           // If dropClass is e.g. "Rare," we get decimalOdds => 16.6667
           const decimalOdds = dropClassLabels[dropClass] || 0;
           const fractionOdds = toMixedFraction(decimalOdds); // e.g. "16 2/3"
-          const percentOdds = (1/decimalOdds * 100).toFixed(4);
+          const percentOdds = (1 / decimalOdds * 100).toFixed(4);
         
-          // Conditional logic for 'Always' dropClass
-          const oddsInfo = dropClass === 'Always' 
-            ? '' 
-            : ` => 1 in ${fractionOdds} (${percentOdds}%)`;
-        
+          // Format data into cleaner, separated columns
           rowEl.innerHTML = `
             <td>${dropName}</td>
             <td>${minQty || 1}</td>
             <td>${maxQty || 1}</td>
-            <td>${dropClass}${oddsInfo}</td>
+            <td>${dropClass}</td>
+            <td>${dropClass === 'Always' ? 'Always' : `1 in ${fractionOdds}`}</td>
+            <td>${dropClass === 'Always' ? '-' : `${percentOdds}%`}</td>
           `;
         });
+        
         subCell.appendChild(dropTable);
 
         // Check if it's a god => add second table
