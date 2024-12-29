@@ -6,7 +6,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>God Drops Integration with Expandable Table & Sorting</title>
+  <title>Enemy Data with Expandable Drops, Asc/Dsc Sorting, Searching, and God-Exclusive Drops</title>
   <style>
     /* General Table Styles */
     body {
@@ -117,6 +117,7 @@
   </style>
 </head>
 <body>
+  <h1>Enemy Data with Expandable Drops & Correct Asc/Dsc Sorting</h1>
   <h1>God Drops Integration Example</h1>
 
   <div id="searchContainer">
@@ -124,9 +125,8 @@
   </div>
 
   <!-- 
-      We skip the "Drops" column (CSV index #10) in the main table 
-      because it’s displayed in a subtable row. 
-      Indices: 
+      We skip column #10 (Drops) in the main table because it's displayed in a subtable row.
+      Final column mapping:
         0  => Enemy Name
         1  => Icon
         2  => Health
@@ -167,19 +167,19 @@
 
   <script>
     /*
-      1) CSV data for normal enemies (including "Gods" with no built-in drops).
-      2) Additional "God-only" drop data in Java-like structures, converted to JavaScript. 
-         If the enemy name is one of the “allGods,” 
-         we’ll show an additional sub-subtable with God-exclusive drops.
+      We’ll unify everything into one coherent script:
+      1) CSV parse
+      2) Table building (with subtable for normal drops)
+      3) Additional subtable for God-exclusive drops
+      4) Sorting (asc/dsc)
+      5) Searching
     */
 
-    // God data (converted to JavaScript form)
+    // God data
     const allGods = [
       "Amaran", "Aurial", "Cognium", "Copina", 
       "Feroxi", "Kynosian", "Noctyra", "Opulina"
     ];
-
-    // For each god, an array of drop names
     const allGodDrops = [
       ["Shield of Amaran", "Ring of Life", "Necklace of Defence", "Necklace of Health", "Queens Armour Fragment", "Kings Armour Fragment", "Invincibility Potion", "Rock Skin Potion", "Dragon Platter", "Iridium Ore"],
       ["Scythe of Aurial", "Scythe of Demeter", "Restoration Fragment 2", "Magic Watering Can", "Farm Chest", "Farm Key", "Wine", "Eggplant", "Fruit Salad", "Lemon"],
@@ -190,8 +190,6 @@
       ["Mystic Staff", "Death Princess Rune", "Ancient Elven Book", "Ring of Death", "Book of Death", "Soul Gem", "Liquid Death Potion", "Dragon Skull", "Insta Kill Potion", "Big Dragon Bones", "Dragon Bones", "Bones"],
       ["Opulinas Robe Bottoms", "Gold Coin", "Gold Coin", "Golden Touch Potion", "Gold Coin", "Golden Scarab", "Pot of Gold", "Treasure Map", "Gold Coin", "Gold Bar", "Gold Feather", "Gold Ore"]
     ];
-
-    // For each god, an array of "min,max" strings
     const allGodDropAmounts = [
       ["1,1", "1,1", "1,1", "1,1", "4,5", "2,3", "1,3", "2,5", "15,25", "10,20"],
       ["1,1", "1,1", "1,1", "1,1", "2,3", "2,3", "15,20", "10,15", "15,20", "15,20"],
@@ -202,9 +200,6 @@
       ["1,1", "1,1", "1,1", "1,1", "1,1", "1,1", "5,10", "5,10", "10,15", "15,20", "20,25", "30,40"],
       ["1,1", "100,100", "25,25", "2,5", "15,15", "5,10", "5,10", "5,10", "5,5", "15,20", "25,30", "30,40"]
     ];
-
-    // For each god, an array of "long" drop rates
-    // (representing rarity or approximate 1 in X chance)
     const allGodDropRates = [
       [1, 4, 14, 24, 144, 384, 984, 2984, 7984, 17984],
       [1, 3, 5, 13, 163, 313, 1313, 4313, 10313, 20313],
@@ -216,17 +211,17 @@
       [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
     ];
 
-    // CSV Data
+    // Main CSV data
     const csvData = `
 Enemy Name,Enemy Icon,Enemy Health,Enemy Attack,Enemy Strength,Enemy Defence,Enemy Attack Speed,Enemy Slayer Exp,Enemy Weakness,Enemy Slayer Level,Enemy Drops,Enemy Area,Scroll Drop %,Kills
-Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon",Farm,0.0006%,155340
+Chicken,R.drawable.enemy_chicken_01,10,1,1,1,Slow,11,Melee,1,"Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",Farm,0.0006%,155340
 Aurial,R.drawable.enemy_aurial,4000000,60000,225000,36000,Fast,216060,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,6.7522%,15
 Amaran,R.drawable.enemy_amaran,7000000,70000,300000,67500,VeryFast,371885,None,1,"Gold Coin,5,10,Always",KingdomoftheGods,11.6217%,9
 Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,130,"Gold Coin,5,10,Always",KingdomoftheGods,11.2748%,9
 `.trim();
 
     let currentData = [];
-    let sortDirections = {};
+    let sortDirections = {}; // track asc/dsc for each column
 
     document.addEventListener('DOMContentLoaded', () => {
       const { data } = parseCsv(csvData);
@@ -236,16 +231,21 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
       populateTable(currentData);
     });
 
-    // Parse CSV
+    /**
+     * Parse CSV lines, ignoring quotes for the header, but properly parsing data.
+     */
     function parseCsv(csvString) {
       const lines = csvString.split('\n');
-      lines[0]; // headers row (unused for display, but kept for reference)
+      // lines[0] => CSV header row, not used directly for display
       const dataRows = lines.slice(1);
 
       const data = dataRows.map((row) => splitByCsvRules(row));
       return { data };
     }
 
+    /**
+     * Split each CSV line by commas, respecting quotes.
+     */
     function splitByCsvRules(line) {
       const result = [];
       let current = '';
@@ -265,12 +265,29 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
       return result;
     }
 
-    // Build the table
+    /**
+     * Populate the table rows (with sub-rows for drops).
+     */
     function populateTable(dataArray) {
       const tbody = document.querySelector('#enemyTable tbody');
       tbody.innerHTML = '';
 
       dataArray.forEach(row => {
+        // CSV columns:
+        //  0:  Enemy Name
+        //  1:  Enemy Icon
+        //  2:  Health
+        //  3:  Attack
+        //  4:  Strength
+        //  5:  Defence
+        //  6:  Attack Speed
+        //  7:  Slayer Exp
+        //  8:  Weakness
+        //  9:  Slayer Level
+        // 10:  Drops
+        // 11:  Area
+        // 12:  Scroll Drop %
+        // 13:  Kills
         const [
           enemyName,
           enemyIcon,
@@ -282,13 +299,13 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
           enemySlayerExp,
           enemyWeakness,
           enemySlayerLevel,
-          dropsString,
+          dropsString,   // not displayed in main row
           enemyArea,
           scrollChance,
           kills
         ] = row;
 
-        // Main row
+        // Create main row
         const mainRow = document.createElement('tr');
         mainRow.classList.add('clickable-row');
         mainRow.innerHTML = `
@@ -307,13 +324,13 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
           <td>${kills}</td>
         `;
 
-        // Subtable row
+        // Create sub-row
         const subRow = document.createElement('tr');
         subRow.classList.add('subtable');
         const subRowCell = document.createElement('td');
-        subRowCell.colSpan = 13; // We have 13 displayed columns
+        subRowCell.colSpan = 13; // total columns in main row
 
-        // Build the main drop table from CSV
+        // Build the "normal drops" table
         const dropTable = document.createElement('table');
         dropTable.className = 'drop-table';
         dropTable.innerHTML = `
@@ -329,25 +346,24 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
         `;
         const dropTableBody = dropTable.querySelector('tbody');
         const dropsArray = parseDrops(dropsString);
-        dropsArray.forEach(drop => {
-          // CSV "Drops" is mini-CSV: name,min,max,class
-          const [dropName, minQty, maxQty, dropClass] = drop;
-          const dropRate = getDropRateLabel(dropClass); 
+        dropsArray.forEach(d => {
+          // format: [dropName, minQty, maxQty, dropClass]
+          const [dn, mn, mx, dc] = d;
+          const rateLabel = getDropRateLabel(dc);
           const rowEl = document.createElement('tr');
           rowEl.innerHTML = `
-            <td>${dropName}</td>
-            <td>${minQty || 1}</td>
-            <td>${maxQty || 1}</td>
-            <td>${dropClass || "Unknown"} (${dropRate})</td>
+            <td>${dn}</td>
+            <td>${mn || 1}</td>
+            <td>${mx || 1}</td>
+            <td>${dc || 'Unknown'} (${rateLabel})</td>
           `;
           dropTableBody.appendChild(rowEl);
         });
 
-        // Check if this enemy is one of the gods
+        // Check if this enemy is a God => add a second table
         const godIndex = allGods.indexOf(enemyName);
-        // If found, add a separate table for "God-Exclusive" drops
         if (godIndex !== -1) {
-          // Create a second table
+          // build a "God-Exclusive" drop table
           const godTable = document.createElement('table');
           godTable.className = 'drop-table';
           godTable.innerHTML = `
@@ -361,30 +377,28 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
             </thead>
             <tbody></tbody>
           `;
-          const godTableBody = godTable.querySelector('tbody');
-
-          const theseDrops = allGodDrops[godIndex];        // e.g. ["Shield of Amaran", "Ring of Life", ...]
-          const theseAmounts = allGodDropAmounts[godIndex]; // e.g. ["1,1", "1,1", ...]
-          const theseRates = allGodDropRates[godIndex];    // e.g. [1,4,14,24,...]
+          const godBody = godTable.querySelector('tbody');
+          const theseDrops = allGodDrops[godIndex];
+          const theseAmounts = allGodDropAmounts[godIndex];
+          const theseRates = allGodDropRates[godIndex];
 
           for (let i = 0; i < theseDrops.length; i++) {
             const [minQ, maxQ] = theseAmounts[i].split(',');
-            const rateVal = theseRates[i];
             const rowEl2 = document.createElement('tr');
             rowEl2.innerHTML = `
               <td>${theseDrops[i]}</td>
               <td>${minQ}</td>
               <td>${maxQ}</td>
-              <td>${rateVal}</td>
+              <td>${theseRates[i]}</td>
             `;
-            godTableBody.appendChild(rowEl2);
+            godBody.appendChild(rowEl2);
           }
 
-          // Append this second table
+          // Insert this God table after the normal drop table
           dropTable.insertAdjacentElement('afterend', godTable);
         }
 
-        // Append the first table
+        // Append normal drop table into the subRow
         subRowCell.appendChild(dropTable);
         subRow.appendChild(subRowCell);
 
@@ -393,25 +407,28 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
           subRow.style.display = (subRow.style.display === 'table-row') ? 'none' : 'table-row';
         });
 
-        // Add rows
+        // Add both rows to the DOM
         tbody.appendChild(mainRow);
         tbody.appendChild(subRow);
       });
     }
 
-    // Parse the mini CSV in "Drops" from the main CSV
+    /**
+     * Mini parser for the “Drops” cell => "name,minQty,maxQty,class" separated by '/', etc.
+     */
     function parseDrops(dropsString) {
       let cleaned = dropsString.trim();
       if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         cleaned = cleaned.slice(1, -1);
       }
-      if (!cleaned) return []; // if empty
-      // Each drop separated by '/', each field separated by ','
+      if (!cleaned) return [];
       const dropRows = cleaned.split('/');
-      return dropRows.map(r => r.split(',').map(x => x.trim()));
+      return dropRows.map(row => row.split(',').map(x => x.trim()));
     }
 
-    // Just a mock mapping for standard drop classes
+    /**
+     * Provide approximate labels for each standard drop class.
+     */
     function getDropRateLabel(dropClass) {
       const map = {
         'Always': '1 in 1',
@@ -426,29 +443,28 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
       return map[dropClass] || 'Unknown';
     }
 
-    // Sorting
+    /**
+     * Sorting: toggles asc/dsc by column index.
+     */
     function initSorting() {
       const thElems = document.querySelectorAll('#enemyTable thead th[data-sort-col]');
       thElems.forEach(th => {
         th.addEventListener('click', () => {
           const colIndex = parseInt(th.getAttribute('data-sort-col'), 10);
-
           // Toggle direction
           if (sortDirections[colIndex] === undefined) {
-            sortDirections[colIndex] = true; // default asc
+            sortDirections[colIndex] = true; // default ascending
           } else {
             sortDirections[colIndex] = !sortDirections[colIndex];
           }
-
           sortData(colIndex, sortDirections[colIndex]);
         });
       });
     }
 
     function sortData(colIndex, ascending) {
-      // Numeric columns:
-      //  2 (Health), 3 (Attack), 4 (Strength), 5 (Defence), 7 (SlayerExp)
-      //  9 (SlayerLevel), 12 (ScrollDrop%), 13 (Kills)
+      // Numeric columns => parseFloat
+      //  2,3,4,5,7,9,12,13
       const numericCols = [2, 3, 4, 5, 7, 9, 12, 13];
 
       currentData.sort((a, b) => {
@@ -456,16 +472,15 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
         let B = b[colIndex];
 
         if (numericCols.includes(colIndex)) {
-          // scroll drop?
           if (colIndex === 12) {
+            // Scroll drop => remove '%'
             A = parseFloat(A.replace('%', ''));
             B = parseFloat(B.replace('%', ''));
           } else {
             A = parseFloat(A);
             B = parseFloat(B);
           }
-          const cmp = (A - B);
-          return ascending ? cmp : -cmp;
+          return ascending ? (A - B) : (B - A);
         } else {
           // string compare
           const cmp = A.localeCompare(B);
@@ -476,21 +491,22 @@ Feroxi,R.drawable.enemy_feroxi,6500000,90000,562500,63000,VeryFast,360785,None,1
       populateTable(currentData);
     }
 
-    // Searching (by name, index=0)
+    /**
+     * Searching by name (column 0).
+     */
     function initSearch() {
-      const searchInput = document.getElementById('searchInput');
-      searchInput.addEventListener('input', e => {
-        const val = e.target.value.toLowerCase();
-        // Filter on col0 => Enemy Name
+      const input = document.getElementById('searchInput');
+      input.addEventListener('input', () => {
+        const val = input.value.toLowerCase();
+        // Filter by enemyName => col 0
         const filtered = currentData.filter(row => row[0].toLowerCase().includes(val));
         populateTable(filtered);
       });
     }
-
   </script>
 
   <footer>
-    <p>God-exclusive drops are merged into the subtable for enemies matching a name in "allGods". Sorting and searching remain intact.</p>
+    <p>Expandable subtables for normal drops, plus God-exclusive drops if the enemy matches one of the <strong>allGods</strong>. Sorting (asc/dsc) and searching by name remain intact.</p>
   </footer>
 </body>
 </html>
