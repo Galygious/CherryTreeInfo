@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Upgrade Cost Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="calculator.html">Energy Calculator</a>
+    </nav>
+
+    <div class="container">
+        <h1>Energy Upgrade Cost Calculator</h1>
+        <label for="currentEnergy">Current Max Energy:</label>
+        <input type="number" id="currentEnergy" placeholder="Enter your current max energy">
+
+        <label for="desiredEnergy">Desired Max Energy:</label>
+        <input type="number" id="desiredEnergy" placeholder="Enter your desired max energy">
+
+        <button onclick="calculateCost()">Calculate Cost</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateCost() {
+            const baseMaxStamina = 50; // The base max stamina
+            const stamCost = 3; // The stamina cost per unit increase
+
+            const currentEnergy = parseInt(document.getElementById('currentEnergy').value, 10);
+            const desiredEnergy = parseInt(document.getElementById('desiredEnergy').value, 10);
+
+            if (isNaN(currentEnergy) || isNaN(desiredEnergy) || desiredEnergy <= currentEnergy) {
+                document.getElementById('result').textContent = "Please enter valid values: Desired energy must be greater than current energy.";
+                return;
+            }
+
+            let totalCost = 0;
+
+            for (let energy = currentEnergy + 1; energy <= desiredEnergy; energy++) {
+                totalCost += (energy - baseMaxStamina) + stamCost;
+            }
+
+            document.getElementById('result').textContent = `Total cost: ${totalCost} gold coins`;
+        }
+    </script>
+</body>
+</html>
