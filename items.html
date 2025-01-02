@@ -7,35 +7,147 @@
         th { cursor: pointer; }
         .sort-asc::after { content: " ↑"; }
         .sort-desc::after { content: " ↓"; }
-        .table-responsive { margin-top: 2rem; }
+        .table-responsive { margin-top: 0.5rem; }
         th:hover { background-color: #f3f4f6; }
+        .section {
+            margin-bottom: 0.5rem;
+        }
+        .section-button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .section-button:hover {
+            background-color: #e5e7eb;
+        }
+        .section-button::after {
+            content: " ▼";
+            float: right;
+        }
+        .section-button.collapsed::after {
+            content: " ▶";
+        }
+        .section-content {
+            display: none;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-bottom-left-radius: 0.375rem;
+            border-bottom-right-radius: 0.375rem;
+            margin-top: -0.5rem;
+        }
+        .section-content.expanded {
+            display: block;
+        }
     </style>
     <script src="items.js"></script>
+    <script src="archery.js"></script>
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-6xl mx-auto">
         <div class="bg-white rounded-lg shadow p-6">
             <h1 class="text-2xl font-bold mb-4">Equipment Database</h1>
-            <div id="tablesContainer"></div>
+            <div id="sections"></div>
         </div>
     </div>
 
     <script>
-        // Store original grouped items to preserve order
-        const originalGroupedItems = {};
-        
+        // Store original items and table sort states
+        const originalItems = [...items];
+        const tableSortStates = {};
+
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        function getMainType(item) {
-            return item.type.includes('Equipment-') ? 
-                item.type.split('Equipment-')[1] : item.type;
-        }
-
         function createTableForType(type, typeItems) {
-            const sortState = window[`sortState_${type}`] || { column: -1, direction: '' };
+            const sortState = tableSortStates[type] || { column: -1, direction: '' };
             
+            // Special handling for bows
+            if (type === 'bow') {
+                return `
+                    <div class="table-responsive">
+                        <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="p-3 text-left border cursor-pointer" style="width:20%;" onclick="sortTable('${type}', 0)">
+                                        Bow
+                                        ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 1)">
+                                        Speed
+                                        ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 2)">
+                                        Damage
+                                        ${sortState.column === 2 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 3)">
+                                        Accuracy
+                                        ${sortState.column === 3 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 4)">
+                                        Crit %
+                                        ${sortState.column === 4 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${typeItems.map(item => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3 border">
+                                            <span class="font-medium">${item.name}</span>
+                                        </td>
+                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.speed) || 0)}</td>
+                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.damage) || 0)}</td>
+                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.accuracy) || 0)}%</td>
+                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.critChance) || 0)}%</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            // Special handling for arrows
+            if (type === 'arrow') {
+                return `
+                    <div class="table-responsive">
+                        <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="p-3 text-left border cursor-pointer" style="width:50%;" onclick="sortTable('${type}', 0)">
+                                        Arrow
+                                        ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                    <th class="p-3 text-center border cursor-pointer" style="width:50%;" onclick="sortTable('${type}', 1)">
+                                        Damage
+                                        ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${typeItems.map(item => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3 border">
+                                            <span class="font-medium">${item.name}</span>
+                                        </td>
+                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.damage) || 0)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            // Default table for other types
             return `
                 <div class="table-responsive">
                     <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
@@ -90,91 +202,160 @@
             `;
         }
 
-        function populateTables() {
-            // Group items by type
-            items.forEach(item => {
-                const mainType = getMainType(item);
-                if (!originalGroupedItems[mainType]) {
-                    originalGroupedItems[mainType] = [];
-                }
-                originalGroupedItems[mainType].push({...item});
-            });
-
-            // Initialize sort states for each type
-            Object.keys(originalGroupedItems).forEach(type => {
-                window[`sortState_${type}`] = { column: -1, direction: '' };
-            });
-
-            const container = document.getElementById('tablesContainer');
-            container.innerHTML = Object.entries(originalGroupedItems)
-                .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
-                .map(([type, typeItems]) => createTableForType(type, typeItems))
-                .join('');
+        function toggleSection(type) {
+            const content = document.getElementById(`section-${type.toLowerCase()}-content`);
+            const button = document.querySelector(`[data-section="${type}"]`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                button.classList.add('collapsed');
+            } else {
+                content.classList.add('expanded');
+                button.classList.remove('collapsed');
+            }
         }
 
-        function sortTable(type, column) {
-            console.log(`Sorting ${type} table, column ${column}`);
-            
-            // Get or initialize sort state for this table
-            const sortStateKey = `sortState_${type}`;
-            if (!window[sortStateKey]) {
-                window[sortStateKey] = { column: -1, direction: '' };
-            }
-            const sortState = window[sortStateKey];
-            
-            // Determine new sort direction
-            if (sortState.column !== column) {
-                // New column clicked - start with descending
-                sortState.column = column;
-                sortState.direction = 'desc';
-            } else {
-                // Same column clicked - cycle through states
-                if (sortState.direction === 'desc') {
-                    sortState.direction = 'asc';
-                } else if (sortState.direction === 'asc') {
-                    sortState.column = -1;
-                    sortState.direction = '';
-                } else {
-                    sortState.direction = 'desc';
-                }
-            }
-            
-            console.log('Sort state:', sortState);
-
-            // Get items for this type
-            let typeItems = [...originalGroupedItems[type]];
-
-            // Sort items if we have a sort direction
-            if (sortState.direction) {
-                typeItems.sort((a, b) => {
-                    let result;
-                    
-                    switch(column) {
-                        case 0: // Name
-                            result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                            break;
-                        case 5: // Value (in Details column)
-                            result = (parseInt(a.value) || 0) - (parseInt(b.value) || 0);
-                            break;
-                        default: // Other numeric columns
-                            const props = ['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'];
-                            result = (parseInt(a[props[column - 1]]) || 0) - (parseInt(b[props[column - 1]]) || 0);
-                    }
-                    
-                    return sortState.direction === 'asc' ? result : -result;
-                });
+        function populateTables() {
+            // Group items by type
+            const groupedItems = items.reduce((acc, item) => {
+                const mainType = item.type.includes('Equipment-') ? 
+                    item.type.split('Equipment-')[1] : item.type;
                 
-                console.log(`Sorted ${type} items by ${column}:`, 
-                    typeItems.map(item => column === 0 ? item.name : 
-                        column === 5 ? item.value : 
-                        item[['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'][column - 1]]
-                    )
-                );
-            }
+                if (!acc[mainType]) {
+                    acc[mainType] = [];
+                }
+                acc[mainType].push({...item});
+                return acc;
+            }, {});
 
-            // Update the table
-            const table = document.getElementById(`${type.toLowerCase()}-table`);
-            table.parentElement.outerHTML = createTableForType(type, typeItems);
+            // Add bow and arrow items
+            groupedItems['bow'] = bows;
+            groupedItems['arrow'] = arrows;
+
+            // Create sections with buttons and tables
+            const container = document.getElementById('sections');
+            container.innerHTML = Object.entries(groupedItems)
+                .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
+                .map(([type, typeItems]) => `
+                    <div class="section">
+                        <button class="section-button collapsed" onclick="toggleSection('${type}')" data-section="${type}">
+                            ${type}
+                        </button>
+                        <div id="section-${type.toLowerCase()}-content" class="section-content">
+                            ${createTableForType(type, typeItems)}
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+            function sortTable(type, column) {
+                console.log('Sorting table:', type, 'column:', column);
+                
+                // Get or initialize sort state for this table
+                if (!tableSortStates[type]) {
+                    tableSortStates[type] = { column: -1, direction: '' };
+                }
+                const sortState = tableSortStates[type];
+                
+                // Determine new sort direction
+                if (sortState.column !== column) {
+                    // New column clicked - start with descending
+                    sortState.column = column;
+                    sortState.direction = 'desc';
+                } else {
+                    // Same column clicked - cycle through states
+                    if (sortState.direction === 'desc') {
+                        sortState.direction = 'asc';
+                    } else if (sortState.direction === 'asc') {
+                        sortState.column = -1;
+                        sortState.direction = '';
+                    } else {
+                        sortState.direction = 'desc';
+                    }
+                }
+                
+                console.log('New sort state:', sortState);
+
+                // Get items for this type
+                let typeItems;
+                if (type === 'bow') {
+                    typeItems = [...bows];
+                } else if (type === 'arrow') {
+                    typeItems = [...arrows];
+                } else {
+                    typeItems = items.filter(item => {
+                        const mainType = item.type.includes('Equipment-') ? 
+                            item.type.split('Equipment-')[1] : item.type;
+                        return mainType === type;
+                    }).map(item => ({...item}));
+                }
+
+                // Sort items if we have a sort direction
+                if (sortState.direction) {
+                    typeItems.sort((a, b) => {
+                        let result;
+                        
+                        if (type === 'bow') {
+                            switch(column) {
+                                case 0: // Name
+                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                                    break;
+                                case 1: // Speed
+                                    result = (parseInt(a.speed) || 0) - (parseInt(b.speed) || 0);
+                                    break;
+                                case 2: // Damage
+                                    result = (parseInt(a.damage) || 0) - (parseInt(b.damage) || 0);
+                                    break;
+                                case 3: // Accuracy
+                                    result = (parseInt(a.accuracy) || 0) - (parseInt(b.accuracy) || 0);
+                                    break;
+                                case 4: // Crit Chance
+                                    result = (parseInt(a.critChance) || 0) - (parseInt(b.critChance) || 0);
+                                    break;
+                            }
+                        } else if (type === 'arrow') {
+                            switch(column) {
+                                case 0: // Name
+                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                                    break;
+                                case 1: // Damage
+                                    result = (parseInt(a.damage) || 0) - (parseInt(b.damage) || 0);
+                                    break;
+                            }
+                        } else {
+                            switch(column) {
+                                case 0: // Name
+                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                                    break;
+                                case 5: // Value (in Details column)
+                                    result = (parseInt(a.value) || 0) - (parseInt(b.value) || 0);
+                                    break;
+                                default: // Other numeric columns
+                                    const props = ['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'];
+                                    result = (parseInt(a[props[column - 1]]) || 0) - (parseInt(b[props[column - 1]]) || 0);
+                            }
+                        }
+                        
+                        return sortState.direction === 'asc' ? result : -result;
+                    });
+                } else {
+                    // Reset to original order
+                    if (type === 'bow') {
+                        typeItems = [...bows];
+                    } else if (type === 'arrow') {
+                        typeItems = [...arrows];
+                    } else {
+                        typeItems = originalItems.filter(item => {
+                            const mainType = item.type.includes('Equipment-') ? 
+                                item.type.split('Equipment-')[1] : item.type;
+                            return mainType === type;
+                        }).map(item => ({...item}));
+                    }
+                }
+
+            // Update the table while maintaining section visibility
+            const content = document.getElementById(`section-${type.toLowerCase()}-content`);
+            content.innerHTML = createTableForType(type, typeItems);
         }
 
         // Initialize tables
