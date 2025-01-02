@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Items Database</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        th { cursor: pointer; }
+        .sort-asc::after { content: " ↑"; }
+        .sort-desc::after { content: " ↓"; }
+        .table-responsive { margin-top: 2rem; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h1 class="text-2xl font-bold mb-4">Equipment Database</h1>
+            <div id="tablesContainer">
+                <!-- Tables will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Import the items data first -->
+    <script src="items.js"></script>
+    
+    <!-- Then the main script -->
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function createTableForType(type, typeItems) {
+            return `
+                <div class="table-responsive">
+                    <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="p-3 text-left border" style="width:25%;">${type}</th>
+                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 1)">
+                                    <i class="fa-solid fa-bars"></i> Attack
+                                </th>
+                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 2)">
+                                    <i class="fa-solid fa-bars"></i> Strength
+                                </th>
+                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 3)">
+                                    <i class="fa-solid fa-bars"></i> Defence
+                                </th>
+                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 4)">
+                                    <i class="fa-solid fa-bars"></i> Health
+                                </th>
+                                <th class="p-3 text-left border" style="width:33%;">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${typeItems.map(item => `
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">
+                                        <span class="font-medium">${item.name}</span>
+                                        ${item.rarity !== 'Common' ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` : ''}
+                                    </td>
+                                    <td class="p-3 border text-center">${formatNumber(item.attackBonus)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(item.strengthBonus)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(item.defenceBonus)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(item.healthBonus)}</td>
+                                    <td class="p-3 border">
+                                        ${item.description !== "null" ? item.description : ''}
+                                        ${item.value > 0 ? `<div class="text-sm text-gray-500">Value: ${formatNumber(item.value)}</div>` : ''}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function populateTables() {
+            // Group items by type
+            const groupedItems = items.reduce((acc, item) => {
+                // Extract the main type (e.g., "Equipment-Weapon" -> "Weapon")
+                const mainType = item.type.includes('Equipment-') ? 
+                    item.type.split('Equipment-')[1] : item.type;
+                
+                if (!acc[mainType]) {
+                    acc[mainType] = [];
+                }
+                acc[mainType].push(item);
+                return acc;
+            }, {});
+
+            // Create HTML for each type
+            const container = document.getElementById('tablesContainer');
+            container.innerHTML = Object.entries(groupedItems)
+                .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
+                .map(([type, typeItems]) => createTableForType(type, typeItems))
+                .join('');
+        }
+
+        function sortTable(type, column) {
+            const table = document.getElementById(`${type.toLowerCase()}-table`);
+            const headers = table.querySelectorAll('th');
+            
+            // Remove existing sort indicators
+            headers.forEach(header => {
+                header.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            // Get current sort state for this table
+            const tableSort = table.dataset.sort || '1,asc';
+            const [currentColumn, currentDir] = tableSort.split(',');
+            const ascending = currentColumn !== column.toString() || currentDir === 'desc';
+
+            // Add sort indicator
+            headers[column].classList.add(ascending ? 'sort-asc' : 'sort-desc');
+
+            // Store new sort state
+            table.dataset.sort = `${column},${ascending ? 'asc' : 'desc'}`;
+
+            // Sort the items and rebuild the table
+            const typeItems = items.filter(item => {
+                const mainType = item.type.includes('Equipment-') ? 
+                    item.type.split('Equipment-')[1] : item.type;
+                return mainType === type;
+            }).sort((a, b) => {
+                let valA, valB;
+                switch(column) {
+                    case 1: valA = a.attackBonus; valB = b.attackBonus; break;
+                    case 2: valA = a.strengthBonus; valB = b.strengthBonus; break;
+                    case 3: valA = a.defenceBonus; valB = b.defenceBonus; break;
+                    case 4: valA = a.healthBonus; valB = b.healthBonus; break;
+                    default: valA = a.name; valB = b.name;
+                }
+                
+                return ascending ? 
+                    (valA > valB ? 1 : -1) : 
+                    (valA < valB ? 1 : -1);
+            });
+
+            const tableHtml = createTableForType(type, typeItems);
+            table.parentElement.outerHTML = tableHtml;
+        }
+
+        // Initial population once the page loads
+        document.addEventListener('DOMContentLoaded', populateTables);
+    </script>
+</body>
+</html>
