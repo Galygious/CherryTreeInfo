@@ -8736,5 +8736,3 @@ const items = [
     "description": "An enhanced version of the Rod of Copina"
   }
 ];
-
-export default items;
