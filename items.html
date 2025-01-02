@@ -8,47 +8,63 @@
         .sort-asc::after { content: " ↑"; }
         .sort-desc::after { content: " ↓"; }
         .table-responsive { margin-top: 2rem; }
+        th:hover { background-color: #f3f4f6; }
     </style>
+    <script src="items.js"></script>
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-6xl mx-auto">
         <div class="bg-white rounded-lg shadow p-6">
             <h1 class="text-2xl font-bold mb-4">Equipment Database</h1>
-            <div id="tablesContainer">
-                <!-- Tables will be inserted here -->
-            </div>
+            <div id="tablesContainer"></div>
         </div>
     </div>
 
-    <!-- Import the items data first -->
-    <script src="items.js"></script>
-    
-    <!-- Then the main script -->
     <script>
+        // Store original grouped items to preserve order
+        const originalGroupedItems = {};
+        
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
+        function getMainType(item) {
+            return item.type.includes('Equipment-') ? 
+                item.type.split('Equipment-')[1] : item.type;
+        }
+
         function createTableForType(type, typeItems) {
+            const sortState = window[`sortState_${type}`] || { column: -1, direction: '' };
+            
             return `
                 <div class="table-responsive">
                     <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="p-3 text-left border" style="width:25%;">${type}</th>
-                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 1)">
-                                    <i class="fa-solid fa-bars"></i> Attack
+                                <th class="p-3 text-left border cursor-pointer" style="width:25%;" onclick="sortTable('${type}', 0)">
+                                    ${type}
+                                    ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
                                 </th>
-                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 2)">
-                                    <i class="fa-solid fa-bars"></i> Strength
+                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 1)">
+                                    Attack
+                                    ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
                                 </th>
-                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 3)">
-                                    <i class="fa-solid fa-bars"></i> Defence
+                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 2)">
+                                    Strength
+                                    ${sortState.column === 2 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
                                 </th>
-                                <th class="p-3 text-center border" style="width:8%;" onclick="sortTable('${type}', 4)">
-                                    <i class="fa-solid fa-bars"></i> Health
+                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 3)">
+                                    Defence
+                                    ${sortState.column === 3 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
                                 </th>
-                                <th class="p-3 text-left border" style="width:33%;">Details</th>
+                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 4)">
+                                    Health
+                                    ${sortState.column === 4 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                </th>
+                                <th class="p-3 text-left border cursor-pointer" style="width:33%;" onclick="sortTable('${type}', 5)">
+                                    Details
+                                    ${sortState.column === 5 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,13 +74,13 @@
                                         <span class="font-medium">${item.name}</span>
                                         ${item.rarity !== 'Common' ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` : ''}
                                     </td>
-                                    <td class="p-3 border text-center">${formatNumber(item.attackBonus)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(item.strengthBonus)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(item.defenceBonus)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(item.healthBonus)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.attackBonus) || 0)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.strengthBonus) || 0)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.defenceBonus) || 0)}</td>
+                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.healthBonus) || 0)}</td>
                                     <td class="p-3 border">
-                                        ${item.description !== "null" ? item.description : ''}
-                                        ${item.value > 0 ? `<div class="text-sm text-gray-500">Value: ${formatNumber(item.value)}</div>` : ''}
+                                        ${item.description}
+                                        ${parseInt(item.value) > 0 ? `<div class="text-sm text-gray-500">Value: ${formatNumber(parseInt(item.value))}</div>` : ''}
                                     </td>
                                 </tr>
                             `).join('')}
@@ -76,72 +92,93 @@
 
         function populateTables() {
             // Group items by type
-            const groupedItems = items.reduce((acc, item) => {
-                // Extract the main type (e.g., "Equipment-Weapon" -> "Weapon")
-                const mainType = item.type.includes('Equipment-') ? 
-                    item.type.split('Equipment-')[1] : item.type;
-                
-                if (!acc[mainType]) {
-                    acc[mainType] = [];
+            items.forEach(item => {
+                const mainType = getMainType(item);
+                if (!originalGroupedItems[mainType]) {
+                    originalGroupedItems[mainType] = [];
                 }
-                acc[mainType].push(item);
-                return acc;
-            }, {});
+                originalGroupedItems[mainType].push({...item});
+            });
 
-            // Create HTML for each type
+            // Initialize sort states for each type
+            Object.keys(originalGroupedItems).forEach(type => {
+                window[`sortState_${type}`] = { column: -1, direction: '' };
+            });
+
             const container = document.getElementById('tablesContainer');
-            container.innerHTML = Object.entries(groupedItems)
+            container.innerHTML = Object.entries(originalGroupedItems)
                 .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
                 .map(([type, typeItems]) => createTableForType(type, typeItems))
                 .join('');
         }
 
         function sortTable(type, column) {
-            const table = document.getElementById(`${type.toLowerCase()}-table`);
-            const headers = table.querySelectorAll('th');
+            console.log(`Sorting ${type} table, column ${column}`);
             
-            // Remove existing sort indicators
-            headers.forEach(header => {
-                header.classList.remove('sort-asc', 'sort-desc');
-            });
-
-            // Get current sort state for this table
-            const tableSort = table.dataset.sort || '1,asc';
-            const [currentColumn, currentDir] = tableSort.split(',');
-            const ascending = currentColumn !== column.toString() || currentDir === 'desc';
-
-            // Add sort indicator
-            headers[column].classList.add(ascending ? 'sort-asc' : 'sort-desc');
-
-            // Store new sort state
-            table.dataset.sort = `${column},${ascending ? 'asc' : 'desc'}`;
-
-            // Sort the items and rebuild the table
-            const typeItems = items.filter(item => {
-                const mainType = item.type.includes('Equipment-') ? 
-                    item.type.split('Equipment-')[1] : item.type;
-                return mainType === type;
-            }).sort((a, b) => {
-                let valA, valB;
-                switch(column) {
-                    case 1: valA = a.attackBonus; valB = b.attackBonus; break;
-                    case 2: valA = a.strengthBonus; valB = b.strengthBonus; break;
-                    case 3: valA = a.defenceBonus; valB = b.defenceBonus; break;
-                    case 4: valA = a.healthBonus; valB = b.healthBonus; break;
-                    default: valA = a.name; valB = b.name;
+            // Get or initialize sort state for this table
+            const sortStateKey = `sortState_${type}`;
+            if (!window[sortStateKey]) {
+                window[sortStateKey] = { column: -1, direction: '' };
+            }
+            const sortState = window[sortStateKey];
+            
+            // Determine new sort direction
+            if (sortState.column !== column) {
+                // New column clicked - start with descending
+                sortState.column = column;
+                sortState.direction = 'desc';
+            } else {
+                // Same column clicked - cycle through states
+                if (sortState.direction === 'desc') {
+                    sortState.direction = 'asc';
+                } else if (sortState.direction === 'asc') {
+                    sortState.column = -1;
+                    sortState.direction = '';
+                } else {
+                    sortState.direction = 'desc';
                 }
-                
-                return ascending ? 
-                    (valA > valB ? 1 : -1) : 
-                    (valA < valB ? 1 : -1);
-            });
+            }
+            
+            console.log('Sort state:', sortState);
 
-            const tableHtml = createTableForType(type, typeItems);
-            table.parentElement.outerHTML = tableHtml;
+            // Get items for this type
+            let typeItems = [...originalGroupedItems[type]];
+
+            // Sort items if we have a sort direction
+            if (sortState.direction) {
+                typeItems.sort((a, b) => {
+                    let result;
+                    
+                    switch(column) {
+                        case 0: // Name
+                            result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                            break;
+                        case 5: // Value (in Details column)
+                            result = (parseInt(a.value) || 0) - (parseInt(b.value) || 0);
+                            break;
+                        default: // Other numeric columns
+                            const props = ['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'];
+                            result = (parseInt(a[props[column - 1]]) || 0) - (parseInt(b[props[column - 1]]) || 0);
+                    }
+                    
+                    return sortState.direction === 'asc' ? result : -result;
+                });
+                
+                console.log(`Sorted ${type} items by ${column}:`, 
+                    typeItems.map(item => column === 0 ? item.name : 
+                        column === 5 ? item.value : 
+                        item[['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'][column - 1]]
+                    )
+                );
+            }
+
+            // Update the table
+            const table = document.getElementById(`${type.toLowerCase()}-table`);
+            table.parentElement.outerHTML = createTableForType(type, typeItems);
         }
 
-        // Initial population once the page loads
-        document.addEventListener('DOMContentLoaded', populateTables);
+        // Initialize tables
+        populateTables();
     </script>
 </body>
 </html>
