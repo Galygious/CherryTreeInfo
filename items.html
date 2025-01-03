@@ -1,7 +1,8 @@
+<!-- File: index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Items Database</title>
+    <title>Equipment Database</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
         th { cursor: pointer; }
@@ -46,7 +47,12 @@
         }
     </style>
     <script src="items.js"></script>
-    <script src="archery.js"></script>
+    <script src="archery.js"></script>enemyNames
+    <script src="mobs.js"></script>
+    <script>
+        let Monsters = {};
+        tableList.forEach((table) => {console.log(table,":",table.length)})
+    </script>
 </head>
 <body class="bg-gray-100 p-8">
     <div class="max-w-6xl mx-auto">
@@ -57,155 +63,510 @@
     </div>
 
     <script>
-        // Store original items and table sort states
-        const originalItems = [...items];
-        const tableSortStates = {};
+        // Data Sources Mapping
+        const DATA_SOURCES = {
+            items: items,
+            bows: bows,
+            arrows: arrows,
+            tableList: tableList,
+        };
 
+        // Utility Function to Format Numbers with Commas
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        function createTableForType(type, typeItems) {
-            const sortState = tableSortStates[type] || { column: -1, direction: '' };
-            
-            // Special handling for bows
-            if (type === 'bow') {
-                return `
-                    <div class="table-responsive">
-                        <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
-                            <thead>
-                                <tr class="bg-gray-50">
-                                    <th class="p-3 text-left border cursor-pointer" style="width:20%;" onclick="sortTable('${type}', 0)">
-                                        Bow
-                                        ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 1)">
-                                        Speed
-                                        ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 2)">
-                                        Damage
-                                        ${sortState.column === 2 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 3)">
-                                        Accuracy
-                                        ${sortState.column === 3 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                    <th class="p-3 text-center border cursor-pointer" style="width:10%;" onclick="sortTable('${type}', 4)">
-                                        Crit %
-                                        ${sortState.column === 4 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${typeItems.map(item => `
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-3 border">
-                                            <span class="font-medium">${item.name}</span>
-                                        </td>
-                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.speed) || 0)}</td>
-                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.damage) || 0)}</td>
-                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.accuracy) || 0)}%</td>
-                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.critChance) || 0)}%</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
+        // Helper function to parse potential string/number for sorting
+        function parseForSorting(value) {
+            const num = parseFloat(value);
+            if (!isNaN(num)) {
+                return num;
             }
-            
-            // Special handling for arrows
-            if (type === 'arrow') {
-                return `
-                    <div class="table-responsive">
-                        <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
-                            <thead>
-                                <tr class="bg-gray-50">
-                                    <th class="p-3 text-left border cursor-pointer" style="width:50%;" onclick="sortTable('${type}', 0)">
-                                        Arrow
-                                        ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                    <th class="p-3 text-center border cursor-pointer" style="width:50%;" onclick="sortTable('${type}', 1)">
-                                        Damage
-                                        ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${typeItems.map(item => `
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-3 border">
-                                            <span class="font-medium">${item.name}</span>
-                                        </td>
-                                        <td class="p-3 border text-center">${formatNumber(parseInt(item.damage) || 0)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
+            if (typeof value === 'string') {
+                return value.toLowerCase();
             }
-            
-            // Default table for other types
-            return `
-                <div class="table-responsive">
-                    <table class="w-full border-collapse" id="${type.toLowerCase()}-table">
+            return value || 0;
+        }
+
+        // Configuration-Driven Table Settings
+        const TABLE_CONFIGS = {
+            default: {
+                dataSource: {
+                    source: 'items',
+                    filter: (item, type) => {
+                        const itemType = item.type?.includes('Equipment-')
+                            ? item.type.split('Equipment-')[1]
+                            : item.type;
+                        return (
+                            itemType &&
+                            itemType.toLowerCase() === type.toLowerCase() &&
+                            !TABLE_CONFIGS[itemType.toLowerCase()]
+                        );
+                    }
+                },
+                columns: [
+                    {
+                        header: 'Item',
+                        width: '25%',
+                        source: 'items',
+                        field: 'name',
+                        render: (item) => `
+                            <span class="font-medium">
+                                ${item.name}
+                                ${item.rarity !== 'Common' 
+                                    ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` 
+                                    : ''
+                                }
+                            </span>
+                        `
+                    },
+                    {
+                        header: 'Attack',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'attackBonus'
+                    },
+                    {
+                        header: 'Strength',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'strengthBonus'
+                    },
+                    {
+                        header: 'Defence',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'defenceBonus'
+                    },
+                    {
+                        header: 'Health',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'healthBonus'
+                    },
+                    {
+                        header: 'Details',
+                        width: '33%',
+                        source: 'items',
+                        // Example of domSortSelector usage if you'd like to sort by "value" in the rendered HTML
+                        domSortSelector: '.sortval',
+                        render: (item) => {
+                            // We'll embed the numeric value in a <span> with a data-sort-val attribute
+                            const numericValue = parseInt(item.value) || 0;
+                            return `
+                                <div>
+                                    ${
+                                        item.description && item.description !== 'null' 
+                                            ? `<span class="text-gray-300">
+                                                   <br>
+                                                   Description: ${item.description}
+                                               </span>`
+                                            : ''
+                                    }
+                                    ${
+                                        numericValue > 0 
+                                            ? `<div class="text-sm text-gray-500">
+                                                   Value: 
+                                                   <span 
+                                                      class="sortval" 
+                                                      data-sort-val="${numericValue}"
+                                                   >
+                                                      ${formatNumber(numericValue)}
+                                                   </span>
+                                               </div>` 
+                                            : ''
+                                    }
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            },
+            weapon: {
+                dataSource: {
+                    source: 'items',
+                    filter: (item) => {
+                        if (item.type && item.type.toLowerCase().includes('equipment-weapon')) {
+                            const isBow = bows.some(b => b.name === item.name);
+                            return !isBow;
+                        }
+                        return false;
+                    }
+                },
+                columns: [
+                    {
+                        header: 'Item',
+                        width: '25%',
+                        source: 'items',
+                        field: 'name',
+                        render: (item) => `
+                            <span class="font-medium">
+                                ${item.name}
+                                ${item.rarity !== 'Common' 
+                                    ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` 
+                                    : ''
+                                }
+                            </span>
+                        `
+                    },
+                    {
+                        header: 'Attack',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'attackBonus'
+                    },
+                    {
+                        header: 'Strength',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'strengthBonus'
+                    },
+                    {
+                        header: 'Defence',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'defenceBonus'
+                    },
+                    {
+                        header: 'Health',
+                        width: '8%',
+                        align: 'center',
+                        source: 'items',
+                        field: 'healthBonus'
+                    },
+                    {
+                        header: 'Details',
+                        width: '33%',
+                        source: 'items',
+                        domSortSelector: '.sortval',
+                        render: (item) => {
+                            const numericValue = parseInt(item.value) || 0;
+                            return `
+                                ${
+                                    item.description && item.description !== 'null' 
+                                        ? `<span class="text-gray-300">
+                                               <br>
+                                               Description: ${item.description}
+                                           </span>`
+                                        : ''
+                                }
+                                <div>
+                                    ${
+                                        numericValue > 0 
+                                            ? `<div class="text-sm text-gray-500">
+                                                   Value: 
+                                                   <span
+                                                     class="sortval" 
+                                                     data-sort-val="${numericValue}"
+                                                   >
+                                                     ${formatNumber(numericValue)}
+                                                   </span>
+                                               </div>` 
+                                            : ''
+                                    }
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            },
+            bow: {
+                dataSource: {
+                    source: 'bows',
+                    filter: () => true
+                },
+                columns: [
+                    {
+                        header: 'Bow',
+                        width: '20%',
+                        source: 'items',
+                        field: 'name'
+                    },
+                    {
+                        header: 'Speed',
+                        width: '20%',
+                        align: 'center',
+                        source: 'bows',
+                        field: 'speed'
+                    }
+                ]
+            },
+            arrows: {
+                dataSource: {
+                    source: 'arrows',
+                    filter: () => true
+                },
+                columns: [
+                    {
+                        header: 'Arrows',
+                        width: '33%',
+                        source: 'items',
+                        field: 'name'
+                    },
+                    {
+                        header: 'Damage',
+                        width: '33%',
+                        align: 'center',
+                        source: 'arrows',
+                        field: 'damage'
+                    },
+                    {
+                        header: 'Details',
+                        width: '33%',
+                        source: 'items',
+                        domSortSelector: '.sortval',
+                        render: (item) => {
+                            const numericValue = parseInt(item.value) || 0;
+                            return `
+                                ${
+                                    item.description && item.description !== 'null' 
+                                        ? `<span class="text-gray-300">
+                                               <br>
+                                               Description: ${item.description}
+                                           </span>`
+                                        : ''
+                                }
+                                <div>
+                                    ${
+                                        numericValue > 0 
+                                            ? `<div class="text-sm text-gray-500">
+                                                   Value: 
+                                                   <span
+                                                     class="sortval" 
+                                                     data-sort-val="${numericValue}"
+                                                   >
+                                                     ${formatNumber(numericValue)}
+                                                   </span>
+                                               </div>` 
+                                            : ''
+                                    }
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            }
+        };
+
+        class TableGenerator {
+            constructor() {
+                this.sortStates = {};
+            }
+
+            getFilteredData(config, type) {
+                const ds = config.dataSource;
+                if (!ds || !DATA_SOURCES[ds.source]) return [];
+                const baseItems = DATA_SOURCES[ds.source];
+                if (typeof ds.filter === 'function') {
+                    return baseItems.filter(item => ds.filter(item, type));
+                }
+                return baseItems;
+            }
+
+            getSortedData(data, config, sortState, tableElement) {
+                if (sortState.column === -1) return data;
+                const columnDef = config.columns[sortState.column];
+                if (!columnDef) return data;
+
+                // If standard field-based sort:
+                if (columnDef.field && !columnDef.domSortSelector) {
+                    return [...data].sort((a, b) => {
+                        const aValue = parseForSorting(a[columnDef.field]);
+                        const bValue = parseForSorting(b[columnDef.field]);
+                        if (aValue < bValue) return sortState.direction === 'asc' ? -1 : 1;
+                        if (aValue > bValue) return sortState.direction === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+                }
+
+                // If DOM-based:
+                if (columnDef.domSortSelector && tableElement) {
+                    const rows = Array.from(tableElement.querySelectorAll('tbody tr'));
+                    const combined = rows.map(row => {
+                        const cell = row.querySelectorAll('td')[sortState.column];
+                        if (!cell) {
+                            return { row, sortValue: '' };
+                        }
+                        let sortValue = '';
+                        const domEl = cell.querySelector(columnDef.domSortSelector);
+                        if (domEl) {
+                            const dataVal = domEl.getAttribute('data-sort-val');
+                            sortValue = dataVal ? parseForSorting(dataVal) : parseForSorting(domEl.textContent);
+                        }
+                        return { row, sortValue };
+                    });
+
+                    combined.sort((a, b) => {
+                        if (a.sortValue < b.sortValue) return sortState.direction === 'asc' ? -1 : 1;
+                        if (a.sortValue > b.sortValue) return sortState.direction === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+
+                    const tbody = tableElement.querySelector('tbody');
+                    combined.forEach(item => tbody.appendChild(item.row));
+                    return combined.map(item => data[rows.indexOf(item.row)]);
+                }
+
+                return data;
+            }
+
+            generateTable(type) {
+                const lowerType = type.toLowerCase();
+                const config = TABLE_CONFIGS[lowerType] || TABLE_CONFIGS.default;
+                const sortState = this.sortStates[lowerType] || { column: -1, direction: '' };
+                this.sortStates[lowerType] = sortState;
+
+                const filteredData = this.getFilteredData(config, lowerType);
+
+                const tableWrapper = document.createElement('div');
+                tableWrapper.className = 'table-responsive';
+                const tableId = `${lowerType}-table`;
+                tableWrapper.innerHTML = `
+                    <table class="w-full border-collapse" id="${tableId}">
                         <thead>
                             <tr class="bg-gray-50">
-                                <th class="p-3 text-left border cursor-pointer" style="width:25%;" onclick="sortTable('${type}', 0)">
-                                    ${type}
-                                    ${sortState.column === 0 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
-                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 1)">
-                                    Attack
-                                    ${sortState.column === 1 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
-                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 2)">
-                                    Strength
-                                    ${sortState.column === 2 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
-                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 3)">
-                                    Defence
-                                    ${sortState.column === 3 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
-                                <th class="p-3 text-center border cursor-pointer" style="width:8%;" onclick="sortTable('${type}', 4)">
-                                    Health
-                                    ${sortState.column === 4 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
-                                <th class="p-3 text-left border cursor-pointer" style="width:33%;" onclick="sortTable('${type}', 5)">
-                                    Details
-                                    ${sortState.column === 5 ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : ''}
-                                </th>
+                                ${this.generateHeaders(config, sortState)}
                             </tr>
                         </thead>
                         <tbody>
-                            ${typeItems.map(item => `
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">
-                                        <span class="font-medium">${item.name}</span>
-                                        ${item.rarity !== 'Common' ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` : ''}
-                                    </td>
-                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.attackBonus) || 0)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.strengthBonus) || 0)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.defenceBonus) || 0)}</td>
-                                    <td class="p-3 border text-center">${formatNumber(parseInt(item.healthBonus) || 0)}</td>
-                                    <td class="p-3 border">
-                                        ${item.description}
-                                        ${parseInt(item.value) > 0 ? `<div class="text-sm text-gray-500">Value: ${formatNumber(parseInt(item.value))}</div>` : ''}
-                                    </td>
-                                </tr>
-                            `).join('')}
+                            ${this.generateRows(config, filteredData, sortState)}
                         </tbody>
                     </table>
-                </div>
-            `;
+                `;
+
+                this.attachSortHandlers(tableWrapper, lowerType, config);
+                return tableWrapper;
+            }
+
+            generateHeaders(config, sortState) {
+                return config.columns.map((column, index) => {
+                    let sortIndicator = '';
+                    if (sortState.column === index) {
+                        sortIndicator = sortState.direction === 'asc' ? ' ↑' : ' ↓';
+                    }
+                    return `
+                        <th class="p-3 text-left border cursor-pointer" style="width: ${column.width}">
+                            ${column.header}${sortIndicator}
+                        </th>
+                    `;
+                }).join('');
+            }
+
+            generateRows(config, data, sortState) {
+                // At initial build, we pass null for tableElement
+                const sorted = this.getSortedData(data, config, sortState, null);
+                return sorted.map(item => {
+                    const rowCells = config.columns.map(col => {
+                        return this.generateCell(col, item, config);
+                    });
+                    return `<tr class="hover:bg-gray-50">${rowCells.join('')}</tr>`;
+                }).join('');
+            }
+
+            generateCell(column, item, config) {
+                // If the column's "source" is different from the table-level dataSource,
+                // we attempt to find a matching object by name in that other source
+                // (assuming the `name` property is unique).
+                if (column.source && column.source !== (config.dataSource?.source)) {
+                    const altSource = DATA_SOURCES[column.source];
+                    if (altSource) {
+                        const match = altSource.find(x => x.name === item.name);
+                        if (match) {
+                            item = match;
+                        }
+                    }
+                }
+
+                if (column.render) {
+                    return `<td class="p-3 border ${column.align === 'center' ? 'text-center' : ''}">
+                        ${column.render(item)}
+                    </td>`;
+                }
+
+                // If no custom render, display the "field"
+                const value = column.field ? item[column.field] : item.name;
+                return `<td class="p-3 border ${column.align === 'center' ? 'text-center' : ''}">
+                    ${typeof value === 'number' ? formatNumber(value) : (value ?? '')}
+                </td>`;
+            }
+
+            attachSortHandlers(tableWrapper, type, config) {
+                const table = tableWrapper.querySelector('table');
+                const headers = table.querySelectorAll('th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        this.handleSort(type, index);
+                        this.updateTableBody(tableWrapper, type, config);
+                        this.updateSortIndicators(tableWrapper, config, type);
+                    });
+                });
+            }
+
+            handleSort(type, columnIndex) {
+                if (!this.sortStates[type]) {
+                    this.sortStates[type] = { column: -1, direction: '' };
+                }
+                const st = this.sortStates[type];
+                if (st.column === columnIndex) {
+                    if (st.direction === 'desc') {
+                        st.direction = 'asc';
+                    } else if (st.direction === 'asc') {
+                        st.column = -1;
+                        st.direction = '';
+                    }
+                } else {
+                    st.column = columnIndex;
+                    st.direction = 'desc';
+                }
+            }
+
+            updateTableBody(tableWrapper, type, config) {
+                const table = tableWrapper.querySelector('table');
+                const sortState = this.sortStates[type] || { column: -1, direction: '' };
+                const filteredData = this.getFilteredData(config, type);
+                const sortedData = this.getSortedData(filteredData, config, sortState, table);
+
+                // If we're NOT using domSortSelector for the sorted column, do a normal re-gen of <tbody>
+                const columnDef = config.columns[sortState.column];
+                if (columnDef && !columnDef.domSortSelector) {
+                    table.querySelector('tbody').innerHTML = sortedData
+                        .map(item => {
+                            const rowCells = config.columns.map(col => this.generateCell(col, item, config));
+                            return `<tr class="hover:bg-gray-50">${rowCells.join('')}</tr>`;
+                        })
+                        .join('');
+                }
+            }
+
+            updateSortIndicators(tableWrapper, config, type) {
+                const sortState = this.sortStates[type] || { column: -1, direction: '' };
+                const table = tableWrapper.querySelector('table');
+                const headers = table.querySelectorAll('th');
+                headers.forEach((header, idx) => {
+                    let sortIndicator = '';
+                    if (sortState.column === idx) {
+                        sortIndicator = sortState.direction === 'asc' ? ' ↑' : ' ↓';
+                    }
+                    header.innerHTML = `${config.columns[idx].header}${sortIndicator}`;
+                });
+            }
         }
+
+        // ----------------------------------
+        // Instantiate & Populate
+        // ----------------------------------
+        const tableGen = new TableGenerator();
 
         function toggleSection(type) {
             const content = document.getElementById(`section-${type.toLowerCase()}-content`);
             const button = document.querySelector(`[data-section="${type}"]`);
-            
             if (content.classList.contains('expanded')) {
                 content.classList.remove('expanded');
                 button.classList.add('collapsed');
@@ -215,151 +576,79 @@
             }
         }
 
+        String.prototype.toTitleCase = function() {
+            return this.replace(/\w\S*/g, function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        };
+
         function populateTables() {
-            // Group items by type
-            const groupedItems = items.reduce((acc, item) => {
-                const mainType = item.type.includes('Equipment-') ? 
-                    item.type.split('Equipment-')[1] : item.type;
-                
-                if (!acc[mainType]) {
-                    acc[mainType] = [];
-                }
-                acc[mainType].push({...item});
-                return acc;
-            }, {});
-
-            // Add bow and arrow items
-            groupedItems['bow'] = bows;
-            groupedItems['arrow'] = arrows;
-
-            // Create sections with buttons and tables
             const container = document.getElementById('sections');
-            container.innerHTML = Object.entries(groupedItems)
-                .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
-                .map(([type, typeItems]) => `
-                    <div class="section">
-                        <button class="section-button collapsed" onclick="toggleSection('${type}')" data-section="${type}">
-                            ${type}
-                        </button>
-                        <div id="section-${type.toLowerCase()}-content" class="section-content">
-                            ${createTableForType(type, typeItems)}
-                        </div>
-                    </div>
-                `).join('');
-        }
+            container.innerHTML = '';
 
-            function sortTable(type, column) {
-                console.log('Sorting table:', type, 'column:', column);
-                
-                // Get or initialize sort state for this table
-                if (!tableSortStates[type]) {
-                    tableSortStates[type] = { column: -1, direction: '' };
-                }
-                const sortState = tableSortStates[type];
-                
-                // Determine new sort direction
-                if (sortState.column !== column) {
-                    // New column clicked - start with descending
-                    sortState.column = column;
-                    sortState.direction = 'desc';
-                } else {
-                    // Same column clicked - cycle through states
-                    if (sortState.direction === 'desc') {
-                        sortState.direction = 'asc';
-                    } else if (sortState.direction === 'asc') {
-                        sortState.column = -1;
-                        sortState.direction = '';
-                    } else {
-                        sortState.direction = 'desc';
+            // Collect config keys
+            const specialTypes = new Set(Object.keys(TABLE_CONFIGS));
+            const sections = new Map();
+
+            // If your items array includes a "type"
+            // (like "Equipment-Arrows") we capture that here:
+            items.forEach(item => {
+                let itemType = item.type?.includes('Equipment-') 
+                    ? item.type.split('Equipment-')[1] 
+                    : item.type;
+                if (itemType) {
+                    itemType = itemType.toLowerCase();
+                    if (!specialTypes.has(itemType) && !sections.has(itemType)) {
+                        sections.set(itemType, {
+                            type: itemType,
+                            config: TABLE_CONFIGS.default
+                        });
                     }
                 }
-                
-                console.log('New sort state:', sortState);
+            });
 
-                // Get items for this type
-                let typeItems;
-                if (type === 'bow') {
-                    typeItems = [...bows];
-                } else if (type === 'arrow') {
-                    typeItems = [...arrows];
-                } else {
-                    typeItems = items.filter(item => {
-                        const mainType = item.type.includes('Equipment-') ? 
-                            item.type.split('Equipment-')[1] : item.type;
-                        return mainType === type;
-                    }).map(item => ({...item}));
-                }
-
-                // Sort items if we have a sort direction
-                if (sortState.direction) {
-                    typeItems.sort((a, b) => {
-                        let result;
-                        
-                        if (type === 'bow') {
-                            switch(column) {
-                                case 0: // Name
-                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                                    break;
-                                case 1: // Speed
-                                    result = (parseInt(a.speed) || 0) - (parseInt(b.speed) || 0);
-                                    break;
-                                case 2: // Damage
-                                    result = (parseInt(a.damage) || 0) - (parseInt(b.damage) || 0);
-                                    break;
-                                case 3: // Accuracy
-                                    result = (parseInt(a.accuracy) || 0) - (parseInt(b.accuracy) || 0);
-                                    break;
-                                case 4: // Crit Chance
-                                    result = (parseInt(a.critChance) || 0) - (parseInt(b.critChance) || 0);
-                                    break;
-                            }
-                        } else if (type === 'arrow') {
-                            switch(column) {
-                                case 0: // Name
-                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                                    break;
-                                case 1: // Damage
-                                    result = (parseInt(a.damage) || 0) - (parseInt(b.damage) || 0);
-                                    break;
-                            }
-                        } else {
-                            switch(column) {
-                                case 0: // Name
-                                    result = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                                    break;
-                                case 5: // Value (in Details column)
-                                    result = (parseInt(a.value) || 0) - (parseInt(b.value) || 0);
-                                    break;
-                                default: // Other numeric columns
-                                    const props = ['attackBonus', 'strengthBonus', 'defenceBonus', 'healthBonus'];
-                                    result = (parseInt(a[props[column - 1]]) || 0) - (parseInt(b[props[column - 1]]) || 0);
-                            }
-                        }
-                        
-                        return sortState.direction === 'asc' ? result : -result;
+            // Add explicitly configured (arrows, bow, etc.)
+            Object.keys(TABLE_CONFIGS).forEach(tKey => {
+                if (tKey !== 'default') {
+                    sections.set(tKey.toLowerCase(), {
+                        type: tKey,
+                        config: TABLE_CONFIGS[tKey]
                     });
-                } else {
-                    // Reset to original order
-                    if (type === 'bow') {
-                        typeItems = [...bows];
-                    } else if (type === 'arrow') {
-                        typeItems = [...arrows];
-                    } else {
-                        typeItems = originalItems.filter(item => {
-                            const mainType = item.type.includes('Equipment-') ? 
-                                item.type.split('Equipment-')[1] : item.type;
-                            return mainType === type;
-                        }).map(item => ({...item}));
-                    }
                 }
+            });
 
-            // Update the table while maintaining section visibility
-            const content = document.getElementById(`section-${type.toLowerCase()}-content`);
-            content.innerHTML = createTableForType(type, typeItems);
+            const sortedSections = Array.from(sections.values())
+                .sort((a, b) => a.type.localeCompare(b.type));
+
+            // Create each section
+            sortedSections.forEach(({ type, config }) => {
+                const section = document.createElement('div');
+                section.className = 'section';
+        
+                const button = document.createElement('button');
+                button.className = 'section-button collapsed';
+                button.onclick = () => toggleSection(type);
+                button.setAttribute('data-section', type);
+                button.textContent = type.toLowerCase() === 'null'
+                    ? 'Miscellaneous'
+                    : type.toTitleCase();
+        
+                const content = document.createElement('div');
+                content.id = `section-${type.toLowerCase()}-content`;
+                content.className = 'section-content';
+                
+                // Generate table
+                const table = tableGen.generateTable(type);
+                content.appendChild(table);
+        
+                section.appendChild(button);
+                section.appendChild(content);
+                container.appendChild(section);
+            });
         }
 
-        // Initialize tables
-        populateTables();
+        // Init on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', populateTables);
     </script>
 </body>
 </html>
