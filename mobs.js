@@ -1,371 +1,4068 @@
-const enemyNames = [
-	"Chicken",
-	"Crow",
-	"Rat",
-	"Sheep",
-	"Goat",
-	"Pig",
-	"Ox",
-	"Young Goblin",
-	"Goblin Grump",
-	"Goblin Guard",
-	"Goblin Chief",
-	"Jin",
-	"Red Ghoul",
-	"Grey Wolf",
-	"Cyclops",
-	"Cave Demon",
-	"Banshee",
-	"Cave Beast",
-	"Giant Cave Spider",
-	"Wild Dog",
-	"Crocodile",
-	"Lion",
-	"Brown Bear",
-	"Skeletal Bear",
-	"Baby Red Dragon",
-	"Baby Blue Dragon",
-	"Undead Dragon",
-	"Ancient Dragon",
-	"Green Dragon",
-	"Water Dragon",
-	"King Dragon",
-	"Dragon Queen",
-	"Elite Chicken",
-	"Elite Crow",
-	"Elite Rat",
-	"Elite Sheep",
-	"Elite Goat",
-	"Elite Pig",
-	"Elite Ox",
-	"Training Dummy",
-	"Ghost",
-	"Phoenix",
-	"Nightmare",
-	"Orc Captain",
-	"Cobra",
-	"Skeletal Hound",
-	"Necromancer",
-	"Fluffy",
-	"Blue Devil",
-	"Ancient Tribal Leader",
-	"Dummy Queen",
-	"Scarab Queen",
-	"Spider Queen",
-	"Undead Dragon Queen",
-	"Bone King",
-	"Skeletal King",
-	"Living Armour King",
-	"Orc King",
-	"Elven Fairy",
-	"Elven Warrior",
-	"Elven Archer",
-	"Elven Mage",
-	"Elven King",
-	"Elven Queen",
-	"Amaran",
-	"Aurial",
-	"Cognium",
-	"Copina",
-	"Feroxi",
-	"Kynosian",
-	"Noctyra",
-	"Opulina"
-];
-
-const enemyIcons = [
-    "R.drawable.enemy_chicken_01",
-    "R.drawable.enemy_crow_01",
-    "R.drawable.enemy_rat_01",
-    "R.drawable.enemy_sheep_01",
-    "R.drawable.enemy_goat_01",
-    "R.drawable.enemy_pig_01",
-    "R.drawable.enemy_ox_01",
-    "R.drawable.enemy_goblin_01",
-    "R.drawable.enemy_goblin_02",
-    "R.drawable.enemy_goblin_03",
-    "R.drawable.enemy_goblin_04",
-    "R.drawable.enemy_jin",
-    "R.drawable.enemy_red_ghoul_01",
-    "R.drawable.enemy_greywolf_02",
-    "R.drawable.enemy_cyclop_01",
-    "R.drawable.enemy_demon_06",
-    "R.drawable.enemy_banshee",
-    "R.drawable.enemy_beest_02",
-    "R.drawable.enemy_spider_01",
-    "R.drawable.enemy_dog_01",
-    "R.drawable.enemy_crocodile_01",
-    "R.drawable.enemy_lion_01",
-    "R.drawable.enemy_bear_01",
-    "R.drawable.enemy_bear",
-    "R.drawable.enemy_dragon_10",
-    "R.drawable.enemy_dragon_11",
-    "R.drawable.enemy_dragon_08",
-    "R.drawable.enemy_dragon_07",
-    "R.drawable.enemy_dragon_04",
-    "R.drawable.enemy_dragon_05",
-    "R.drawable.enemy_dragon_01",
-    "R.drawable.enemy_dragon_06",
-    "R.drawable.enemy_chicken_01",
-    "R.drawable.enemy_crow_01",
-    "R.drawable.enemy_rat_01",
-    "R.drawable.enemy_sheep_01",
-    "R.drawable.enemy_goat_01",
-    "R.drawable.enemy_pig_01",
-    "R.drawable.enemy_ox_01",
-    "R.drawable.enemy_dummy_01",
-    "R.drawable.enemy_ghost_01",
-    "R.drawable.enemy_phoenix_01",
-    "R.drawable.enemy_nightmare_01",
-    "R.drawable.enemy_orc_05",
-    "R.drawable.enemy_snake_01",
-    "R.drawable.enemy_hound",
-    "R.drawable.enemy_skeleton_05",
-    "R.drawable.enemy_spider_03",
-    "R.drawable.enemy_tentacle_01",
-    "R.drawable.enemy_mask_01",
-    "R.drawable.enemy_doll_01",
-    "R.drawable.enemy_bug",
-    "R.drawable.enemy_spider_02",
-    "R.drawable.enemy_dragon_13",
-    "R.drawable.enemy_bone_beast",
-    "R.drawable.enemy_skeleton_04",
-    "R.drawable.enemy_living_armor_03",
-    "R.drawable.enemy_orc_04",
-    "R.drawable.enemy_elvenfairy",
-    "R.drawable.enemy_elvenwarrior",
-    "R.drawable.enemy_elvenarcher",
-    "R.drawable.enemy_elvenmage",
-    "R.drawable.enemy_elvenking",
-    "R.drawable.enemy_elvenqueen",
-    "R.drawable.enemy_amaran",
-    "R.drawable.enemy_aurial",
-    "R.drawable.enemy_cognium",
-    "R.drawable.enemy_copina",
-    "R.drawable.enemy_feroxi",
-    "R.drawable.enemy_kynosian",
-    "R.drawable.enemy_noctyra",
-    "R.drawable.enemy_opulina",
-];
-
-const enemyHealth = [
-    10, 20, 30, 50, 75, 100, 150, 35, 75, 135, 225, 375, 600, 90, 150, 300, 450, 675, 1000, 180, 360, 570, 750, 1200,
-    800, 1000, 1600, 2800, 4000, 5200, 8000, 15000, 10000, 15000,
-    69420, 25000, 30000, 50000, 75000,
-    35, 75, 69420, 69420, 600, 750, 1500,
-    2500, 5000, 8000, 12000, 50000, 75000, 100000, 150000, 200000, 250000, 300000, 400000, 100000, 150000,
-    300000, 400000, 600000, 750000, 69420, 4000000, 69420,
-    69420, 6500000, 69420, 69420, 4500000
-];
-
-const enemyAttack = [
-    1, 5, 5, 10, 10, 15, 25, 10, 15, 25, 45, 70, 80, 35, 60, 75, 75, 80, 90, 50, 65, 70, 80, 95, 120, 150,
-    180, 69420, 300, 350, 69420,
-    69420, 300, 500, 69420, 600, 750, 900, 1200, 10, 30, 50, 60,
-    70, 80, 140, 200, 69420, 350, 600, 69420,
-    2400, 3000, 3750, 5000, 7500, 10000, 15000, 8000, 9000, 12000, 15000, 24000, 30000, 70000, 60000,
-    80000, 60000, 90000, 80000, 100000, 70000
-];
-
-const enemyStrength = [
-    1, 4, 10, 15, 25, 15, 30, 15, 15, 20, 60, 65, 90, 50, 75, 65, 80, 80, 95, 65, 70, 75, 90, 120, 120,
-    150, 220, 280, 350, 350, 450, 750, 300, 69420, 450, 600, 750, 900, 1200, 10, 25, 60,
-    70, 80, 90, 160, 69420, 300, 500, 69420,
-    69420, 1400, 69420, 2400, 3600, 4800, 6000, 7200, 6000, 8000,
-    10000, 15000, 25000, 40000, 300000, 225000, 450000, 225000, 562500, 525000, 562500, 262500
-];
-
-const enemyDefence = [
-    1, 5, 8, 15, 15, 25, 40, 5, 10, 35, 50, 70, 85, 40, 70, 60, 70, 80, 85, 55, 50, 60, 85, 100, 120,
-    130, 140, 300, 240, 300, 450, 69420, 200, 300, 200, 69420, 600,
-    750, 1000, 10, 20, 50, 75, 75, 85, 120, 200, 350, 69420, 850, 850, 1000, 1500, 1700,
-    2500, 3800, 5000, 8500, 10000, 12000, 14000, 16000, 18000, 25000, 67500, 36000, 54000, 40500, 63000,
-    36000, 67500, 45000
-];
-
-const enemyAttackSpeed = [
-    "Slow", "Medium", "Medium", "Slow", "Slow", "Medium", "Slow", "Medium", "Medium", "Medium", "Fast",
-    "Very Fast", "Very Fast", "Fast", "Slow", "Medium", "Fast", "Fast", "Very Fast", "Fast", "Slow", "Fast",
-    "Slow", "Slow", "Medium", "Medium", "Fast", "Fast", "Fast", "Very Fast", "Very Fast", "Very Fast", "Fast",
-    "Fast", "Fast", "Fast", "Very Fast", "Very Fast", "Very Fast", "Slow", "Medium", "Fast", "Fast", "Fast",
-    "Very Fast", "Fast", "Fast", "Very Fast", "Fast", "Very Fast", "Very Fast", "Very Fast", "Very Fast",
-    "Insane", "Very Fast", "Very Fast", "Very Fast", "Insane", "Fast", "Fast", "Very Fast", "Very Fast",
-    "Insane", "Insane", "Very Fast", "Fast", "Insane", "Fast", "Very Fast", "Insane", "Insane", "Fast"
-];
-
-const enemySlayerExp = [
-    11n, 12n, 13n, 15n, 16n, 18n, 22n, 13n, 16n, 21n, 29n, 39n, 53n, 21n, 28n, 35n, 44n, 56n, 74n, 28n,
-    37n, 49n, 60n, 86n, 68n, 82n, 117n, 192n, 255n, 320n, 475n, 938n, 550n, 820n, 1063n, 1340n, 1615n,
-    2638n, 3930n, 13n, 18n, 31n, 40n, 51n, 60n, 106n, 168n, 305n, 473n, 723n, 2693n, 4000n, 5335n, 7903n,
-    10565n, 13315n, 16060n, 21545n, 6210n, 8960n, 16810n, 22310n, 33360n, 42260n, 371885n, 216060n,
-    329210n, 266285n, 360785n, 282060n, 336510n, 243885n
-];
-
-const enemyWeakness = [
-    "Melee", "Archery", "Melee", "Melee", "Melee", "Melee", "Melee", "Archery", "Melee", "Melee", "Archery",
-    "Melee", "Archery", "Melee", "Archery", "Melee", "Archery", "Melee", "Archery", "Melee", "Archery", "Melee",
-    "Melee", "Melee", "Archery", "Archery", "Archery", "Archery", "Archery", "Archery", "Archery", "Archery",
-    "Melee", "Archery", "Melee", "Melee", "Melee", "Melee", "Melee", "Melee", "Melee", "Archery", "Archery",
-    "Melee", "Melee", "Melee", "Melee", "Archery", "Archery", "Melee", "Melee", "Archery", "Archery", "Archery",
-    "Melee", "Melee", "Melee", "Archery", "Archery", "Archery", "Melee", "Archery", "Melee", "Melee", "None",
-    "None", "None", "None", "None", "None", "None", "None"
-];
-
-const enemySlayerLevel = [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 10, 20, 30, 45, 60, 65, 75, 85, 90, 95, 99, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 130, 130, 130, 130, 130, 130, 130, 130
-];
-
-const enemyDrops = [
-    "Bones,1,1,Always/Feathers,1,3,Always/Egg,1,1,Uncommon/Drumstick,1,1,Rare/Thread,1,1,Common/Birds Nest,1,1,Uncommon/Common Key,1,1,Rare/Chicken Knife,1,1,Secret Rare",
-    "Bones,1,1,Always/Feathers,3,6,Always/Evergreen Arrow Shafts,5,10,Uncommon/Egg,1,1,Uncommon/Thread,1,3,Common/Coins,2,10,Uncommon/Birds Nest,1,2,Uncommon/Common Chest,1,1,Rare/Raw Shrimp,1,1,Uncommon",
-    "Bones,1,1,Always/Coins,1,5,Uncommon/Stone Arrowheads,5,10,Uncommon/Common Chest,1,1,Rare/Thread,2,5,Common/Raw Shrimp,1,1,Uncommon/Emerald,1,1,Super Rare",
-    "Bones,1,1,Always/Coins,5,10,Uncommon/Wool,1,1,Common/Akomeric,1,1,Rare/Common Chest,1,1,Rare/Thread,2,6,Common/Raw Snail,1,1,Uncommon/Raw Shrimp,1,1,Common",
-    "Bones,1,1,Always/Milk,1,1,Uncommon/Oak Arrow Shafts,15,30,Rare/Coins,5,10,Uncommon/Common Chest,1,1,Rare/Thread,5,10,Common/Raw Carp,1,1,Uncommon",
-    "Bones,1,1,Always/Bacon,1,1,Common/Coins,10,20,Uncommon/Common Chest,1,1,Rare/Raw Minnows,1,1,Uncommon/Emerald,1,1,Super Rare",
-    "Bones,1,1,Always/Milk,1,1,Common/Coins,20,40,Common/Hide,1,1,Common/Common Chest,1,1,Uncommon/Thread,10,15,Common/Raw Perch,1,1,Uncommon",
-    "Bones,1,1,Always/Coins,5,10,Common/Evergreen Bow,1,1,Rare/Akomeric,1,1,Uncommon/Bloodroot,1,1,Rare/Hyssop,1,1,Rare/Red Chest,1,1,Super Rare/Oak,1,3,Common",
-    "Bones,1,1,Always/Coins,5,10,Common/Copper Arrowheads,5,10,Rare/Akomeric,1,1,Uncommon/Bloodroot,1,1,Rare/Hyssop,1,1,Rare/Hide,1,1,Common/Red Chest,1,1,Super Rare",
-    "Bones,1,1,Always/Coins,10,15,Common/Oak Bow,1,1,Rare/Red Chest,1,1,Rare/Wood,1,1,Common/Iron Ore,1,1,Common/Bloodroot,1,1,Common/Akomeric,1,1,Common",
-    "Bones,1,1,Always/Coins,20,30,Common/Red Chest,1,1,Rare/Goblin Cleaver,1,1,Legendary/Bloodroot,1,1,Common/Akomeric,1,1,Common/Hyssop,1,1,Common/Ancient Rod,1,1,Secret Rare",
-    "Bones,1,1,Always/Coins,50,100,Uncommon/Maple Bow,1,1,Rare/Red Chest,1,1,Uncommon/Raw Crab,1,1,Rare/Raw Lobster,1,1,Rare/Empty Vial,5,10,Common/Oak,3,5,Common/Cauldron,1,1,Secret Rare",
-    "Bones,1,1,Always/Coins,60,100,Uncommon/Red Chest,1,1,Uncommon/Raw Crab,1,1,Uncommon/Raw Lobster,1,1,Rare/Emerald,1,1,Super Rare",
-    "Bones,1,1,Always/Akomeric,1,1,Always/Hide,1,5,Uncommon/Leather,1,2,Rare/Iron Ore,1,1,Uncommon/Emerald,1,1,Super Rare",
-    "Bones,1,1,Always/Akomeric,1,1,Always/Maple Log,1,1,Uncommon/Bloodroot,1,1,Uncommon/Stone,1,3,Uncommon/Wood,2,5,Uncommon/Rope,1,3,Rare/Mithril Boots,1,1,Super Rare/Mithril Ore,1,5,Rare",
-    "Bones,1,1,Always/Empty Vial,1,3,Common/Fir Bow,1,1,Rare/Nails,1,5,Uncommon/Bloodroot,1,1,Uncommon/Fishing Potion,1,1,Rare/Honey,1,1,Uncommon",
-    "Bones,1,1,Always/Empty Vial,1,3,Common/Strength Potion,1,1,Uncommon/Mithril Top,1,1,Super Rare/Mithril Greaves,1,1,Super Rare/Mithril Boots,1,1,Super Rare/Safflower,1,1,Rare",
-    "Bones,1,1,Always/Tooth Necklace,1,1,Rare/Empty Vial,1,3,Common/Hyssop,1,1,Common/Safflower,1,1,Uncommon/Hide,1,10,Uncommon/Raw Catfish,1,5,Rare/Large Fishing Net,1,1,Super Rare/Fishing Net,3,5,Rare",
-    "Bones,1,1,Always/Stone Tablet,1,1,Legendary/Hide,5,10,Uncommon/Thread,10,20,Uncommon/Leather,1,5,Rare/Rope,5,10,Super Rare/Wolfmint,1,1,Super Rare/Vissinel,1,1,Super Rare/Coins,200,500,Rare",
-    "Bones,1,1,Always/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Iron Ore,1,5,Uncommon/Wood,1,3,Common/Emerald,1,1,Super Rare",
-    "Bones,1,1,Always/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Cog,1,1,Common/Thread,5,10,Common/Hide,1,5,Uncommon/Fishing Net,1,3,Rare",
-    "Bones,1,1,Always/Ram Skull,1,1,Super Rare/Fir Log,1,1,Uncommon/Nefrit Chest,1,1,Super Rare/Nefrit Key,1,1,Super Rare/Thread,5,10,Common/Yarn,1,5,Uncommon/Emerald,1,1,Rare",
-    "Bones,1,1,Always/Ram Skull,1,1,Super Rare/Honey,1,1,Common/Nefrit Chest,1,1,Rare/Nefrit Key,1,1,Rare/Coins,200,500,Rare/Pot of Gold,1,1,Rare/Thread,10,20,Uncommon/Yarn,5,10,Common",
-    "Bones,1,1,Always/Gold Ring,1,1,Legendary/Rhodium Ore,1,1,Super Rare/Nefrit Chest,1,1,Uncommon/Nefrit Key,1,1,Uncommon/Coins,500,1000,Rare/Thread,20,50,Rare/Oak,5,10,Common",
-    "Dragon Bones,1,1,Always/Dragon Leather,1,1,Rare/Dragon Skull,1,1,Legendary/Crystal Chest,1,1,Super Rare/Dragon Ore,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",
-    "Dragon Bones,1,1,Always/Dragon Leather,1,1,Rare/Dragon Skull,1,1,Legendary/Crystal Key,1,1,Super Rare/Dragon Ore,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",
-    "Dragon Bones,1,1,Always/Dragon Leather,1,1,Uncommon/Dragon Skull,1,1,Legendary/Crystal Chest,1,1,Super Rare/Dragon Ore,1,2,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,500,1000,Rare/Luck Potion,1,1,Uncommon",
-    "Dragon Bones,1,1,Always/Dragon Arrowheads,15,25,Rare/Dragon Leather,1,1,Uncommon/Dragon Skull,1,1,Legendary/Golden Necklace,1,1,Legendary/Crystal Key,1,1,Super Rare/Dragon Ore,1,2,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,1000,2500,Rare",
-    "Dragon Bones,1,1,Always/Dragon Leather,1,2,Uncommon/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Necklace,1,1,Legendary/Crystal Chest,1,1,Rare/Dragon Ore,1,2,Super Rare/Dragon Wing Battleaxe,1,1,Legendary/Dragon Scimitar,1,1,Super Rare/Coins,1000,2500,Rare",
-    "Dragon Bones,1,1,Always/Dragon Leather,1,2,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Crystal Key,1,1,Rare/Dragon Ore,1,1,Rare/Trident of the Seas,1,1,Legendary/Dragon Wing Battleaxe,1,1,Super Rare/Dragon Scimitar,1,1,Super Rare/Coins,2500,5000,Rare",
-    "Big Dragon Bones,1,1,Always/Dragon Leather,2,5,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Crystal Key,1,1,Rare/Dragon Ore,1,2,Rare/Dragon Wing Battleaxe,1,1,Super Rare/Dragon Scimitar,1,1,Rare/Coins,5000,10000,Rare/Kings Chest,1,1,Mythical/Kings Key,1,1,Mythical",
-    "Big Dragon Bones,1,2,Always/Dragon Leather,5,10,Common/Dragon Skull,1,1,Super Rare/Dragon Tail,1,1,Super Rare/Golden Scarab,1,1,Super Rare/Queens Chest,1,1,Mythical/Queens Key,1,1,Mythical/Dragon Ore,2,5,Rare/Dragon Scimitar,1,1,Rare/Coins,5000,10000,Rare",
-    "Bones,5,5,Always/Coins,1000,2500,Always/Cedar Log,1,1,Rare/Feathers,10,30,Always/Egg,5,10,Uncommon/Chicken Knife,1,1,Legendary/Farm Chest,1,1,Legendary/Farmour Fragment,1,1,Legendary",
-    "Bones,5,5,Always/Coins,1500,2500,Always/Feathers,5,10,Always/Egg,1,3,Uncommon/Thread,5,10,Common/Birds Nest,2,5,Uncommon/Farm Key,1,1,Legendary/Dagger Fragment,1,1,Mythical",
-    "Bones,5,5,Always/Coins,2000,3000,Always/Platinum Ore,1,1,Rare/Emerald,1,3,Rare/Farm Chest,1,1,Super Rare/Farmour Fragment,1,2,Legendary",
-    "Bones,5,5,Always/Coins,2500,3000,Always/Wool,2,5,Common/Farm Key,1,1,Super Rare/Dagger Fragment,1,3,Mythical",
-    "Bones,5,5,Always/Coins,3000,4000,Always/Cedar Bow,1,1,Super Rare/Milk,2,5,Uncommon/Farm Chest,1,1,Rare/Farmour Fragment,1,3,Legendary",
-    "Bones,5,5,Always/Coins,3500,4500,Always/Bacon,2,5,Common/Farm Key,1,1,Rare/Dagger Fragment,2,5,Mythical",
-    "Bones,5,5,Always/Coins,4000,5000,Always/Hide,2,5,Common/Ginkgo Bow,1,1,Legendary/Ginkgo Log,1,1,Uncommon/Farm Chest,1,2,Rare/Farm Key,1,2,Rare/Farmour Fragment,2,5,Legendary/Dagger Fragment,1,1,Legendary",
-    "Wood,1,1,Always/Hide,1,1,Uncommon/Redwood Log,1,1,Super Rare/Thread,1,3,Common/Common Key,1,1,Rare/Oak,1,3,Uncommon/Iron Ore,1,3,Uncommon",
-    "Akomeric,1,1,Common/Mushroom,1,1,Common/Stone,1,5,Common/Common Key,1,1,Rare/Common Chest,1,1,Rare",
-    "Bones,1,1,Always/Bloodroot,1,1,Common/Red Chest,1,1,Rare/Red Key,1,1,Rare/Thread,10,20,Common/Yarn,1,5,Common/Ruby,1,1,Rare/Gold Ore,1,1,Legendary/Sextant,1,1,Super Rare/Mystery Egg,1,1,Secret Rare",
-    "Hyssop,1,1,Common/Red Key,1,1,Rare/Red Chest,1,1,Rare/Book of Aroon,1,1,Legendary/Thread,25,50,Rare/Hide,10,25,Uncommon/Iron Ore,1,3,Common",
-    "Bones,1,1,Always/Thread,10,25,Common/Sage Leaf,1,5,Common/Wood,10,20,Uncommon/Mithril Ore,5,10,Rare/Iron Ore,10,25,Rare/Barbarian Boots,1,1,Legendary/Barbarian Gloves,1,1,Legendary/Barbarian Top,1,1,Legendary/Barbarian Helm,1,1,Legendary/Barbarian Greaves,1,1,Legendary/Barbarian Cape,1,1,Legendary",
-    "Bones,1,1,Always/Safflower,1,1,Common/Sunburst Flower,1,1,Super Rare/Spiked Chest,1,1,Rare/Spiked Key,1,1,Rare/Hide,10,25,Uncommon/Mithril Ore,1,5,Rare/Iron Ore,10,25,Common/Yarn,5,10,Rare/Emerald,1,1,Rare",
-    "Bones,1,1,Always/Sage Leaf,1,1,Common/Redwood Bow,1,1,Super Rare/Mithril Ore,5,10,Uncommon/Rope,5,10,Uncommon/Cog,1,1,Rare/Iron Ore,5,10,Common/Blue Silk,15,20,Super Rare",
-    "Bones,1,5,Always/Thread,10,15,Common/Vissinel,1,1,Common/Wood,10,20,Uncommon/Mithril Ore,5,10,Rare/Iron Ore,10,20,Rare/Necromancer Boots,1,1,Legendary/Necromancer Gloves,1,1,Legendary/Necromancer Top,1,1,Legendary/Necromancer Helm,1,1,Legendary/Necromancer Greaves,1,1,Legendary/Necromancer Cape,1,1,Legendary",
-    "Bones,1,1,Always/Wolfmint,1,1,Common/Ember Fern,1,1,Super Rare/Chestnut Log,1,1,Rare/Crystal Chest,1,2,Super Rare/Thread,25,50,Uncommon/Rope,10,15,Rare/Yarn,5,10,Rare/Gold Ring,1,1,Legendary/Iron Ore,10,20,Common",
-    "Bones,1,1,Always/Vissinel,1,1,Always/Crystal Key,1,1,Rare/Chestnut Bow,1,1,Super Rare/Stone Tablet,1,1,Legendary/Gold Ring,1,1,Legendary/Thread,50,100,Uncommon/Rope,15,20,Rare/Blue Thread,1,1,Common",
-    "Bones,5,5,Always/Vissinel,3,5,Always/Crystal Chest,1,3,Rare/Ancient Dagger,1,1,Mythical/Blue Thread,3,5,Common/Blue Silk,1,3,Uncommon/Coin Purse,1,1,Super Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare",
-    "Coins,100,200,Always/Queens Chest,1,1,Super Rare/Wood,10,20,Always/Hide,10,20,Uncommon/Thread,10,30,Common/Queens Armour Fragment,1,1,Legendary",
-    "Coins,150,250,Always/Queens Key,1,1,Super Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare/Queens Armour Fragment,1,2,Legendary/Golden Scarab,1,1,Super Rare",
-    "Coins,250,500,Always/Queens Chest,1,1,Rare/Golden Necklace,1,1,Super Rare/Wine,3,5,Rare/Wolfmint,1,1,Common/Ember Fern,1,1,Rare/Thread,50,100,Uncommon/Gold Ring,1,1,Legendary/Queens Armour Fragment,1,3,Legendary",
-    "Coins,500,750,Always/Queens Key,1,1,Rare/Big Dragon Bones,2,3,Always/Dragon Leather,2,5,Common/Dragon Skull,1,1,Legendary/Dragon Tail,1,1,Legendary/Golden Scarab,1,1,Legendary/Queens Weapon Fragment,1,1,Legendary",
-    "Sunburst Flower,1,1,Always/Coins,750,1000,Always/Kings Chest,1,1,Super Rare/Kings Armour Fragment,1,1,Legendary",
-    "Sunburst Flower,1,1,Always/Coins,1000,1500,Always/Kings Key,1,1,Super Rare/Kings Armour Fragment,1,2,Legendary",
-    "Ember Fern,1,1,Always/Coins,2000,3000,Always/Kings Chest,1,1,Rare/Kings Armour Fragment,1,3,Legendary",
-    "Ember Fern,1,1,Always/Coins,3000,5000,Always/Kings Key,1,1,Rare/Kings Weapon Fragment,1,1,Legendary",
-    "Coins,8000,10000,Always/Elven Armour Fragment,1,1,Legendary/Blue Silk,5,10,Common/Compass,1,1,Rare/Treasure Map,1,1,Rare/Extreme Power Potion,1,1,Rare/Safflower,1,3,Uncommon/Dragon Tail,1,3,Legendary/Elven Crystal,1,1,Rare",
-    "Coins,10000,15000,Always/Elven Weapon Fragment,1,1,Legendary/Compass,1,3,Rare/Sunburst Flower,1,3,Uncommon/Dragon Skull,1,3,Legendary/Raw Ray,1,1,Common/Pirates Hat,1,1,Super Rare/Elven Crystal,1,3,Rare",
-    "Coins,15000,20000,Always/Elven Armour Fragment,1,1,Super Rare/Elven Arrows,1,1,Super Rare/Sunburst Flower,3,5,Uncommon/Crab,3,5,Common/Dragon Plate,15,20,Super Rare/Raw Shark,1,1,Common/Golden Scarab,1,3,Super Rare/Elven Crystal,1,1,Uncommon",
-    "Coins,20000,25000,Always/Elven Weapon Fragment,1,1,Super Rare/Sunburst Flower,5,10,Uncommon/Dragon Leather,15,20,Super Rare/Raw Octopus,1,1,Common/Dragon Ore,1,3,Super Rare/Dragon Platter,1,1,Rare/Elven Crystal,1,3,Uncommon",
-    "Coins,30000,50000,Always/Elven Armour Fragment,1,2,Uncommon/Ember Fern,3,5,Uncommon/Dragon Tail,5,10,Legendary/Dragon Ore,3,5,Super Rare/Golden Scarab,3,5,Super Rare/Dragon Platter,3,5,Rare/Elven Crystal,1,1,Common",
-    "Coins,50000,100000,Always/Elven Weapon Fragment,1,2,Uncommon/Ember Fern,15,20,Uncommon/Dragon Skull,5,10,Legendary/Queens Weapon Fragment,1,1,Super Rare/Queens Armour Fragment,1,1,Super Rare/Dragon Platter,5,10,Uncommon/Elven Crystal,1,3,Common",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always",
-    "Gold Coin,5,10,Always"
-];
-
-const enemyArea = [
-    "Farm",
-    "Farm",
-    "Farm",
-    "Farm",
-    "Farm",
-    "Farm",
-    "Farm",
-    "Abandoned Village",
-    "Abandoned Village",
-    "Abandoned Village",
-    "Abandoned Village",
-    "Abandoned Village",
-    "Abandoned Village",
-    "Caves",
-    "Caves",
-    "Caves",
-    "Caves",
-    "Caves",
-    "Caves",
-    "Great Plains",
-    "Great Plains",
-    "Great Plains",
-    "Great Plains",
-    "Great Plains",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Dragon Island",
-    "Elite Farm",
-    "Elite Farm",
-    "Elite Farm",
-    "Elite Farm",
-    "Elite Farm",
-    "Elite Farm",
-    "Elite Farm",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Slayer Dungeon",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Realm of the Kings",
-    "Immortal Realm",
-    "Immortal Realm",
-    "Immortal Realm",
-    "Immortal Realm",
-    "Immortal Realm",
-    "Immortal Realm",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods",
-    "Kingdom of the Gods"
-];
+// @ts-nocheck
+const monsters = {
+    "Chicken": {
+      "enemyIcons": "R.drawable.enemy_chicken_01",
+      "enemyHealth": 10,
+      "enemyAttack": 1,
+      "enemyStrength": 1,
+      "enemyDefence": 1,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "11",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Feathers",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Egg",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Drumstick",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Birds Nest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Common Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Chicken Knife",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Secret Rare"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Crow": {
+      "enemyIcons": "R.drawable.enemy_crow_01",
+      "enemyHealth": 20,
+      "enemyAttack": 5,
+      "enemyStrength": 4,
+      "enemyDefence": 5,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "12",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Feathers",
+          "min": 3,
+          "max": 6,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Evergreen Arrow Shafts",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Egg",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Thread",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Coins",
+          "min": 2,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Birds Nest",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Raw Shrimp",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Rat": {
+      "enemyIcons": "R.drawable.enemy_rat_01",
+      "enemyHealth": 30,
+      "enemyAttack": 5,
+      "enemyStrength": 10,
+      "enemyDefence": 8,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "13",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Stone Arrowheads",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Raw Shrimp",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Sheep": {
+      "enemyIcons": "R.drawable.enemy_sheep_01",
+      "enemyHealth": 50,
+      "enemyAttack": 10,
+      "enemyStrength": 15,
+      "enemyDefence": 15,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "15",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Wool",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 2,
+          "max": 6,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Raw Snail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Raw Shrimp",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Goat": {
+      "enemyIcons": "R.drawable.enemy_goat_01",
+      "enemyHealth": 75,
+      "enemyAttack": 10,
+      "enemyStrength": 25,
+      "enemyDefence": 15,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "16",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Milk",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Oak Arrow Shafts",
+          "min": 15,
+          "max": 30,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Raw Carp",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Pig": {
+      "enemyIcons": "R.drawable.enemy_pig_01",
+      "enemyHealth": 100,
+      "enemyAttack": 15,
+      "enemyStrength": 15,
+      "enemyDefence": 25,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "18",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Bacon",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Coins",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Raw Minnows",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Ox": {
+      "enemyIcons": "R.drawable.enemy_ox_01",
+      "enemyHealth": 150,
+      "enemyAttack": 25,
+      "enemyStrength": 30,
+      "enemyDefence": 40,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "22",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Milk",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Coins",
+          "min": 20,
+          "max": 40,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 15,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Raw Perch",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Farm"
+    },
+    "Young Goblin": {
+      "enemyIcons": "R.drawable.enemy_goblin_01",
+      "enemyHealth": 35,
+      "enemyAttack": 10,
+      "enemyStrength": 15,
+      "enemyDefence": 5,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "13",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Evergreen Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Hyssop",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Oak",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Goblin Grump": {
+      "enemyIcons": "R.drawable.enemy_goblin_02",
+      "enemyHealth": 75,
+      "enemyAttack": 15,
+      "enemyStrength": 15,
+      "enemyDefence": 10,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "16",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Copper Arrowheads",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Hyssop",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Goblin Guard": {
+      "enemyIcons": "R.drawable.enemy_goblin_03",
+      "enemyHealth": 135,
+      "enemyAttack": 25,
+      "enemyStrength": 20,
+      "enemyDefence": 35,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "21",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 10,
+          "max": 15,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Oak Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Wood",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Goblin Chief": {
+      "enemyIcons": "R.drawable.enemy_goblin_04",
+      "enemyHealth": 225,
+      "enemyAttack": 45,
+      "enemyStrength": 60,
+      "enemyDefence": 50,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "29",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 20,
+          "max": 30,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Goblin Cleaver",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Hyssop",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Ancient Rod",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Secret Rare"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Jin": {
+      "enemyIcons": "R.drawable.enemy_jin",
+      "enemyHealth": 375,
+      "enemyAttack": 70,
+      "enemyStrength": 65,
+      "enemyDefence": 70,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "39",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 50,
+          "max": 100,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Maple Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Raw Crab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Raw Lobster",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Empty Vial",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Oak",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Cauldron",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Secret Rare"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Red Ghoul": {
+      "enemyIcons": "R.drawable.enemy_red_ghoul_01",
+      "enemyHealth": 600,
+      "enemyAttack": 80,
+      "enemyStrength": 90,
+      "enemyDefence": 85,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "53",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 60,
+          "max": 100,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Raw Crab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Raw Lobster",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Abandoned Village"
+    },
+    "Grey Wolf": {
+      "enemyIcons": "R.drawable.enemy_greywolf_02",
+      "enemyHealth": 90,
+      "enemyAttack": 35,
+      "enemyStrength": 50,
+      "enemyDefence": 40,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "21",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Leather",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Cyclops": {
+      "enemyIcons": "R.drawable.enemy_cyclop_01",
+      "enemyHealth": 150,
+      "enemyAttack": 60,
+      "enemyStrength": 75,
+      "enemyDefence": 70,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "28",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Maple Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Stone",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Wood",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Rope",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Mithril Boots",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Mithril Ore",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Cave Demon": {
+      "enemyIcons": "R.drawable.enemy_demon_06",
+      "enemyHealth": 300,
+      "enemyAttack": 75,
+      "enemyStrength": 65,
+      "enemyDefence": 60,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "35",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Empty Vial",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Fir Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Nails",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Fishing Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Honey",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Banshee": {
+      "enemyIcons": "R.drawable.enemy_banshee",
+      "enemyHealth": 450,
+      "enemyAttack": 75,
+      "enemyStrength": 80,
+      "enemyDefence": 70,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "44",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Empty Vial",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Strength Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Mithril Top",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Mithril Greaves",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Mithril Boots",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Safflower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Cave Beast": {
+      "enemyIcons": "R.drawable.enemy_beest_02",
+      "enemyHealth": 675,
+      "enemyAttack": 80,
+      "enemyStrength": 80,
+      "enemyDefence": 80,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "56",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Tooth Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Empty Vial",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Hyssop",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Safflower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Raw Catfish",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Large Fishing Net",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Fishing Net",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Giant Cave Spider": {
+      "enemyIcons": "R.drawable.enemy_spider_01",
+      "enemyHealth": 1000,
+      "enemyAttack": 90,
+      "enemyStrength": 95,
+      "enemyDefence": 85,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "74",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Stone Tablet",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Hide",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Leather",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Rope",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Wolfmint",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Vissinel",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 200,
+          "max": 500,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Caves"
+    },
+    "Wild Dog": {
+      "enemyIcons": "R.drawable.enemy_dog_01",
+      "enemyHealth": 180,
+      "enemyAttack": 50,
+      "enemyStrength": 65,
+      "enemyDefence": 55,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "28",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Nefrit Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Nefrit Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Wood",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Great Plains"
+    },
+    "Crocodile": {
+      "enemyIcons": "R.drawable.enemy_crocodile_01",
+      "enemyHealth": 360,
+      "enemyAttack": 65,
+      "enemyStrength": 70,
+      "enemyDefence": 50,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "37",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Nefrit Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Nefrit Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Cog",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Thread",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Fishing Net",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Great Plains"
+    },
+    "Lion": {
+      "enemyIcons": "R.drawable.enemy_lion_01",
+      "enemyHealth": 570,
+      "enemyAttack": 70,
+      "enemyStrength": 75,
+      "enemyDefence": 60,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "49",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Ram Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Fir Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Nefrit Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Nefrit Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Yarn",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Great Plains"
+    },
+    "Brown Bear": {
+      "enemyIcons": "R.drawable.enemy_bear_01",
+      "enemyHealth": 750,
+      "enemyAttack": 80,
+      "enemyStrength": 90,
+      "enemyDefence": 85,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "60",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Ram Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Honey",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Nefrit Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Nefrit Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 200,
+          "max": 500,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Pot of Gold",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Yarn",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Great Plains"
+    },
+    "Skeletal Bear": {
+      "enemyIcons": "R.drawable.enemy_bear",
+      "enemyHealth": 1200,
+      "enemyAttack": 95,
+      "enemyStrength": 120,
+      "enemyDefence": 100,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "86",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Gold Ring",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Rhodium Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Nefrit Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Nefrit Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Coins",
+          "min": 500,
+          "max": 1000,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 20,
+          "max": 50,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Oak",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Great Plains"
+    },
+    "Baby Red Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_10",
+      "enemyHealth": 800,
+      "enemyAttack": 120,
+      "enemyStrength": 120,
+      "enemyDefence": 120,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "68",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 500,
+          "max": 1000,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Luck Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Baby Blue Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_11",
+      "enemyHealth": 1000,
+      "enemyAttack": 150,
+      "enemyStrength": 150,
+      "enemyDefence": 130,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "82",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 500,
+          "max": 1000,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Luck Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Undead Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_08",
+      "enemyHealth": 1600,
+      "enemyAttack": 180,
+      "enemyStrength": 220,
+      "enemyDefence": 140,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "117",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 500,
+          "max": 1000,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Luck Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Ancient Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_07",
+      "enemyHealth": 2800,
+      "enemyAttack": 69420,
+      "enemyStrength": 280,
+      "enemyDefence": 300,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "192",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Arrowheads",
+          "min": 15,
+          "max": 25,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 1000,
+          "max": 2500,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Green Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_04",
+      "enemyHealth": 4000,
+      "enemyAttack": 300,
+      "enemyStrength": 350,
+      "enemyDefence": 240,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "255",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Wing Battleaxe",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 1000,
+          "max": 2500,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Water Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_05",
+      "enemyHealth": 5200,
+      "enemyAttack": 350,
+      "enemyStrength": 350,
+      "enemyDefence": 300,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "320",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Trident of the Seas",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Wing Battleaxe",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 2500,
+          "max": 5000,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "King Dragon": {
+      "enemyIcons": "R.drawable.enemy_dragon_01",
+      "enemyHealth": 8000,
+      "enemyAttack": 69420,
+      "enemyStrength": 450,
+      "enemyDefence": 450,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "475",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Big Dragon Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Crystal Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Wing Battleaxe",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 5000,
+          "max": 10000,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Kings Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        },
+        {
+          "name": "Kings Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Dragon Queen": {
+      "enemyIcons": "R.drawable.enemy_dragon_06",
+      "enemyHealth": 15000,
+      "enemyAttack": 69420,
+      "enemyStrength": 750,
+      "enemyDefence": 69420,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "938",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Big Dragon Bones",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Queens Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        },
+        {
+          "name": "Queens Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dragon Scimitar",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Coins",
+          "min": 5000,
+          "max": 10000,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Dragon Island"
+    },
+    "Elite Chicken": {
+      "enemyIcons": "R.drawable.enemy_chicken_01",
+      "enemyHealth": 10000,
+      "enemyAttack": 300,
+      "enemyStrength": 300,
+      "enemyDefence": 200,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "550",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 1000,
+          "max": 2500,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Cedar Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Feathers",
+          "min": 10,
+          "max": 30,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Egg",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Chicken Knife",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Farm Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Farmour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Crow": {
+      "enemyIcons": "R.drawable.enemy_crow_01",
+      "enemyHealth": 15000,
+      "enemyAttack": 500,
+      "enemyStrength": 69420,
+      "enemyDefence": 300,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "820",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 1500,
+          "max": 2500,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Feathers",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Egg",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Thread",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Birds Nest",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Farm Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dagger Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Rat": {
+      "enemyIcons": "R.drawable.enemy_rat_01",
+      "enemyHealth": 69420,
+      "enemyAttack": 69420,
+      "enemyStrength": 450,
+      "enemyDefence": 200,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "1063",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 2000,
+          "max": 3000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Platinum Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Farm Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Farmour Fragment",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Sheep": {
+      "enemyIcons": "R.drawable.enemy_sheep_01",
+      "enemyHealth": 25000,
+      "enemyAttack": 600,
+      "enemyStrength": 600,
+      "enemyDefence": 69420,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "1340",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 2500,
+          "max": 3000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Wool",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Farm Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dagger Fragment",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Mythical"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Goat": {
+      "enemyIcons": "R.drawable.enemy_goat_01",
+      "enemyHealth": 30000,
+      "enemyAttack": 750,
+      "enemyStrength": 750,
+      "enemyDefence": 600,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "1615",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 3000,
+          "max": 4000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Cedar Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Milk",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Farm Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Farmour Fragment",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Pig": {
+      "enemyIcons": "R.drawable.enemy_pig_01",
+      "enemyHealth": 50000,
+      "enemyAttack": 900,
+      "enemyStrength": 900,
+      "enemyDefence": 750,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "2638",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 3500,
+          "max": 4500,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Bacon",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Farm Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Dagger Fragment",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Mythical"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Elite Ox": {
+      "enemyIcons": "R.drawable.enemy_ox_01",
+      "enemyHealth": 75000,
+      "enemyAttack": 1200,
+      "enemyStrength": 1200,
+      "enemyDefence": 1000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "3930",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 4000,
+          "max": 5000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Hide",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Ginkgo Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Ginkgo Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Farm Chest",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Farm Key",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Farmour Fragment",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dagger Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Elite Farm"
+    },
+    "Training Dummy": {
+      "enemyIcons": "R.drawable.enemy_dummy_01",
+      "enemyHealth": 35,
+      "enemyAttack": 10,
+      "enemyStrength": 10,
+      "enemyDefence": 10,
+      "enemyAttackSpeed": "Slow",
+      "enemySlayerExp": "13",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 10,
+      "enemyDrops": [
+        {
+          "name": "Wood",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Hide",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Redwood Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Common Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Oak",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Ghost": {
+      "enemyIcons": "R.drawable.enemy_ghost_01",
+      "enemyHealth": 75,
+      "enemyAttack": 30,
+      "enemyStrength": 25,
+      "enemyDefence": 20,
+      "enemyAttackSpeed": "Medium",
+      "enemySlayerExp": "18",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 20,
+      "enemyDrops": [
+        {
+          "name": "Akomeric",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Mushroom",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Stone",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Common Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Common Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Phoenix": {
+      "enemyIcons": "R.drawable.enemy_phoenix_01",
+      "enemyHealth": 69420,
+      "enemyAttack": 50,
+      "enemyStrength": 60,
+      "enemyDefence": 50,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "31",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 30,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Bloodroot",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Red Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Yarn",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Ruby",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Gold Ore",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Sextant",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Mystery Egg",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Secret Rare"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Nightmare": {
+      "enemyIcons": "R.drawable.enemy_nightmare_01",
+      "enemyHealth": 69420,
+      "enemyAttack": 60,
+      "enemyStrength": 70,
+      "enemyDefence": 75,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "40",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 45,
+      "enemyDrops": [
+        {
+          "name": "Hyssop",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Red Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Red Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Book of Aroon",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Thread",
+          "min": 25,
+          "max": 50,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Hide",
+          "min": 10,
+          "max": 25,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Orc Captain": {
+      "enemyIcons": "R.drawable.enemy_orc_05",
+      "enemyHealth": 600,
+      "enemyAttack": 70,
+      "enemyStrength": 80,
+      "enemyDefence": 75,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "51",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 60,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 25,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Sage Leaf",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Wood",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Mithril Ore",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 10,
+          "max": 25,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Barbarian Boots",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Barbarian Gloves",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Barbarian Top",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Barbarian Helm",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Barbarian Greaves",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Barbarian Cape",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Cobra": {
+      "enemyIcons": "R.drawable.enemy_snake_01",
+      "enemyHealth": 750,
+      "enemyAttack": 80,
+      "enemyStrength": 90,
+      "enemyDefence": 85,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "60",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 65,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Safflower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Sunburst Flower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Spiked Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Spiked Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Hide",
+          "min": 10,
+          "max": 25,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Mithril Ore",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 10,
+          "max": 25,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Yarn",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Emerald",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Skeletal Hound": {
+      "enemyIcons": "R.drawable.enemy_hound",
+      "enemyHealth": 1500,
+      "enemyAttack": 140,
+      "enemyStrength": 160,
+      "enemyDefence": 120,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "106",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 75,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Sage Leaf",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Redwood Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Mithril Ore",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Rope",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Cog",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Blue Silk",
+          "min": 15,
+          "max": 20,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Necromancer": {
+      "enemyIcons": "R.drawable.enemy_skeleton_05",
+      "enemyHealth": 2500,
+      "enemyAttack": 200,
+      "enemyStrength": 69420,
+      "enemyDefence": 200,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "168",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 85,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 15,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Vissinel",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Wood",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Mithril Ore",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Necromancer Boots",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Necromancer Gloves",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Necromancer Top",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Necromancer Helm",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Necromancer Greaves",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Necromancer Cape",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Fluffy": {
+      "enemyIcons": "R.drawable.enemy_spider_03",
+      "enemyHealth": 5000,
+      "enemyAttack": 69420,
+      "enemyStrength": 300,
+      "enemyDefence": 350,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "305",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 90,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Wolfmint",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Ember Fern",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Chestnut Log",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Crystal Chest",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 25,
+          "max": 50,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Rope",
+          "min": 10,
+          "max": 15,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Yarn",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Gold Ring",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Iron Ore",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Blue Devil": {
+      "enemyIcons": "R.drawable.enemy_tentacle_01",
+      "enemyHealth": 8000,
+      "enemyAttack": 350,
+      "enemyStrength": 500,
+      "enemyDefence": 69420,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "473",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 95,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Vissinel",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Crystal Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Chestnut Bow",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Stone Tablet",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Gold Ring",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Thread",
+          "min": 50,
+          "max": 100,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Rope",
+          "min": 15,
+          "max": 20,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Blue Thread",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Ancient Tribal Leader": {
+      "enemyIcons": "R.drawable.enemy_mask_01",
+      "enemyHealth": 12000,
+      "enemyAttack": 600,
+      "enemyStrength": 69420,
+      "enemyDefence": 850,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "723",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 99,
+      "enemyDrops": [
+        {
+          "name": "Bones",
+          "min": 5,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Vissinel",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Crystal Chest",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Ancient Dagger",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Mythical"
+        },
+        {
+          "name": "Blue Thread",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Blue Silk",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Coin Purse",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Golden Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Wine",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Slayer Dungeon"
+    },
+    "Dummy Queen": {
+      "enemyIcons": "R.drawable.enemy_doll_01",
+      "enemyHealth": 50000,
+      "enemyAttack": 69420,
+      "enemyStrength": 69420,
+      "enemyDefence": 850,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "2693",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 100,
+          "max": 200,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Queens Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Wood",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Hide",
+          "min": 10,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Thread",
+          "min": 10,
+          "max": 30,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Queens Armour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Scarab Queen": {
+      "enemyIcons": "R.drawable.enemy_bug",
+      "enemyHealth": 75000,
+      "enemyAttack": 2400,
+      "enemyStrength": 1400,
+      "enemyDefence": 1000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "4000",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 150,
+          "max": 250,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Queens Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Golden Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Wine",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Queens Armour Fragment",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Spider Queen": {
+      "enemyIcons": "R.drawable.enemy_spider_02",
+      "enemyHealth": 100000,
+      "enemyAttack": 3000,
+      "enemyStrength": 69420,
+      "enemyDefence": 1500,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "5335",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 250,
+          "max": 500,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Queens Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Golden Necklace",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Wine",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Wolfmint",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Ember Fern",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Thread",
+          "min": 50,
+          "max": 100,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Gold Ring",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Queens Armour Fragment",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Undead Dragon Queen": {
+      "enemyIcons": "R.drawable.enemy_dragon_13",
+      "enemyHealth": 150000,
+      "enemyAttack": 3750,
+      "enemyStrength": 2400,
+      "enemyDefence": 1700,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "7903",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 500,
+          "max": 750,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Queens Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Big Dragon Bones",
+          "min": 2,
+          "max": 3,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 2,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Queens Weapon Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Bone King": {
+      "enemyIcons": "R.drawable.enemy_bone_beast",
+      "enemyHealth": 200000,
+      "enemyAttack": 5000,
+      "enemyStrength": 3600,
+      "enemyDefence": 2500,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "10565",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Sunburst Flower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 750,
+          "max": 1000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Kings Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Kings Armour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Skeletal King": {
+      "enemyIcons": "R.drawable.enemy_skeleton_04",
+      "enemyHealth": 250000,
+      "enemyAttack": 7500,
+      "enemyStrength": 4800,
+      "enemyDefence": 3800,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "13315",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Sunburst Flower",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 1000,
+          "max": 1500,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Kings Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Kings Armour Fragment",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Living Armour King": {
+      "enemyIcons": "R.drawable.enemy_living_armor_03",
+      "enemyHealth": 300000,
+      "enemyAttack": 10000,
+      "enemyStrength": 6000,
+      "enemyDefence": 5000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "16060",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Ember Fern",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 2000,
+          "max": 3000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Kings Chest",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Kings Armour Fragment",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Orc King": {
+      "enemyIcons": "R.drawable.enemy_orc_04",
+      "enemyHealth": 400000,
+      "enemyAttack": 15000,
+      "enemyStrength": 7200,
+      "enemyDefence": 8500,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "21545",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Ember Fern",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Coins",
+          "min": 3000,
+          "max": 5000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Kings Key",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Kings Weapon Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        }
+      ],
+      "enemyArea": "Realm of the Kings"
+    },
+    "Elven Fairy": {
+      "enemyIcons": "R.drawable.enemy_elvenfairy",
+      "enemyHealth": 100000,
+      "enemyAttack": 8000,
+      "enemyStrength": 6000,
+      "enemyDefence": 10000,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "6210",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 8000,
+          "max": 10000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Armour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Blue Silk",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Compass",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Treasure Map",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Extreme Power Potion",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Safflower",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Elven Warrior": {
+      "enemyIcons": "R.drawable.enemy_elvenwarrior",
+      "enemyHealth": 150000,
+      "enemyAttack": 9000,
+      "enemyStrength": 8000,
+      "enemyDefence": 12000,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "8960",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 10000,
+          "max": 15000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Weapon Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Compass",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Sunburst Flower",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Raw Ray",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Pirates Hat",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Rare"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Elven Archer": {
+      "enemyIcons": "R.drawable.enemy_elvenarcher",
+      "enemyHealth": 300000,
+      "enemyAttack": 12000,
+      "enemyStrength": 10000,
+      "enemyDefence": 14000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "16810",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 15000,
+          "max": 20000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Armour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Elven Arrows",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Sunburst Flower",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Crab",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Plate",
+          "min": 15,
+          "max": 20,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Raw Shark",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Elven Mage": {
+      "enemyIcons": "R.drawable.enemy_elvenmage",
+      "enemyHealth": 400000,
+      "enemyAttack": 15000,
+      "enemyStrength": 15000,
+      "enemyDefence": 16000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "22310",
+      "enemyWeakness": "Archery",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 20000,
+          "max": 25000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Weapon Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Sunburst Flower",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Leather",
+          "min": 15,
+          "max": 20,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Raw Octopus",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Platter",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Uncommon"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Elven King": {
+      "enemyIcons": "R.drawable.enemy_elvenking",
+      "enemyHealth": 600000,
+      "enemyAttack": 24000,
+      "enemyStrength": 25000,
+      "enemyDefence": 18000,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "33360",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 30000,
+          "max": 50000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Armour Fragment",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Ember Fern",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Tail",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Dragon Ore",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Golden Scarab",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Platter",
+          "min": 3,
+          "max": 5,
+          "dropclass": "Rare"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Elven Queen": {
+      "enemyIcons": "R.drawable.enemy_elvenqueen",
+      "enemyHealth": 750000,
+      "enemyAttack": 30000,
+      "enemyStrength": 40000,
+      "enemyDefence": 25000,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "42260",
+      "enemyWeakness": "Melee",
+      "enemySlayerLevel": 1,
+      "enemyDrops": [
+        {
+          "name": "Coins",
+          "min": 50000,
+          "max": 100000,
+          "dropclass": "Always"
+        },
+        {
+          "name": "Elven Weapon Fragment",
+          "min": 1,
+          "max": 2,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Ember Fern",
+          "min": 15,
+          "max": 20,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Dragon Skull",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Legendary"
+        },
+        {
+          "name": "Queens Weapon Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Queens Armour Fragment",
+          "min": 1,
+          "max": 1,
+          "dropclass": "Super Rare"
+        },
+        {
+          "name": "Dragon Platter",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Uncommon"
+        },
+        {
+          "name": "Elven Crystal",
+          "min": 1,
+          "max": 3,
+          "dropclass": "Common"
+        }
+      ],
+      "enemyArea": "Immortal Realm"
+    },
+    "Amaran": {
+      "enemyIcons": "R.drawable.enemy_amaran",
+      "enemyHealth": 69420,
+      "enemyAttack": 70000,
+      "enemyStrength": 300000,
+      "enemyDefence": 67500,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "371885",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Aurial": {
+      "enemyIcons": "R.drawable.enemy_aurial",
+      "enemyHealth": 4000000,
+      "enemyAttack": 60000,
+      "enemyStrength": 225000,
+      "enemyDefence": 36000,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "216060",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Cognium": {
+      "enemyIcons": "R.drawable.enemy_cognium",
+      "enemyHealth": 69420,
+      "enemyAttack": 80000,
+      "enemyStrength": 450000,
+      "enemyDefence": 54000,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "329210",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Copina": {
+      "enemyIcons": "R.drawable.enemy_copina",
+      "enemyHealth": 69420,
+      "enemyAttack": 60000,
+      "enemyStrength": 225000,
+      "enemyDefence": 40500,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "266285",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Feroxi": {
+      "enemyIcons": "R.drawable.enemy_feroxi",
+      "enemyHealth": 6500000,
+      "enemyAttack": 90000,
+      "enemyStrength": 562500,
+      "enemyDefence": 63000,
+      "enemyAttackSpeed": "Very Fast",
+      "enemySlayerExp": "360785",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Kynosian": {
+      "enemyIcons": "R.drawable.enemy_kynosian",
+      "enemyHealth": 69420,
+      "enemyAttack": 80000,
+      "enemyStrength": 525000,
+      "enemyDefence": 36000,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "282060",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Noctyra": {
+      "enemyIcons": "R.drawable.enemy_noctyra",
+      "enemyHealth": 69420,
+      "enemyAttack": 100000,
+      "enemyStrength": 562500,
+      "enemyDefence": 67500,
+      "enemyAttackSpeed": "Insane",
+      "enemySlayerExp": "336510",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    },
+    "Opulina": {
+      "enemyIcons": "R.drawable.enemy_opulina",
+      "enemyHealth": 4500000,
+      "enemyAttack": 70000,
+      "enemyStrength": 262500,
+      "enemyDefence": 45000,
+      "enemyAttackSpeed": "Fast",
+      "enemySlayerExp": "243885",
+      "enemyWeakness": "None",
+      "enemySlayerLevel": 130,
+      "enemyDrops": [
+        {
+          "name": "Gold Coin",
+          "min": 5,
+          "max": 10,
+          "dropclass": "Always"
+        }
+      ],
+      "enemyArea": "Kingdom of the Gods"
+    }
+  };
 
 const battleAreas = [
     "Farm",
@@ -444,7 +4141,17 @@ const allGodDropRates = [
   [1, 3, 7, 15, 31, 111, 411, 1011, 2011, 4511, 9511, 17511]
 ];
 
-const tableList = [enemyNames,enemyIcons,enemyHealth,enemyAttack,enemyStrength,enemyDefence,enemyAttackSpeed,enemySlayerExp,enemyWeakness,enemySlayerLevel,enemyDrops,enemyArea,battleAreas,battleAreasDifficulty,slayerMastersTasks,slayerMastersKillCoins,slayerMastersLevelUnlock,slayerMastersMinTask,slayerMastersMaxTask,allGods,allGodDrops,allGodDropAmounts,allGodDropRates]
-
-
-
+const tableList = {
+    monsters:monsters,
+    battleAreas: battleAreas,
+    battleAreasDifficulty: battleAreasDifficulty,
+    slayerMastersTasks: slayerMastersTasks,
+    slayerMastersKillCoins: slayerMastersKillCoins,
+    slayerMastersLevelUnlock: slayerMastersLevelUnlock,
+    slayerMastersMinTask: slayerMastersMinTask,
+    slayerMastersMaxTask: slayerMastersMaxTask,
+    allGods: allGods,
+    allGodDrops: allGodDrops,
+    allGodDropAmounts: allGodDropAmounts,
+    allGodDropRates: allGodDropRates
+};
