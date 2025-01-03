@@ -1,0 +1,4 @@
+items.js:8740 Uncaught SyntaxError: Unexpected token 'export'
+test.html:78 Uncaught ReferenceError: items is not defined
+    at populateTables (test.html:78:34)
+    at test.html:143:9

@@ -1,3 +1,5 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
 <html>
 <head>
     <title>Equipment Database</title>
@@ -6,14 +8,7 @@
         th { cursor: pointer; }
         .sort-asc::after { content: " ↑"; }
         .sort-desc::after { content: " ↓"; }
-        .table-responsive {
-            margin-top: 0.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1px;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
+        .table-responsive { margin-top: 0.5rem; }
         th:hover { background-color: #f3f4f6; }
         .section {
             margin-bottom: 0.5rem;
@@ -50,30 +45,13 @@
         .section-content.expanded {
             display: block;
         }
-        /* Changed from inline to inline-flex and added align-items to reduce extra spacing */
-        .item-container {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 20px;
-            width: 100%;
-        }
-
-        /* Enforce border-collapse and smaller padding/line-height to shrink row height */
-        table.w-full.border-collapse {
-            border-collapse: collapse;
-        }
-        table.w-full.border-collapse th,
-        table.w-full.border-collapse td {
-            padding: 0.5rem; /* Reduce padding from p-3 (which is ~12px) to ~8px */
-            line-height: 1.2; /* Reduce line-height for tighter rows */
-            vertical-align: middle; /* Vertically center the cell contents */
-        }
     </style>
     <script src="items.js"></script>
-    <script src="archery.js"></script>
+    <script src="archery.js"></script>enemyNames
     <script src="mobs.js"></script>
     <script>
-        console.log(monsters);
+        let Monsters = {};
+        tableList.forEach((table) => {console.log(table,":",table.length)})
     </script>
 </head>
 <body class="bg-gray-100 p-8">
@@ -133,17 +111,14 @@
                         source: 'items',
                         field: 'name',
                         render: (item) => `
-                        <div class="item-container font-medium w-full">
-                            <img src="drawable/${item.icon}.png" alt="${item.name}" class="w-12 h-12 mr-2">
-                            <div align="center" class="text-center w-full">
+                            <span class="font-medium">
                                 ${item.name}
                                 ${item.rarity !== 'Common' 
-                                ? `<div class="ml-2 text-sm text-gray-500">(${item.rarity})</div>` 
-                                : ''
+                                    ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` 
+                                    : ''
                                 }
-                            </div>
-                        </div>
-                      `
+                            </span>
+                        `
                     },
                     {
                         header: 'Attack',
@@ -187,7 +162,8 @@
                                     ${
                                         item.description && item.description !== 'null' 
                                             ? `<span class="text-gray-300">
-                                                ${item.description}
+                                                   <br>
+                                                   Description: ${item.description}
                                                </span>`
                                             : ''
                                     }
@@ -228,17 +204,14 @@
                         source: 'items',
                         field: 'name',
                         render: (item) => `
-                        <div class="item-container font-medium w-full">
-                            <img src="drawable/${item.icon}.png" alt="${item.name}" class="w-12 h-12 mr-2">
-                            <div align="center" class="text-center w-full">
+                            <span class="font-medium">
                                 ${item.name}
                                 ${item.rarity !== 'Common' 
-                                ? `<div class="ml-2 text-sm text-gray-500">(${item.rarity})</div>` 
-                                : ''
+                                    ? `<span class="ml-2 text-sm text-gray-500">(${item.rarity})</span>` 
+                                    : ''
                                 }
-                            </div>
-                        </div>
-                      `
+                            </span>
+                        `
                     },
                     {
                         header: 'Attack',
@@ -279,7 +252,8 @@
                                 ${
                                     item.description && item.description !== 'null' 
                                         ? `<span class="text-gray-300">
-                                            ${item.description}
+                                               <br>
+                                               Description: ${item.description}
                                            </span>`
                                         : ''
                                 }
@@ -313,18 +287,7 @@
                         header: 'Bow',
                         width: '20%',
                         source: 'items',
-                        render: (item) => `
-                        <div class="item-container font-medium w-full">
-                            <img src="drawable/${item.icon}.png" alt="${item.name}" class="w-12 h-12 mr-2">
-                            <div align="center" class="text-center w-full">
-                                ${item.name}
-                                ${item.rarity !== 'Common' 
-                                ? `<div class="ml-2 text-sm text-gray-500">(${item.rarity})</div>` 
-                                : ''
-                                }
-                            </div>
-                        </div>
-                      `
+                        field: 'name'
                     },
                     {
                         header: 'Speed',
@@ -345,18 +308,7 @@
                         header: 'Arrows',
                         width: '33%',
                         source: 'items',
-                        render: (item) => `
-                        <div class="item-container font-medium w-full">
-                            <img src="drawable/${item.icon}.png" alt="${item.name}" class="w-12 h-12 mr-2">
-                            <div align="center" class="text-center w-full">
-                                ${item.name}
-                                ${item.rarity !== 'Common' 
-                                ? `<div class="ml-2 text-sm text-gray-500">(${item.rarity})</div>` 
-                                : ''
-                                }
-                            </div>
-                        </div>
-                      `
+                        field: 'name'
                     },
                     {
                         header: 'Damage',
@@ -376,7 +328,8 @@
                                 ${
                                     item.description && item.description !== 'null' 
                                         ? `<span class="text-gray-300">
-                                               ${item.description}
+                                               <br>
+                                               Description: ${item.description}
                                            </span>`
                                         : ''
                                 }
