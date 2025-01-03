@@ -1,4 +1,179 @@
-<!-- File: index.html --><!DOCTYPE html><html><head><meta charset="utf-8"><title>God-Exclusive Drops: Defensive Checks for CSV Rows</title><style>body{font-family:Arial,sans-serif;background-color:#121212;color:#fff;margin:0;padding:0}h1{text-align:center;margin-top:20px;color:#fff}#searchContainer{text-align:center;margin:20px 0}#searchInput{padding:8px;font-size:14px;border-radius:4px;border:1px solid #333;background-color:#1a1a1a;color:#fff;width:250px}table{width:95%;margin:20px auto;border-collapse:collapse;background-color:#1a1a1a;color:#fff;border-radius:8px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.2)}td,th{padding:12px;text-align:left;border:1px solid #272727;vertical-align:middle}thead th{background-color:#2c2c2c;font-weight:700;cursor:pointer;border-bottom:2px solid #3a3a3a}tbody tr{border-bottom:1px solid #272727}tbody tr:last-child{border-bottom:none}tbody tr:nth-child(odd){background-color:#1a1a1a}tbody tr:nth-child(even){background-color:#1e1e1e}tbody tr:hover{background-color:#272727}tr.subtable{display:none;background-color:#1e1e1e}tr.subtable td{padding:0}.drop-table{width:100%;border-collapse:collapse;background-color:#2c2c2c;margin-bottom:20px}.drop-table td,.drop-table th{padding:8px;text-align:left;border:1px solid #272727}.drop-table th{background-color:#3a3a3a;font-weight:700}.clickable-row{cursor:pointer;background-color:#1a1a1a}.clickable-row:hover{background-color:#272727}footer{text-align:center;padding:10px;background-color:#1a1a1a;color:#a0a0a0;border-top:2px solid #272727;margin-top:20px}nav{background-color:#333;padding:10px;text-align:center}nav a{color:#fff;text-decoration:none;margin:0 15px;font-size:1.2em}nav a:hover{text-decoration:underline}</style></head><body><nav><a href="index.html">Mobs</a> <a href="items.min.html">Items</a> <a href="calculator.min.html">Energy Calculator</a></nav><h1>Mob Database</h1><div id="searchContainer"><input type="text" id="searchInput" placeholder="Search enemy name or drops..."></div><table id="enemyTable"><thead><tr><th data-sort-col="0">Enemy Name</th><th data-sort-col="1">Icon</th><th data-sort-col="2">Health</th><th data-sort-col="3">Attack</th><th data-sort-col="4">Strength</th><th data-sort-col="5">Defence</th><th data-sort-col="6">Attack Speed</th><th data-sort-col="7">Slayer Exp</th><th data-sort-col="8">Weakness</th><th data-sort-col="9">Slayer Lvl</th><th data-sort-col="11">Area</th><th data-sort-col="12">Scroll Drop %</th><th data-sort-col="13">Kills</th></tr></thead><tbody></tbody></table><script>/******************************************************
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>God-Exclusive Drops: Defensive Checks for CSV Rows</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #FFFFFF;
+    }
+
+    #searchContainer {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #searchInput {
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #333;
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      width: 250px;
+    }
+
+    table {
+      width: 95%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #272727;
+      vertical-align: middle;
+    }
+
+    thead th {
+      background-color: #2C2C2C;
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 2px solid #3A3A3A;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #272727;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #1A1A1A; /* Darker row background */
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #1E1E1E; /* Lighter row background */
+    }
+
+    tbody tr:hover {
+      background-color: #272727; /* Highlight on hover */
+    }
+
+    tr.subtable {
+      display: none;
+      background-color: #1E1E1E;
+    }
+
+    tr.subtable td {
+      padding: 0;
+    }
+
+    .drop-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #2C2C2C;
+      margin-bottom: 20px;
+    }
+
+    .drop-table th, .drop-table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #272727;
+    }
+
+    .drop-table th {
+      background-color: #3A3A3A;
+      font-weight: bold;
+    }
+
+    .clickable-row {
+      cursor: pointer;
+      background-color: #1A1A1A;
+    }
+
+    .clickable-row:hover {
+      background-color: #272727;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #1A1A1A;
+      color: #A0A0A0;
+      border-top: 2px solid #272727;
+      margin-top: 20px;
+    }
+    nav {
+        background-color: #333;
+        padding: 10px;
+        text-align: center;
+    }
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 1.2em;
+    }
+    nav a:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+      <a href="index.html">Mobs</a>
+      <a href="items.min.html">Items</a>
+      <a href="calculator.min.html">Energy Calculator</a>
+  </nav>
+  <h1>Mob Database</h1>
+
+  <div id="searchContainer">
+    <input type="text" id="searchInput" placeholder="Search enemy name or drops..." />
+  </div>
+
+  <table id="enemyTable">
+    <thead>
+      <tr>
+        <th data-sort-col="0">Enemy Name</th>
+        <th data-sort-col="1">Icon</th>
+        <th data-sort-col="2">Health</th>
+        <th data-sort-col="3">Attack</th>
+        <th data-sort-col="4">Strength</th>
+        <th data-sort-col="5">Defence</th>
+        <th data-sort-col="6">Attack Speed</th>
+        <th data-sort-col="7">Slayer Exp</th>
+        <th data-sort-col="8">Weakness</th>
+        <th data-sort-col="9">Slayer Lvl</th>
+        <th data-sort-col="11">Area</th>
+        <th data-sort-col="12">Scroll Drop %</th>
+        <th data-sort-col="13">Kills</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    /******************************************************
      * 1) GOD ARRAYS (Define extra drops for these enemies)
      ******************************************************/
     const allGods = [
@@ -739,4 +914,11 @@
         });
         populateTable(filtered);
       });
-    }</script><footer><p>Version 1.4.3</p></footer></body></html>
+    }
+  </script>
+
+  <footer>
+    <p>Version 1.4.3</p>
+  </footer>
+</body>
+</html>
