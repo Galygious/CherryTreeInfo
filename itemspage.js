@@ -247,6 +247,27 @@ const DATA_SOURCES = {
           align: 'center',
           source: 'bows',
           field: 'speed'
+        },
+        {
+          header: 'Damage',
+          width: '20%',
+          align: 'center',
+          source: 'bows',
+          field: 'damage'
+        },
+        {
+          header: 'Accuracy',
+          width: '20%',
+          align: 'center',
+          source: 'bows',
+          field: 'accuracy'
+        },
+        {
+          header: 'Crit Chance',
+          width: '20%',
+          align: 'center',
+          source: 'bows',
+          field: 'critChance'
         }
       ]
     },
