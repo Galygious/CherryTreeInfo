@@ -10,7 +10,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_akomeric"
   },
   {
     "name": "Alchemy Cape",
@@ -23,7 +24,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Create 2 Potions instead of 1"
+    "description": "Create 2 Potions instead of 1",
+    "icon": "item_alchemycape"
   },
   {
     "name": "Amonyte",
@@ -36,7 +38,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_amonyte"
   },
   {
     "name": "Anchor",
@@ -49,7 +52,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_anchor"
   },
   {
     "name": "Ancient Rod",
@@ -62,7 +66,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Mystery Island Fishing spot."
+    "description": "Unlocks the Mystery Island Fishing spot.",
+    "icon": "item_ancientrod"
   },
   {
     "name": "Apple",
@@ -75,7 +80,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_apple"
   },
   {
     "name": "Apple Seed",
@@ -88,7 +94,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_apple"
   },
   {
     "name": "Attack Cape",
@@ -101,7 +108,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Provides a 200 Attack bonus"
+    "description": "Provides a 200 Attack bonus",
+    "icon": "item_attackcape"
   },
   {
     "name": "Attack Potion",
@@ -114,7 +122,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +10 Attack Bonus lasting 1 minute"
+    "description": "Gives a +10 Attack Bonus lasting 1 minute",
+    "icon": "item_attackpotion"
   },
   {
     "name": "Bacon",
@@ -127,7 +136,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bacon"
   },
   {
     "name": "Bag of Pearls",
@@ -140,7 +150,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bagofpearls"
   },
   {
     "name": "Bananas",
@@ -153,7 +164,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bananas"
   },
   {
     "name": "Barbarian Boots",
@@ -166,7 +178,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbarianboots"
   },
   {
     "name": "Barbarian Cape",
@@ -179,7 +192,8 @@ const items = [
     "strengthBonus": 80,
     "defenceBonus": 80,
     "healthBonus": 80,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbariancape"
   },
   {
     "name": "Barbarian Gloves",
@@ -192,7 +206,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbariangloves"
   },
   {
     "name": "Barbarian Greaves",
@@ -205,7 +220,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 100,
     "healthBonus": 120,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbariangreaves"
   },
   {
     "name": "Barbarian Helm",
@@ -218,7 +234,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbarianhelm"
   },
   {
     "name": "Barbarian Top",
@@ -231,7 +248,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 120,
     "healthBonus": 160,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barbariantop"
   },
   {
     "name": "Barrel",
@@ -244,7 +262,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_barrel"
   },
   {
     "name": "Bestiary",
@@ -257,7 +276,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bestiary"
   },
   {
     "name": "Birds Nest",
@@ -270,7 +290,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_birdsnest"
   },
   {
     "name": "Bloodroot",
@@ -283,7 +304,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bloodroot"
   },
   {
     "name": "Blue Buttons",
@@ -296,7 +318,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bluebuttons"
   },
   {
     "name": "Blue Crab",
@@ -309,7 +332,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bluecrab"
   },
   {
     "name": "Blue Feather",
@@ -322,7 +346,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bluefeather"
   },
   {
     "name": "Blue Shrimp",
@@ -335,7 +360,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_blueshrimp"
   },
   {
     "name": "Blue Silk",
@@ -348,7 +374,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bluesilk"
   },
   {
     "name": "Blue Thread",
@@ -361,7 +388,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bluethread"
   },
   {
     "name": "Blueberry",
@@ -374,7 +402,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_blueberry"
   },
   {
     "name": "Blueberry Seed",
@@ -387,7 +416,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_blueberry"
   },
   {
     "name": "Blueprints",
@@ -400,7 +430,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_blueprints"
   },
   {
     "name": "Board",
@@ -413,7 +444,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_board"
   },
   {
     "name": "Bones",
@@ -426,7 +458,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bones"
   },
   {
     "name": "Book of Aroon",
@@ -439,7 +472,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_bookofaroon"
   },
   {
     "name": "Burnt Carp",
@@ -452,7 +486,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntcarp"
   },
   {
     "name": "Burnt Catfish",
@@ -465,7 +500,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntcatfish"
   },
   {
     "name": "Burnt Clownfish",
@@ -478,7 +514,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntclownfish"
   },
   {
     "name": "Burnt Crab",
@@ -491,7 +528,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntcrab"
   },
   {
     "name": "Burnt Jellyfish",
@@ -504,7 +542,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntjellyfish"
   },
   {
     "name": "Burnt Lobster",
@@ -517,7 +556,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntlobster"
   },
   {
     "name": "Burnt Marlin",
@@ -530,7 +570,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntmarlin"
   },
   {
     "name": "Burnt Minnows",
@@ -543,7 +584,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntminnows"
   },
   {
     "name": "Burnt Octopus",
@@ -556,7 +598,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntoctopus"
   },
   {
     "name": "Burnt Perch",
@@ -569,7 +612,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntperch"
   },
   {
     "name": "Burnt Pufferfish",
@@ -582,7 +626,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntpufferfish"
   },
   {
     "name": "Burnt Ray",
@@ -595,7 +640,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntray"
   },
   {
     "name": "Burnt Shark",
@@ -608,7 +654,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntshark"
   },
   {
     "name": "Burnt Shrimp",
@@ -621,7 +668,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntshrimp"
   },
   {
     "name": "Burnt Snail",
@@ -634,7 +682,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntsnail"
   },
   {
     "name": "Burnt Squid",
@@ -647,7 +696,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_burntsquid"
   },
   {
     "name": "Candle",
@@ -660,7 +710,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_candle"
   },
   {
     "name": "Carp",
@@ -673,7 +724,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_carp"
   },
   {
     "name": "Carving Knife",
@@ -686,7 +738,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_carvingknife"
   },
   {
     "name": "Catfish",
@@ -699,7 +752,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_catfish"
   },
   {
     "name": "Cherries",
@@ -712,7 +766,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_cherries"
   },
   {
     "name": "Cherries Seed",
@@ -725,7 +780,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_cherries"
   },
   {
     "name": "Chicken Knife",
@@ -738,7 +794,8 @@ const items = [
     "strengthBonus": 75,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "It is a great wonder why a chicken had this"
+    "description": "It is a great wonder why a chicken had this",
+    "icon": "item_chickenknife"
   },
   {
     "name": "Clownfish",
@@ -751,7 +808,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_clownfish"
   },
   {
     "name": "Cog",
@@ -764,7 +822,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_cog"
   },
   {
     "name": "Coin Purse",
@@ -777,7 +836,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_coinpurse"
   },
   {
     "name": "Coins",
@@ -790,7 +850,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_silvercoin"
   },
   {
     "name": "Common Chest",
@@ -803,7 +864,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A low level Chest containing basic loot"
+    "description": "A low level Chest containing basic loot",
+    "icon": "item_commonchest"
   },
   {
     "name": "Common Key",
@@ -816,7 +878,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Common Chest"
+    "description": "Unlocks the Common Chest",
+    "icon": "item_commonkey"
   },
   {
     "name": "Compass",
@@ -829,7 +892,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_compass"
   },
   {
     "name": "Cooking Cape",
@@ -842,7 +906,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Stop burning all food"
+    "description": "Stop burning all food",
+    "icon": "item_cookingcape"
   },
   {
     "name": "Crab",
@@ -855,7 +920,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_crab"
   },
   {
     "name": "Crafting Cape",
@@ -868,7 +934,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Create double items"
+    "description": "Create double items",
+    "icon": "item_craftingcape"
   },
   {
     "name": "Crate",
@@ -881,7 +948,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_crate"
   },
   {
     "name": "Crystal Chest",
@@ -894,7 +962,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A Legendary chest containing Legendary loot"
+    "description": "A Legendary chest containing Legendary loot",
+    "icon": "item_crystalchest"
   },
   {
     "name": "Crystal Key",
@@ -907,7 +976,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Crystal Chest"
+    "description": "Unlocks the Crystal Chest",
+    "icon": "item_crystalkey"
   },
   {
     "name": "Defence Cape",
@@ -920,7 +990,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 200,
     "healthBonus": 0,
-    "description": "Provides a 200 Defence bonus"
+    "description": "Provides a 200 Defence bonus",
+    "icon": "item_defencecape"
   },
   {
     "name": "Defence Potion",
@@ -933,7 +1004,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +10 Defence Bonus lasting 1 minute"
+    "description": "Gives a +10 Defence Bonus lasting 1 minute",
+    "icon": "item_defencepotion"
   },
   {
     "name": "Diary",
@@ -946,7 +1018,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_diary"
   },
   {
     "name": "Dragon Bones",
@@ -959,7 +1032,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonbones"
   },
   {
     "name": "Dragon Leather",
@@ -972,7 +1046,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonleather"
   },
   {
     "name": "Dragon Plate",
@@ -985,7 +1060,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonplate"
   },
   {
     "name": "Dragon Rider Boots",
@@ -998,7 +1074,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 60,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonriderboots"
   },
   {
     "name": "Dragon Rider Gloves",
@@ -1011,7 +1088,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 60,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonridergloves"
   },
   {
     "name": "Dragon Rider Greaves",
@@ -1024,7 +1102,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 150,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonridergreaves"
   },
   {
     "name": "Dragon Rider Helm",
@@ -1037,7 +1116,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 60,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonriderhelm"
   },
   {
     "name": "Dragon Rider Top",
@@ -1050,7 +1130,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 100,
     "healthBonus": 200,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonridertop"
   },
   {
     "name": "Dragon Scimitar",
@@ -1063,7 +1144,8 @@ const items = [
     "strengthBonus": 60,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonscimitar"
   },
   {
     "name": "Dragon Skull",
@@ -1076,7 +1158,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonskull"
   },
   {
     "name": "Dragon Tail",
@@ -1089,7 +1172,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragontail"
   },
   {
     "name": "Dragon Wing Battleaxe",
@@ -1102,7 +1186,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonwingbattleaxe"
   },
   {
     "name": "Drumstick",
@@ -1115,7 +1200,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_drumstick"
   },
   {
     "name": "Egg",
@@ -1128,7 +1214,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_egg"
   },
   {
     "name": "Eggplant",
@@ -1141,7 +1228,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_eggplant"
   },
   {
     "name": "Eggplant Seed",
@@ -1154,7 +1242,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_eggplant"
   },
   {
     "name": "Emerald",
@@ -1167,7 +1256,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_emerald"
   },
   {
     "name": "Empty Vial",
@@ -1180,7 +1270,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_emptyvial"
   },
   {
     "name": "Energy Potion",
@@ -1193,7 +1284,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Restores 5 Energy"
+    "description": "Restores 5 Energy",
+    "icon": "item_energypotion"
   },
   {
     "name": "Extreme Attack Potion",
@@ -1206,7 +1298,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +100 Attack Bonus lasting 1 minute"
+    "description": "Gives a +100 Attack Bonus lasting 1 minute",
+    "icon": "item_extremeattackpotion"
   },
   {
     "name": "Extreme Defence Potion",
@@ -1219,7 +1312,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +100 Defence Bonus lasting 1 minute"
+    "description": "Gives a +100 Defence Bonus lasting 1 minute",
+    "icon": "item_extremedefencepotion"
   },
   {
     "name": "Extreme Energy Potion",
@@ -1232,7 +1326,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Restores 75 Energy"
+    "description": "Restores 75 Energy",
+    "icon": "item_extremeenergypotion"
   },
   {
     "name": "Extreme Health Potion",
@@ -1245,7 +1340,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +100 Max Health bonus lasting 1 minute"
+    "description": "Gives a +100 Max Health bonus lasting 1 minute",
+    "icon": "item_extremehealthpotion"
   },
   {
     "name": "Extreme Strength Potion",
@@ -1258,7 +1354,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +100 Strength Bonus lasting 1 minute"
+    "description": "Gives a +100 Strength Bonus lasting 1 minute",
+    "icon": "item_extremestrengthpotion"
   },
   {
     "name": "Farming Cape",
@@ -1271,7 +1368,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles all Crops harvested"
+    "description": "Doubles all Crops harvested",
+    "icon": "item_farmingcape"
   },
   {
     "name": "Feathers",
@@ -1284,7 +1382,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_feather"
   },
   {
     "name": "Fish Hook",
@@ -1297,7 +1396,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_fishhook"
   },
   {
     "name": "Fishing Cape",
@@ -1310,7 +1410,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles all Fish caught"
+    "description": "Doubles all Fish caught",
+    "icon": "item_fishingcape"
   },
   {
     "name": "Fishing Net",
@@ -1323,7 +1424,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles all Fish caught for 1 minute"
+    "description": "Doubles all Fish caught for 1 minute",
+    "icon": "item_fishingnet"
   },
   {
     "name": "Fishing Potion",
@@ -1336,7 +1438,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles Fishing exp for 1 minute"
+    "description": "Doubles Fishing exp for 1 minute",
+    "icon": "item_fishingpotion"
   },
   {
     "name": "Goblin Cleaver",
@@ -1349,7 +1452,8 @@ const items = [
     "strengthBonus": 60,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goblincleaver"
   },
   {
     "name": "Gold Bar",
@@ -1362,7 +1466,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldbar"
   },
   {
     "name": "Gold Coin",
@@ -1375,7 +1480,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Premium currency"
+    "description": "Premium currency",
+    "icon": "item_goldcoin"
   },
   {
     "name": "Gold Feather",
@@ -1388,7 +1494,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldfeather"
   },
   {
     "name": "Gold Ring",
@@ -1401,7 +1508,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldring"
   },
   {
     "name": "Golden Necklace",
@@ -1414,7 +1522,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldennecklace"
   },
   {
     "name": "Golden Scarab",
@@ -1427,7 +1536,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldenscarab"
   },
   {
     "name": "Grapes",
@@ -1440,7 +1550,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_grapes"
   },
   {
     "name": "Grapes Seed",
@@ -1453,7 +1564,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_grapes"
   },
   {
     "name": "Hammer",
@@ -1466,7 +1578,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_hammer"
   },
   {
     "name": "Health Cape",
@@ -1479,7 +1592,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 400,
-    "description": "Provides a 400 Health bonus"
+    "description": "Provides a 400 Health bonus",
+    "icon": "item_healthcape"
   },
   {
     "name": "Health Potion",
@@ -1492,7 +1606,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +25 Max Health bonus lasting 1 minute"
+    "description": "Gives a +25 Max Health bonus lasting 1 minute",
+    "icon": "item_healthpotion"
   },
   {
     "name": "Hide",
@@ -1505,7 +1620,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_hide"
   },
   {
     "name": "Honey",
@@ -1518,7 +1634,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_honey"
   },
   {
     "name": "Hourglass",
@@ -1531,7 +1648,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_hourglass"
   },
   {
     "name": "Hyssop",
@@ -1544,7 +1662,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_hyssop"
   },
   {
     "name": "Insta Kill Potion",
@@ -1557,7 +1676,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a 5% chance to Instantly kill any enemy. Lasts 1 minute"
+    "description": "Gives a 5% chance to Instantly kill any enemy. Lasts 1 minute",
+    "icon": "item_instakillpotion"
   },
   {
     "name": "Iron",
@@ -1570,7 +1690,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_iron"
   },
   {
     "name": "Iron Battleaxe",
@@ -1583,7 +1704,8 @@ const items = [
     "strengthBonus": 10,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ironbattleaxe"
   },
   {
     "name": "Iron Boots",
@@ -1596,7 +1718,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ironboots"
   },
   {
     "name": "Iron Gloves",
@@ -1609,7 +1732,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_irongloves"
   },
   {
     "name": "Iron Greaves",
@@ -1622,7 +1746,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 8,
     "healthBonus": 10,
-    "description": "null"
+    "description": "null",
+    "icon": "item_irongreaves"
   },
   {
     "name": "Iron Helm",
@@ -1635,7 +1760,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ironhelm"
   },
   {
     "name": "Iron Sword",
@@ -1648,7 +1774,8 @@ const items = [
     "strengthBonus": 5,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ironsword"
   },
   {
     "name": "Iron Top",
@@ -1661,7 +1788,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 10,
     "healthBonus": 20,
-    "description": "null"
+    "description": "null",
+    "icon": "item_irontop"
   },
   {
     "name": "Jawbone",
@@ -1674,7 +1802,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_jawbone"
   },
   {
     "name": "Jellyfish",
@@ -1687,7 +1816,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_jellyfish"
   },
   {
     "name": "Large Exp Scroll",
@@ -1700,7 +1830,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a large amount of exp in the skill of your choice"
+    "description": "Gives a large amount of exp in the skill of your choice",
+    "icon": "item_largeexpscroll"
   },
   {
     "name": "Large Fishing Net",
@@ -1713,7 +1844,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles all Fish caught for 5 minutes"
+    "description": "Doubles all Fish caught for 5 minutes",
+    "icon": "item_largefishingnet"
   },
   {
     "name": "Leather",
@@ -1726,7 +1858,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leather"
   },
   {
     "name": "Leather Bag",
@@ -1739,7 +1872,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leatherbag"
   },
   {
     "name": "Leather Boots",
@@ -1752,7 +1886,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leatherboots"
   },
   {
     "name": "Leather Gloves",
@@ -1765,7 +1900,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leathergloves"
   },
   {
     "name": "Leather Greaves",
@@ -1778,7 +1914,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 5,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leathergreaves"
   },
   {
     "name": "Leather Helm",
@@ -1791,7 +1928,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leatherhelm"
   },
   {
     "name": "Leather Top",
@@ -1804,7 +1942,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5,
     "healthBonus": 10,
-    "description": "null"
+    "description": "null",
+    "icon": "item_leathertop"
   },
   {
     "name": "Lemon",
@@ -1817,7 +1956,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_lemon"
   },
   {
     "name": "Lemon Seed",
@@ -1830,7 +1970,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_lemon"
   },
   {
     "name": "Lobster",
@@ -1843,7 +1984,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_lobster"
   },
   {
     "name": "Luck Potion",
@@ -1856,7 +1998,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Doubles rare drop chances for 1 minute"
+    "description": "Doubles rare drop chances for 1 minute",
+    "icon": "item_luckpotion"
   },
   {
     "name": "Marlin",
@@ -1869,7 +2012,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_marlin"
   },
   {
     "name": "Max Cape",
@@ -1882,7 +2026,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 250,
     "healthBonus": 750,
-    "description": "Provides the benefits of all capes plus extra combat stats"
+    "description": "Provides the benefits of all capes plus extra combat stats",
+    "icon": "item_maxcape"
   },
   {
     "name": "Medium Exp Scroll",
@@ -1895,7 +2040,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a medium amount of exp in the skill of your choice"
+    "description": "Gives a medium amount of exp in the skill of your choice",
+    "icon": "item_mediumexpscroll"
   },
   {
     "name": "Message in a Bottle",
@@ -1908,7 +2054,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_messageinabottle"
   },
   {
     "name": "Milk",
@@ -1921,7 +2068,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_milk"
   },
   {
     "name": "Mini Exp Scroll",
@@ -1934,7 +2082,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a mini amount of exp in the skill of your choice"
+    "description": "Gives a mini amount of exp in the skill of your choice",
+    "icon": "item_miniexpscroll"
   },
   {
     "name": "Minnows",
@@ -1947,7 +2096,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_minnows"
   },
   {
     "name": "Mithril Axe",
@@ -1960,7 +2110,8 @@ const items = [
     "strengthBonus": 40,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilaxe"
   },
   {
     "name": "Mithril Bar",
@@ -1973,7 +2124,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilbar"
   },
   {
     "name": "Mithril Boots",
@@ -1986,7 +2138,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilboots"
   },
   {
     "name": "Mithril Gloves",
@@ -1999,7 +2152,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilgloves"
   },
   {
     "name": "Mithril Greaves",
@@ -2012,7 +2166,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 20,
     "healthBonus": 30,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilgreaves"
   },
   {
     "name": "Mithril Helm",
@@ -2025,7 +2180,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilhelm"
   },
   {
     "name": "Mithril Sword",
@@ -2038,7 +2194,8 @@ const items = [
     "strengthBonus": 30,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilsword"
   },
   {
     "name": "Mithril Top",
@@ -2051,7 +2208,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 25,
     "healthBonus": 50,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithriltop"
   },
   {
     "name": "Molten Glass",
@@ -2064,7 +2222,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_moltenglass"
   },
   {
     "name": "Mushroom",
@@ -2077,7 +2236,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mushroom"
   },
   {
     "name": "Mystery Boots",
@@ -2090,7 +2250,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 25,
     "healthBonus": 1500,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysteryboots"
   },
   {
     "name": "Mystery Cloak",
@@ -2103,7 +2264,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 5000,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysterycloak"
   },
   {
     "name": "Mystery Egg",
@@ -2116,7 +2278,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Mystery Island Exploring zone."
+    "description": "Unlocks the Mystery Island Exploring zone.",
+    "icon": "item_mysteryegg"
   },
   {
     "name": "Mystery Gloves",
@@ -2129,7 +2292,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 10,
     "healthBonus": 1500,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysterygloves"
   },
   {
     "name": "Mystery Greaves",
@@ -2142,7 +2306,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 50,
     "healthBonus": 6000,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysterygreaves"
   },
   {
     "name": "Mystery Hood",
@@ -2155,7 +2320,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 40,
     "healthBonus": 3000,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysteryhood"
   },
   {
     "name": "Mystery Top",
@@ -2168,7 +2334,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 75,
     "healthBonus": 8000,
-    "description": "Obtainable during the Halloween Event 2022."
+    "description": "Obtainable during the Halloween Event 2022.",
+    "icon": "item_mysterytop"
   },
   {
     "name": "Nails",
@@ -2181,7 +2348,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_nails"
   },
   {
     "name": "Discovery Cape",
@@ -2194,7 +2362,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives an extra 2 items per explore"
+    "description": "Gives an extra 2 items per explore",
+    "icon": "item_navigationcape"
   },
   {
     "name": "Necromancer Boots",
@@ -2207,7 +2376,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancerboots"
   },
   {
     "name": "Necromancer Cape",
@@ -2220,7 +2390,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 200,
     "healthBonus": 200,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancercape"
   },
   {
     "name": "Necromancer Gloves",
@@ -2233,7 +2404,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 160,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancergloves"
   },
   {
     "name": "Necromancer Greaves",
@@ -2246,7 +2418,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 240,
     "healthBonus": 240,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancergreaves"
   },
   {
     "name": "Necromancer Helm",
@@ -2259,7 +2432,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 160,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancerhelm"
   },
   {
     "name": "Necromancer Top",
@@ -2272,7 +2446,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 300,
     "healthBonus": 300,
-    "description": "null"
+    "description": "null",
+    "icon": "item_necromancertop"
   },
   {
     "name": "Nefrit Chest",
@@ -2285,7 +2460,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An epic chest containing some epic loot"
+    "description": "An epic chest containing some epic loot",
+    "icon": "item_nefritchest"
   },
   {
     "name": "Nefrit Key",
@@ -2298,7 +2474,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlcoks the Nefrit Chest"
+    "description": "Unlcoks the Nefrit Chest",
+    "icon": "item_nefritkey"
   },
   {
     "name": "Notebook",
@@ -2311,7 +2488,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_notebook"
   },
   {
     "name": "Oak",
@@ -2324,7 +2502,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_oak"
   },
   {
     "name": "Octopus",
@@ -2337,7 +2516,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_octopus"
   },
   {
     "name": "Old Boot",
@@ -2350,7 +2530,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_oldboot"
   },
   {
     "name": "Orange",
@@ -2363,7 +2544,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_orange"
   },
   {
     "name": "Orange Seed",
@@ -2376,7 +2558,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_orange"
   },
   {
     "name": "Pearl",
@@ -2389,7 +2572,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_pearl"
   },
   {
     "name": "Perch",
@@ -2402,7 +2586,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_perch"
   },
   {
     "name": "Pirates Hat",
@@ -2415,7 +2600,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_pirateshat"
   },
   {
     "name": "Pot of Gold",
@@ -2428,7 +2614,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_potofgold"
   },
   {
     "name": "Potato Sack",
@@ -2441,7 +2628,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_potatosack"
   },
   {
     "name": "Pufferfish",
@@ -2454,7 +2642,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_pufferfish"
   },
   {
     "name": "Raft",
@@ -2467,7 +2656,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_raft"
   },
   {
     "name": "Ram Skull",
@@ -2480,7 +2670,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ramskull"
   },
   {
     "name": "Raw Carp",
@@ -2493,7 +2684,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawcarp"
   },
   {
     "name": "Raw Catfish",
@@ -2506,7 +2698,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawcatfish"
   },
   {
     "name": "Raw Clownfish",
@@ -2519,7 +2712,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawclownfish"
   },
   {
     "name": "Raw Crab",
@@ -2532,7 +2726,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawcrab"
   },
   {
     "name": "Raw Jellyfish",
@@ -2545,7 +2740,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawjellyfish"
   },
   {
     "name": "Raw Lobster",
@@ -2558,7 +2754,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawlobster"
   },
   {
     "name": "Raw Marlin",
@@ -2571,7 +2768,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawmarlin"
   },
   {
     "name": "Raw Minnows",
@@ -2584,7 +2782,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawminnows"
   },
   {
     "name": "Raw Octopus",
@@ -2597,7 +2796,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawoctopus"
   },
   {
     "name": "Raw Perch",
@@ -2610,7 +2810,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawperch"
   },
   {
     "name": "Raw Pufferfish",
@@ -2623,7 +2824,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawpufferfish"
   },
   {
     "name": "Raw Ray",
@@ -2636,7 +2838,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawray"
   },
   {
     "name": "Raw Shark",
@@ -2649,7 +2852,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawshark"
   },
   {
     "name": "Raw Shrimp",
@@ -2662,7 +2866,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawshrimp"
   },
   {
     "name": "Raw Snail",
@@ -2675,7 +2880,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawsnail"
   },
   {
     "name": "Raw Squid",
@@ -2688,7 +2894,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rawsquid"
   },
   {
     "name": "Ray",
@@ -2701,7 +2908,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ray"
   },
   {
     "name": "Red Chest",
@@ -2714,7 +2922,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A basic chest containing a good amount of basic loot"
+    "description": "A basic chest containing a good amount of basic loot",
+    "icon": "item_redchest"
   },
   {
     "name": "Red Key",
@@ -2727,7 +2936,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Red Chest"
+    "description": "Unlocks the Red Chest",
+    "icon": "item_redkey"
   },
   {
     "name": "Red Onion",
@@ -2740,7 +2950,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_redonion"
   },
   {
     "name": "Red Onion Seed",
@@ -2753,7 +2964,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_redonion"
   },
   {
     "name": "Regeneration Potion",
@@ -2766,7 +2978,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Restores 5% of you max HP every 3 seconds. Lasts 30 seconds"
+    "description": "Restores 5% of you max HP every 3 seconds. Lasts 30 seconds",
+    "icon": "item_regenerationpotion"
   },
   {
     "name": "Rope",
@@ -2779,7 +2992,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_rope"
   },
   {
     "name": "Ruby",
@@ -2792,7 +3006,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ruby"
   },
   {
     "name": "Safflower",
@@ -2805,7 +3020,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_safflower"
   },
   {
     "name": "Sage Leaf",
@@ -2818,7 +3034,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_sageleaf"
   },
   {
     "name": "Sandstone",
@@ -2831,7 +3048,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_sandstone"
   },
   {
     "name": "Sapphire",
@@ -2844,7 +3062,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_sapphire"
   },
   {
     "name": "Satchel",
@@ -2857,7 +3076,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_satchel"
   },
   {
     "name": "Scarf",
@@ -2870,7 +3090,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_scarf"
   },
   {
     "name": "Scissors",
@@ -2883,7 +3104,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_scissors"
   },
   {
     "name": "Scroll",
@@ -2896,7 +3118,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_scroll"
   },
   {
     "name": "Sea Scorpion",
@@ -2909,7 +3132,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_seascorpion"
   },
   {
     "name": "Sextant",
@@ -2922,7 +3146,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_sextant"
   },
   {
     "name": "Shark",
@@ -2935,7 +3160,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_shark"
   },
   {
     "name": "Shell",
@@ -2948,7 +3174,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_shell"
   },
   {
     "name": "Shrimp",
@@ -2961,7 +3188,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_shrimp"
   },
   {
     "name": "Skeleton Fish",
@@ -2974,7 +3202,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_skeletonfish"
   },
   {
     "name": "Slayer Cape",
@@ -2987,7 +3216,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Double killcoins from Slayer tasks"
+    "description": "Double killcoins from Slayer tasks",
+    "icon": "item_slayercape"
   },
   {
     "name": "Slayer Master Boots",
@@ -3000,7 +3230,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "Gives a 10% Slayer exp bonus"
+    "description": "Gives a 10% Slayer exp bonus",
+    "icon": "item_slayermasterboots"
   },
   {
     "name": "Slayer Master Gloves",
@@ -3013,7 +3244,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 80,
     "healthBonus": 0,
-    "description": "Gives a 10% Slayer exp bonus"
+    "description": "Gives a 10% Slayer exp bonus",
+    "icon": "item_slayermastergloves"
   },
   {
     "name": "Slayer Master Greaves",
@@ -3026,7 +3258,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 120,
     "healthBonus": 150,
-    "description": "Gives a 10% Slayer exp bonus"
+    "description": "Gives a 10% Slayer exp bonus",
+    "icon": "item_slayermastergreaves"
   },
   {
     "name": "Slayer Master Helm",
@@ -3039,7 +3272,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 100,
     "healthBonus": 0,
-    "description": "Gives a 10% Slayer exp bonus"
+    "description": "Gives a 10% Slayer exp bonus",
+    "icon": "item_slayermasterhelm"
   },
   {
     "name": "Slayer Master Top",
@@ -3052,7 +3286,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 150,
     "healthBonus": 200,
-    "description": "Gives a 10% Slayer exp bonus"
+    "description": "Gives a 10% Slayer exp bonus",
+    "icon": "item_slayermastertop"
   },
   {
     "name": "Small Exp Scroll",
@@ -3065,7 +3300,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a small amount of exp in the skill of your choice"
+    "description": "Gives a small amount of exp in the skill of your choice",
+    "icon": "item_smallexpscroll"
   },
   {
     "name": "Snail",
@@ -3078,7 +3314,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_snail"
   },
   {
     "name": "Spiked Chest",
@@ -3091,7 +3328,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A mid level chest containng some mid level loot"
+    "description": "A mid level chest containng some mid level loot",
+    "icon": "item_spikedchest"
   },
   {
     "name": "Spiked Key",
@@ -3104,7 +3342,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Spiked Chest"
+    "description": "Unlocks the Spiked Chest",
+    "icon": "item_spikedkey"
   },
   {
     "name": "Squid",
@@ -3117,7 +3356,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_squid"
   },
   {
     "name": "Steak",
@@ -3130,7 +3370,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steak"
   },
   {
     "name": "Steel Bar",
@@ -3143,7 +3384,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelbar"
   },
   {
     "name": "Steel Boots",
@@ -3156,7 +3398,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 10,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelboots"
   },
   {
     "name": "Steel Gloves",
@@ -3169,7 +3412,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 10,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelgloves"
   },
   {
     "name": "Steel Greaves",
@@ -3182,7 +3426,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 15,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelgreaves"
   },
   {
     "name": "Steel Helm",
@@ -3195,7 +3440,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 10,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelhelm"
   },
   {
     "name": "Steel Knives",
@@ -3208,7 +3454,8 @@ const items = [
     "strengthBonus": 10,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelknives"
   },
   {
     "name": "Steel Shield",
@@ -3221,7 +3468,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelshield"
   },
   {
     "name": "Steel Sword",
@@ -3234,7 +3482,8 @@ const items = [
     "strengthBonus": 20,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steelsword"
   },
   {
     "name": "Steel Top",
@@ -3247,7 +3496,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 20,
     "healthBonus": 30,
-    "description": "null"
+    "description": "null",
+    "icon": "item_steeltop"
   },
   {
     "name": "Stone",
@@ -3260,7 +3510,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_stone"
   },
   {
     "name": "Stone Block",
@@ -3273,7 +3524,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_stoneblock"
   },
   {
     "name": "Stone Tablet",
@@ -3286,7 +3538,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_stonetablet"
   },
   {
     "name": "Strawberry",
@@ -3299,7 +3552,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_strawberry"
   },
   {
     "name": "Strawberry Seed",
@@ -3312,7 +3566,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_strawberry"
   },
   {
     "name": "Strength Cape",
@@ -3325,7 +3580,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Provides a 200 Strength bonus"
+    "description": "Provides a 200 Strength bonus",
+    "icon": "item_strengthcape"
   },
   {
     "name": "Strength Potion",
@@ -3338,7 +3594,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +10 Strength Bonus lasting 1 minute"
+    "description": "Gives a +10 Strength Bonus lasting 1 minute",
+    "icon": "item_strengthpotion"
   },
   {
     "name": "Super Attack Potion",
@@ -3351,7 +3608,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +50 Attack Bonus lasting 1 minute"
+    "description": "Gives a +50 Attack Bonus lasting 1 minute",
+    "icon": "item_superattackpotion"
   },
   {
     "name": "Super Defence Potion",
@@ -3364,7 +3622,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +50 Defence Bonus lasting 1 minute"
+    "description": "Gives a +50 Defence Bonus lasting 1 minute",
+    "icon": "item_superdefencepotion"
   },
   {
     "name": "Super Energy Potion",
@@ -3377,7 +3636,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Restores 25 Energy"
+    "description": "Restores 25 Energy",
+    "icon": "item_superenergypotion"
   },
   {
     "name": "Super Fishing Potion",
@@ -3390,7 +3650,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Triples Fishing exp for 1 minute"
+    "description": "Triples Fishing exp for 1 minute",
+    "icon": "item_superfishingpotion"
   },
   {
     "name": "Super Health Potion",
@@ -3403,7 +3664,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +50 Max Health bonus lasting 1 minute"
+    "description": "Gives a +50 Max Health bonus lasting 1 minute",
+    "icon": "item_superhealthpotion"
   },
   {
     "name": "Super Luck Potion",
@@ -3416,7 +3678,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Greatly increases chance of rare drops for 3 minutes"
+    "description": "Greatly increases chance of rare drops for 3 minutes",
+    "icon": "item_superluckpotion"
   },
   {
     "name": "Super Regeneration Potion",
@@ -3429,7 +3692,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Restores 10% of you max HP every 3 seconds. Lasts 30 seconds"
+    "description": "Restores 10% of you max HP every 3 seconds. Lasts 30 seconds",
+    "icon": "item_superregenerationpotion"
   },
   {
     "name": "Super Strength Potion",
@@ -3442,7 +3706,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Gives a +50 Strength Bonus lasting 1 minute"
+    "description": "Gives a +50 Strength Bonus lasting 1 minute",
+    "icon": "item_superstrengthpotion"
   },
   {
     "name": "Tentacle",
@@ -3455,7 +3720,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_tentacle"
   },
   {
     "name": "Thread",
@@ -3468,7 +3734,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_thread"
   },
   {
     "name": "Tomato",
@@ -3481,7 +3748,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_tomato"
   },
   {
     "name": "Tomato Seed",
@@ -3494,7 +3762,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_tomato"
   },
   {
     "name": "Tooth Necklace",
@@ -3507,7 +3776,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_toothnecklace"
   },
   {
     "name": "Treasure Map",
@@ -3520,7 +3790,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treasuremap"
   },
   {
     "name": "Treestone of Mind",
@@ -3533,7 +3804,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneofmind"
   },
   {
     "name": "Treestone of Power",
@@ -3546,7 +3818,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneofpower"
   },
   {
     "name": "Treestone of Reality",
@@ -3559,7 +3832,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneofreality"
   },
   {
     "name": "Treestone of Soul",
@@ -3572,7 +3846,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneofsoul"
   },
   {
     "name": "Treestone of Space",
@@ -3585,7 +3860,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneofspace"
   },
   {
     "name": "Treestone of Time",
@@ -3598,7 +3874,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_treestoneoftime"
   },
   {
     "name": "Trident of the Seas",
@@ -3611,7 +3888,8 @@ const items = [
     "strengthBonus": 150,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_tridentoftheseas"
   },
   {
     "name": "Vissinel",
@@ -3624,7 +3902,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_vissinel"
   },
   {
     "name": "Waterskin",
@@ -3637,7 +3916,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_waterskin"
   },
   {
     "name": "Wine",
@@ -3650,7 +3930,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_wine"
   },
   {
     "name": "Wolfmint",
@@ -3663,7 +3944,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_wolfmint"
   },
   {
     "name": "Wood",
@@ -3676,7 +3958,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_wood"
   },
   {
     "name": "Wooden Plank",
@@ -3689,7 +3972,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_woodenplank"
   },
   {
     "name": "Wooden Shield",
@@ -3702,7 +3986,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_woodenshield"
   },
   {
     "name": "Wool",
@@ -3715,7 +4000,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_wool"
   },
   {
     "name": "Workbench",
@@ -3728,7 +4014,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_workbench"
   },
   {
     "name": "Yarn",
@@ -3741,7 +4028,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_yarn"
   },
   {
     "name": "Iron Ore",
@@ -3754,7 +4042,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_ironore"
   },
   {
     "name": "Silver Ore",
@@ -3767,7 +4056,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_silverore"
   },
   {
     "name": "Gold Ore",
@@ -3780,7 +4070,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_goldore"
   },
   {
     "name": "Mithril Ore",
@@ -3793,7 +4084,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_mithrilore"
   },
   {
     "name": "Dragon Ore",
@@ -3806,7 +4098,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "null"
+    "description": "null",
+    "icon": "item_dragonore"
   },
   {
     "name": "Santa Hat",
@@ -3819,7 +4112,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 2000,
-    "description": "Keeps my head nice and warm"
+    "description": "Keeps my head nice and warm",
+    "icon": "item_santahat"
   },
   {
     "name": "Christmas Jumper",
@@ -3832,7 +4126,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 3500,
-    "description": "Does anyone actually own one they like"
+    "description": "Does anyone actually own one they like",
+    "icon": "item_christmasjumper"
   },
   {
     "name": "Candy Cane",
@@ -3845,7 +4140,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I feel the sugar flowing through my veins"
+    "description": "I feel the sugar flowing through my veins",
+    "icon": "item_candycane"
   },
   {
     "name": "Ancient Dagger",
@@ -3858,7 +4154,8 @@ const items = [
     "strengthBonus": 350,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Wow this thing is old"
+    "description": "Wow this thing is old",
+    "icon": "item_ancientdagger"
   },
   {
     "name": "Gnome Boots",
@@ -3871,7 +4168,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 60,
     "healthBonus": 2500,
-    "description": "How will these even fit"
+    "description": "How will these even fit",
+    "icon": "item_gnomeboots"
   },
   {
     "name": "Gnome Shorts",
@@ -3884,7 +4182,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 3500,
-    "description": "These leave nothing to the imagination"
+    "description": "These leave nothing to the imagination",
+    "icon": "item_gnomeshorts"
   },
   {
     "name": "Scimitar of Hearts",
@@ -3897,7 +4196,8 @@ const items = [
     "strengthBonus": 250,
     "defenceBonus": 40,
     "healthBonus": 60,
-    "description": "We can slay things with the power of love"
+    "description": "We can slay things with the power of love",
+    "icon": "item_scimtarofhearts"
   },
   {
     "name": "Fish Soup",
@@ -3910,7 +4210,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A hearty bowl of soup"
+    "description": "A hearty bowl of soup",
+    "icon": "item_fishsoup"
   },
   {
     "name": "Fish Steak",
@@ -3923,7 +4224,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A fresh Fish Steak"
+    "description": "A fresh Fish Steak",
+    "icon": "item_fishsteak"
   },
   {
     "name": "Fish Wedge",
@@ -3936,7 +4238,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A nice parcel wedge of fishies"
+    "description": "A nice parcel wedge of fishies",
+    "icon": "item_fishwedge"
   },
   {
     "name": "Burnt Fish Soup",
@@ -3949,7 +4252,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntfishsoup"
   },
   {
     "name": "Burnt Fish Steak",
@@ -3962,7 +4266,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntfishsteak"
   },
   {
     "name": "Burnt Fish Wedge",
@@ -3975,7 +4280,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntfishwedge"
   },
   {
     "name": "Bone Stew",
@@ -3988,7 +4294,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Erm okay"
+    "description": "Erm okay",
+    "icon": "item_bonestew"
   },
   {
     "name": "Mushroom Soup",
@@ -4001,7 +4308,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Nice bitta Mushroom Soup"
+    "description": "Nice bitta Mushroom Soup",
+    "icon": "item_mushroomsoup"
   },
   {
     "name": "Fruit Salad",
@@ -4014,7 +4322,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Getting my 5 a day"
+    "description": "Getting my 5 a day",
+    "icon": "item_fruitsalad"
   },
   {
     "name": "Crab Soup",
@@ -4027,7 +4336,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Tasty"
+    "description": "Tasty",
+    "icon": "item_crabsoup"
   },
   {
     "name": "Cherry Pie",
@@ -4040,7 +4350,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I am the greatest chef"
+    "description": "I am the greatest chef",
+    "icon": "item_cherrypie"
   },
   {
     "name": "Burnt Bone Stew",
@@ -4053,7 +4364,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntbonestew"
   },
   {
     "name": "Burnt Mushroom Soup",
@@ -4066,7 +4378,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntmushroomsoup"
   },
   {
     "name": "Burnt Fruit Salad",
@@ -4079,7 +4392,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntfruitsalad"
   },
   {
     "name": "Burnt Crab Soup",
@@ -4092,7 +4406,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntcrabsoup"
   },
   {
     "name": "Burnt Cherry Pie",
@@ -4105,7 +4420,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntcherrypie"
   },
   {
     "name": "Cheese",
@@ -4118,7 +4434,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Cheese please"
+    "description": "Cheese please",
+    "icon": "item_cheese"
   },
   {
     "name": "Bag of Flour",
@@ -4131,7 +4448,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Makes for good baking"
+    "description": "Makes for good baking",
+    "icon": "item_bagofflour"
   },
   {
     "name": "Burnt Cheese",
@@ -4144,7 +4462,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oopsie"
+    "description": "Oopsie",
+    "icon": "item_burntcheese"
   },
   {
     "name": "Cauldron",
@@ -4157,7 +4476,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This blessing allows automatic potion renewal"
+    "description": "This blessing allows automatic potion renewal",
+    "icon": "item_cauldron"
   },
   {
     "name": "Extreme Luck Potion",
@@ -4170,7 +4490,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Triples rare drop chances for 1 minute"
+    "description": "Triples rare drop chances for 1 minute",
+    "icon": "item_extremeluckpotion"
   },
   {
     "name": "Ultimate Power Potion",
@@ -4183,7 +4504,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Boosts Attack Strength and Defence by 160 for 1 minute"
+    "description": "Boosts Attack Strength and Defence by 160 for 1 minute",
+    "icon": "item_ultimatepowerpotion"
   },
   {
     "name": "Liquid Death Potion",
@@ -4196,7 +4518,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants a 10% chance per hit to instantly kill the enemy"
+    "description": "Grants a 10% chance per hit to instantly kill the enemy",
+    "icon": "item_liquiddeathpotion"
   },
   {
     "name": "Invincibility Potion",
@@ -4209,7 +4532,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Blocks all incoming damage for 1 minute"
+    "description": "Blocks all incoming damage for 1 minute",
+    "icon": "item_invincibilitypotion"
   },
   {
     "name": "Golden Touch Potion",
@@ -4222,7 +4546,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants a 1% chance per action to find Gold Coins while Fishing Mining or Thieving for 1 minute"
+    "description": "Grants a 1% chance per action to find Gold Coins while Fishing Mining or Thieving for 1 minute",
+    "icon": "item_goldentouchpotion"
   },
   {
     "name": "Lightning Potion",
@@ -4235,7 +4560,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Deals 50 damage to the target every second while in combat for 30 seconds"
+    "description": "Deals 50 damage to the target every second while in combat for 30 seconds",
+    "icon": "item_lightningpotion"
   },
   {
     "name": "Thunderstorm Potion",
@@ -4248,7 +4574,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Deals 100 damage to the target every second while in combat for 30 seconds"
+    "description": "Deals 100 damage to the target every second while in combat for 30 seconds",
+    "icon": "item_thunderstormpotion"
   },
   {
     "name": "Poison Potion",
@@ -4261,7 +4588,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Deals 25 damage to the target every second while in combat for 30 seconds"
+    "description": "Deals 25 damage to the target every second while in combat for 30 seconds",
+    "icon": "item_poisonpotion"
   },
   {
     "name": "Cyclone Potion",
@@ -4274,7 +4602,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Deals 200 damage to the target every second while in combat for 30 seconds"
+    "description": "Deals 200 damage to the target every second while in combat for 30 seconds",
+    "icon": "item_cyclonepotion"
   },
   {
     "name": "Thieving Potion",
@@ -4287,7 +4616,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants a 100% Thieving success rate for 1 minute"
+    "description": "Grants a 100% Thieving success rate for 1 minute",
+    "icon": "item_thievingpotion"
   },
   {
     "name": "Extreme Power Potion",
@@ -4300,7 +4630,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Boosts Attack Strength and Defence by 120 for 1 minute"
+    "description": "Boosts Attack Strength and Defence by 120 for 1 minute",
+    "icon": "item_extremepowerpotion"
   },
   {
     "name": "Power Potion",
@@ -4313,7 +4644,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Boosts Attack Strength and Defence by 15 for 1 minute"
+    "description": "Boosts Attack Strength and Defence by 15 for 1 minute",
+    "icon": "item_powerpotion"
   },
   {
     "name": "Super Power Potion",
@@ -4326,7 +4658,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Boosts Attack Strength and Defence by 60 for 1 minute"
+    "description": "Boosts Attack Strength and Defence by 60 for 1 minute",
+    "icon": "item_superpowerpotion"
   },
   {
     "name": "Mining Potion",
@@ -4339,7 +4672,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants a 100% Mining success rate for 1 minute"
+    "description": "Grants a 100% Mining success rate for 1 minute",
+    "icon": "item_miningpotion"
   },
   {
     "name": "Ember Fern",
@@ -4352,7 +4686,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely rare herb"
+    "description": "An extremely rare herb",
+    "icon": "item_emberfern"
   },
   {
     "name": "Sunburst Flower",
@@ -4365,7 +4700,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A super rare flower used in potion making"
+    "description": "A super rare flower used in potion making",
+    "icon": "item_sunburstflower"
   },
   {
     "name": "Rod of Anuket",
@@ -4378,7 +4714,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "While equipped this blessing will automatically cast out my Fishing Nets when they finish"
+    "description": "While equipped this blessing will automatically cast out my Fishing Nets when they finish",
+    "icon": "item_rodofanuket"
   },
   {
     "name": "Drakes Compass",
@@ -4391,7 +4728,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This blessing allows me to clear the Discovery Grid in one click"
+    "description": "This blessing allows me to clear the Discovery Grid in one click",
+    "icon": "item_drakescompass"
   },
   {
     "name": "Drakes Diary",
@@ -4404,7 +4742,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Although this is cool it means I missed the requirements needed to get the compass"
+    "description": "Although this is cool it means I missed the requirements needed to get the compass",
+    "icon": "item_drakesdiary"
   },
   {
     "name": "Scythe of Demeter",
@@ -4417,7 +4756,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Equipping this blessing will drastically speed up my farming"
+    "description": "Equipping this blessing will drastically speed up my farming",
+    "icon": "item_scytheofdemeter"
   },
   {
     "name": "Mystic Boots",
@@ -4430,7 +4770,8 @@ const items = [
     "strengthBonus": 20,
     "defenceBonus": 150,
     "healthBonus": 100,
-    "description": "A pair of boots brimming with power"
+    "description": "A pair of boots brimming with power",
+    "icon": "item_mysticboots"
   },
   {
     "name": "Mystic Gloves",
@@ -4443,7 +4784,8 @@ const items = [
     "strengthBonus": 20,
     "defenceBonus": 300,
     "healthBonus": 100,
-    "description": "A pair of gloves brimming with power"
+    "description": "A pair of gloves brimming with power",
+    "icon": "item_mysticgloves"
   },
   {
     "name": "Mystic Bottoms",
@@ -4456,7 +4798,8 @@ const items = [
     "strengthBonus": 40,
     "defenceBonus": 420,
     "healthBonus": 600,
-    "description": "A set of robe bottoms brimming with power"
+    "description": "A set of robe bottoms brimming with power",
+    "icon": "item_mysticbottoms"
   },
   {
     "name": "Mystic Hat",
@@ -4469,7 +4812,8 @@ const items = [
     "strengthBonus": 30,
     "defenceBonus": 300,
     "healthBonus": 100,
-    "description": "A hat brimming with power"
+    "description": "A hat brimming with power",
+    "icon": "item_mystichat"
   },
   {
     "name": "Mystic Robe",
@@ -4482,7 +4826,8 @@ const items = [
     "strengthBonus": 50,
     "defenceBonus": 500,
     "healthBonus": 800,
-    "description": "A mystical robe top brimming with power"
+    "description": "A mystical robe top brimming with power",
+    "icon": "item_mysticrobe"
   },
   {
     "name": "Mystic Dagger",
@@ -4495,7 +4840,8 @@ const items = [
     "strengthBonus": 500,
     "defenceBonus": 50,
     "healthBonus": 50,
-    "description": "A dagger filled with mystical powers"
+    "description": "A dagger filled with mystical powers",
+    "icon": "item_mysticdagger"
   },
   {
     "name": "Bunny Ears",
@@ -4508,7 +4854,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 150,
     "healthBonus": 300,
-    "description": "It is a wonder how these protect me so well"
+    "description": "It is a wonder how these protect me so well",
+    "icon": "item_bunnyears"
   },
   {
     "name": "Locker Key",
@@ -4521,7 +4868,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This key gives accesss to the equipment locker where I can stash all my equipment"
+    "description": "This key gives accesss to the equipment locker where I can stash all my equipment",
+    "icon": "item_lockerkey"
   },
   {
     "name": "Power Stone",
@@ -4534,7 +4882,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Equipping this blessing will increase my damage by 10%"
+    "description": "Equipping this blessing will increase my damage by 10%",
+    "icon": "item_powerstone"
   },
   {
     "name": "Super Power Stone",
@@ -4547,7 +4896,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Equipping this blessing will increase my damage by 25%"
+    "description": "Equipping this blessing will increase my damage by 25%",
+    "icon": "item_superpowerstone"
   },
   {
     "name": "Extreme Power Stone",
@@ -4560,7 +4910,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Equipping this blessing will increase my damage by 50%"
+    "description": "Equipping this blessing will increase my damage by 50%",
+    "icon": "item_extremepowerstone"
   },
   {
     "name": "Mini Max Cape",
@@ -4573,7 +4924,8 @@ const items = [
     "strengthBonus": 120,
     "defenceBonus": 120,
     "healthBonus": 300,
-    "description": "Provides the benefits of all free to play capes with extra bonuses"
+    "description": "Provides the benefits of all free to play capes with extra bonuses",
+    "icon": "item_minimaxcape"
   },
   {
     "name": "Mining Cape",
@@ -4586,7 +4938,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "While wearing this cape I will get double the loot from Mining"
+    "description": "While wearing this cape I will get double the loot from Mining",
+    "icon": "item_miningcape"
   },
   {
     "name": "Thieving Cape",
@@ -4599,7 +4952,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "While wearing this cape I no longer take damage when caught pickpocketing"
+    "description": "While wearing this cape I no longer take damage when caught pickpocketing",
+    "icon": "item_thievingcape"
   },
   {
     "name": "Kings Sword",
@@ -4612,7 +4966,8 @@ const items = [
     "strengthBonus": 2000,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A mythical sword wielded by Kings"
+    "description": "A mythical sword wielded by Kings",
+    "icon": "item_kingssword"
   },
   {
     "name": "Queens Sword",
@@ -4625,7 +4980,8 @@ const items = [
     "strengthBonus": 1000,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A mythical sword wielded by Queens"
+    "description": "A mythical sword wielded by Queens",
+    "icon": "item_queenssword"
   },
   {
     "name": "Queens Gloves",
@@ -4638,7 +4994,8 @@ const items = [
     "strengthBonus": 50,
     "defenceBonus": 200,
     "healthBonus": 250,
-    "description": "A pair of Gloves fit for royalty"
+    "description": "A pair of Gloves fit for royalty",
+    "icon": "item_queensgloves"
   },
   {
     "name": "Queens Boots",
@@ -4651,7 +5008,8 @@ const items = [
     "strengthBonus": 50,
     "defenceBonus": 300,
     "healthBonus": 500,
-    "description": "A pair of Boots fit for royalty"
+    "description": "A pair of Boots fit for royalty",
+    "icon": "item_queensboots"
   },
   {
     "name": "Queens Helm",
@@ -4664,7 +5022,8 @@ const items = [
     "strengthBonus": 75,
     "defenceBonus": 450,
     "healthBonus": 750,
-    "description": "A Helmet fit for royalty"
+    "description": "A Helmet fit for royalty",
+    "icon": "item_queenshelm"
   },
   {
     "name": "Queens Greaves",
@@ -4677,7 +5036,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 600,
     "healthBonus": 1000,
-    "description": "A pair of Greaves fit for royalty"
+    "description": "A pair of Greaves fit for royalty",
+    "icon": "item_queensgreaves"
   },
   {
     "name": "Queens Top",
@@ -4690,7 +5050,8 @@ const items = [
     "strengthBonus": 150,
     "defenceBonus": 750,
     "healthBonus": 1500,
-    "description": "A Top fit for royalty"
+    "description": "A Top fit for royalty",
+    "icon": "item_queenstop"
   },
   {
     "name": "Kings Gloves",
@@ -4703,7 +5064,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 300,
     "healthBonus": 500,
-    "description": "A pair of Gloves fit for royalty"
+    "description": "A pair of Gloves fit for royalty",
+    "icon": "item_kingsgloves"
   },
   {
     "name": "Kings Boots",
@@ -4716,7 +5078,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 450,
     "healthBonus": 750,
-    "description": "A pair of Boots fit for royalty"
+    "description": "A pair of Boots fit for royalty",
+    "icon": "item_kingsboots"
   },
   {
     "name": "Kings Helm",
@@ -4729,7 +5092,8 @@ const items = [
     "strengthBonus": 150,
     "defenceBonus": 600,
     "healthBonus": 1000,
-    "description": "A Helmet fit for royalty"
+    "description": "A Helmet fit for royalty",
+    "icon": "item_kingshelm"
   },
   {
     "name": "Kings Greaves",
@@ -4742,7 +5106,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 750,
     "healthBonus": 1500,
-    "description": "A pair of Greaves fit for royalty"
+    "description": "A pair of Greaves fit for royalty",
+    "icon": "item_kingsgreaves"
   },
   {
     "name": "Kings Top",
@@ -4755,7 +5120,8 @@ const items = [
     "strengthBonus": 500,
     "defenceBonus": 1000,
     "healthBonus": 2500,
-    "description": "A Top fit for royalty"
+    "description": "A Top fit for royalty",
+    "icon": "item_kingstop"
   },
   {
     "name": "Kings Armour Fragment",
@@ -4768,7 +5134,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft mythical armour"
+    "description": "I can use this to craft mythical armour",
+    "icon": "item_kingsarmourfragment"
   },
   {
     "name": "Kings Weapon Fragment",
@@ -4781,7 +5148,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft a mythical weapon"
+    "description": "I can use this to craft a mythical weapon",
+    "icon": "item_kingsweaponfragment"
   },
   {
     "name": "Queens Armour Fragment",
@@ -4794,7 +5162,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft mythical armour"
+    "description": "I can use this to craft mythical armour",
+    "icon": "item_queensarmourfragment"
   },
   {
     "name": "Queens Weapon Fragment",
@@ -4807,7 +5176,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft a mythical weapon"
+    "description": "I can use this to craft a mythical weapon",
+    "icon": "item_queensweaponfragment"
   },
   {
     "name": "Queens Chest",
@@ -4820,7 +5190,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Contains loot from the Queens"
+    "description": "Contains loot from the Queens",
+    "icon": "item_queenschest"
   },
   {
     "name": "Queens Key",
@@ -4833,7 +5204,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Queens Chest"
+    "description": "Unlocks the Queens Chest",
+    "icon": "item_queenskey"
   },
   {
     "name": "Kings Chest",
@@ -4846,7 +5218,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Contains loot from the Kings"
+    "description": "Contains loot from the Kings",
+    "icon": "item_kingschest"
   },
   {
     "name": "Kings Key",
@@ -4859,7 +5232,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Unlocks the Kings Chest"
+    "description": "Unlocks the Kings Chest",
+    "icon": "item_kingskey"
   },
   {
     "name": "Evergreen Log",
@@ -4872,7 +5246,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from an Evergreen Tree"
+    "description": "A log cut from an Evergreen Tree",
+    "icon": "item_evergreenlog"
   },
   {
     "name": "Oak Log",
@@ -4885,7 +5260,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from an Oak Tree"
+    "description": "A log cut from an Oak Tree",
+    "icon": "item_oaklog"
   },
   {
     "name": "Pine Log",
@@ -4898,7 +5274,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Pine Tree"
+    "description": "A log cut from a Pine Tree",
+    "icon": "item_pinelog"
   },
   {
     "name": "Maple Log",
@@ -4911,7 +5288,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Maple Tree"
+    "description": "A log cut from a Maple Tree",
+    "icon": "item_maplelog"
   },
   {
     "name": "Birch Log",
@@ -4924,7 +5302,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Birch Tree"
+    "description": "A log cut from a Birch Tree",
+    "icon": "item_birchlog"
   },
   {
     "name": "Spruce Log",
@@ -4937,7 +5316,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Spruce Tree"
+    "description": "A log cut from a Spruce Tree",
+    "icon": "item_sprucelog"
   },
   {
     "name": "Fir Log",
@@ -4950,7 +5330,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Fir Tree"
+    "description": "A log cut from a Fir Tree",
+    "icon": "item_firlog"
   },
   {
     "name": "Ash Log",
@@ -4963,7 +5344,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from an Ash Tree"
+    "description": "A log cut from an Ash Tree",
+    "icon": "item_ashlog"
   },
   {
     "name": "Willow Log",
@@ -4976,7 +5358,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Willow Tree"
+    "description": "A log cut from a Willow Tree",
+    "icon": "item_willowlog"
   },
   {
     "name": "Eucalyptus Log",
@@ -4989,7 +5372,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Eucalyptus Tree"
+    "description": "A log cut from a Eucalyptus Tree",
+    "icon": "item_eucalyptuslog"
   },
   {
     "name": "Elder Log",
@@ -5002,7 +5386,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from an Elder Tree"
+    "description": "A log cut from an Elder Tree",
+    "icon": "item_elderlog"
   },
   {
     "name": "Redwood Log",
@@ -5015,7 +5400,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Redwood Tree"
+    "description": "A log cut from a Redwood Tree",
+    "icon": "item_redwoodlog"
   },
   {
     "name": "Cedar Log",
@@ -5028,7 +5414,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Cedar Tree"
+    "description": "A log cut from a Cedar Tree",
+    "icon": "item_cedarlog"
   },
   {
     "name": "Cherry Blossom Log",
@@ -5041,7 +5428,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Cherry Blossom Tree"
+    "description": "A log cut from a Cherry Blossom Tree",
+    "icon": "item_cherryblossomlog"
   },
   {
     "name": "Mahogany Log",
@@ -5054,7 +5442,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Mahogany Tree"
+    "description": "A log cut from a Mahogany Tree",
+    "icon": "item_mahoganylog"
   },
   {
     "name": "Chestnut Log",
@@ -5067,7 +5456,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Chestnut Tree"
+    "description": "A log cut from a Chestnut Tree",
+    "icon": "item_chestnutlog"
   },
   {
     "name": "Magnolia Log",
@@ -5080,7 +5470,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Magnolia Tree"
+    "description": "A log cut from a Magnolia Tree",
+    "icon": "item_magnolialog"
   },
   {
     "name": "Ginkgo Log",
@@ -5093,7 +5484,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A log cut from a Ginkgo Tree"
+    "description": "A log cut from a Ginkgo Tree",
+    "icon": "item_ginkgolog"
   },
   {
     "name": "Hatchet of the Gods",
@@ -5106,7 +5498,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 50,
     "healthBonus": 250,
-    "description": "A hatchet crafted upon Mount Olympus itself"
+    "description": "A hatchet crafted upon Mount Olympus itself",
+    "icon": "item_hatchetofthegods"
   },
   {
     "name": "Rabbits Foot",
@@ -5119,7 +5512,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This is strange but apparently it brings luck"
+    "description": "This is strange but apparently it brings luck",
+    "icon": "item_rabbitsfoot"
   },
   {
     "name": "Ginkgo Seed",
@@ -5132,7 +5526,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Ginkgo Logs"
+    "description": "I can plant this to get some Ginkgo Logs",
+    "icon": "item_ginkgolog"
   },
   {
     "name": "Magnolia Seed",
@@ -5145,7 +5540,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Magnolia Logs"
+    "description": "I can plant this to get some Magnolia Logs",
+    "icon": "item_magnolialog"
   },
   {
     "name": "Chestnut Seed",
@@ -5158,7 +5554,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Chestnut Logs"
+    "description": "I can plant this to get some Chestnut Logs",
+    "icon": "item_chestnutlog"
   },
   {
     "name": "Mahogany Seed",
@@ -5171,7 +5568,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Mahogany Logs"
+    "description": "I can plant this to get some Mahogany Logs",
+    "icon": "item_mahoganylog"
   },
   {
     "name": "Cherry Blossom Seed",
@@ -5184,7 +5582,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Cherry Blossom Logs"
+    "description": "I can plant this to get some Cherry Blossom Logs",
+    "icon": "item_cherryblossomlog"
   },
   {
     "name": "Cedar Seed",
@@ -5197,7 +5596,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Cedar Logs"
+    "description": "I can plant this to get some Cedar Logs",
+    "icon": "item_cedarlog"
   },
   {
     "name": "Redwood Seed",
@@ -5210,7 +5610,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Redwood Logs"
+    "description": "I can plant this to get some Redwood Logs",
+    "icon": "item_redwoodlog"
   },
   {
     "name": "Elder Seed",
@@ -5223,7 +5624,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Elder Logs"
+    "description": "I can plant this to get some Elder Logs",
+    "icon": "item_elderlog"
   },
   {
     "name": "Eucalyptus Seed",
@@ -5236,7 +5638,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Eucalyptus Logs"
+    "description": "I can plant this to get some Eucalyptus Logs",
+    "icon": "item_eucalyptuslog"
   },
   {
     "name": "Willow Seed",
@@ -5249,7 +5652,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Willow Logs"
+    "description": "I can plant this to get some Willow Logs",
+    "icon": "item_willowlog"
   },
   {
     "name": "Ash Seed",
@@ -5262,7 +5666,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Ash Logs"
+    "description": "I can plant this to get some Ash Logs",
+    "icon": "item_ashlog"
   },
   {
     "name": "Fir Seed",
@@ -5275,7 +5680,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Fir Logs"
+    "description": "I can plant this to get some Fir Logs",
+    "icon": "item_firlog"
   },
   {
     "name": "Spruce Seed",
@@ -5288,7 +5694,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Spruce Logs"
+    "description": "I can plant this to get some Spruce Logs",
+    "icon": "item_sprucelog"
   },
   {
     "name": "Birch Seed",
@@ -5301,7 +5708,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Birch Logs"
+    "description": "I can plant this to get some Birch Logs",
+    "icon": "item_birchlog"
   },
   {
     "name": "Maple Seed",
@@ -5314,7 +5722,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Maple Logs"
+    "description": "I can plant this to get some Maple Logs",
+    "icon": "item_maplelog"
   },
   {
     "name": "Pine Seed",
@@ -5327,7 +5736,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Pine Logs"
+    "description": "I can plant this to get some Pine Logs",
+    "icon": "item_pinelog"
   },
   {
     "name": "Oak Seed",
@@ -5340,7 +5750,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Oak Logs"
+    "description": "I can plant this to get some Oak Logs",
+    "icon": "item_oaklog"
   },
   {
     "name": "Evergreen Seed",
@@ -5353,7 +5764,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can plant this to get some Evergreen Logs"
+    "description": "I can plant this to get some Evergreen Logs",
+    "icon": "item_evergreenlog"
   },
   {
     "name": "Eagles Nest",
@@ -5366,7 +5778,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I wonder what this may contain"
+    "description": "I wonder what this may contain",
+    "icon": "item_eaglesnest"
   },
   {
     "name": "Rock Skin Potion",
@@ -5379,7 +5792,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Reduces all Incoming damage by 50% for 1 minute"
+    "description": "Reduces all Incoming damage by 50% for 1 minute",
+    "icon": "item_rockskinpotion"
   },
   {
     "name": "Dragon Platter",
@@ -5392,7 +5806,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This will heal me for 30% of my max health"
+    "description": "This will heal me for 30% of my max health",
+    "icon": "item_dragonplatter"
   },
   {
     "name": "Big Dragon Bones",
@@ -5405,7 +5820,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "The bones of a mighty dragon king"
+    "description": "The bones of a mighty dragon king",
+    "icon": "item_bigdragonbones"
   },
   {
     "name": "Burnt Dragon Platter",
@@ -5418,7 +5834,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I meant to do this"
+    "description": "I meant to do this",
+    "icon": "item_burntdragonplatter"
   },
   {
     "name": "Farmour Fragment",
@@ -5431,7 +5848,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to make some armour"
+    "description": "I can use this to make some armour",
+    "icon": "item_farmourfragment"
   },
   {
     "name": "Dagger Fragment",
@@ -5444,7 +5862,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to make a weapon"
+    "description": "I can use this to make a weapon",
+    "icon": "item_daggerfragment"
   },
   {
     "name": "Farm Chest",
@@ -5457,7 +5876,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Contains some farm stuff"
+    "description": "Contains some farm stuff",
+    "icon": "item_farmchest"
   },
   {
     "name": "Farm Key",
@@ -5470,7 +5890,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Opens the Farm Chest"
+    "description": "Opens the Farm Chest",
+    "icon": "item_farmkey"
   },
   {
     "name": "Dagger of Demeter",
@@ -5483,7 +5904,8 @@ const items = [
     "strengthBonus": 600,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A dagger from the goddess of harvest"
+    "description": "A dagger from the goddess of harvest",
+    "icon": "item_daggerofdemeter"
   },
   {
     "name": "Farmour Gloves",
@@ -5496,7 +5918,8 @@ const items = [
     "strengthBonus": 25,
     "defenceBonus": 250,
     "healthBonus": 100,
-    "description": "A pair of Gloves fit for the garden"
+    "description": "A pair of Gloves fit for the garden",
+    "icon": "item_farmourgloves"
   },
   {
     "name": "Farmour Boots",
@@ -5509,7 +5932,8 @@ const items = [
     "strengthBonus": 25,
     "defenceBonus": 300,
     "healthBonus": 150,
-    "description": "A pair of Boots fit for the garden"
+    "description": "A pair of Boots fit for the garden",
+    "icon": "item_farmourboots"
   },
   {
     "name": "Farmour Helm",
@@ -5522,7 +5946,8 @@ const items = [
     "strengthBonus": 40,
     "defenceBonus": 400,
     "healthBonus": 200,
-    "description": "A Helmet fit for the garden"
+    "description": "A Helmet fit for the garden",
+    "icon": "item_farmourhelm"
   },
   {
     "name": "Farmour Legs",
@@ -5535,7 +5960,8 @@ const items = [
     "strengthBonus": 50,
     "defenceBonus": 500,
     "healthBonus": 350,
-    "description": "A pair of Greaves fit for the garden"
+    "description": "A pair of Greaves fit for the garden",
+    "icon": "item_farmourlegs"
   },
   {
     "name": "Farmour Top",
@@ -5548,7 +5974,8 @@ const items = [
     "strengthBonus": 75,
     "defenceBonus": 650,
     "healthBonus": 500,
-    "description": "A Top fit for the garden"
+    "description": "A Top fit for the garden",
+    "icon": "item_farmourtop"
   },
   {
     "name": "Drakes Ring",
@@ -5561,7 +5988,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of Drakes Compass"
+    "description": "This ring provides the benefits of Drakes Compass",
+    "icon": "item_drakesring"
   },
   {
     "name": "Ring of Anuket",
@@ -5574,7 +6002,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of Anukets Rod"
+    "description": "This ring provides the benefits of Anukets Rod",
+    "icon": "item_ringofanuket"
   },
   {
     "name": "Ring of Death",
@@ -5587,7 +6016,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides gives a permanent 10% chance to instantly kill the enemy"
+    "description": "This ring provides gives a permanent 10% chance to instantly kill the enemy",
+    "icon": "item_ringofdeath"
   },
   {
     "name": "Ring of Demeter",
@@ -5600,7 +6030,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of Demeters Scythe"
+    "description": "This ring provides the benefits of Demeters Scythe",
+    "icon": "item_ringofdemeter"
   },
   {
     "name": "Ring of Extreme Power",
@@ -5613,7 +6044,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of the Extreme Power Stone"
+    "description": "This ring provides the benefits of the Extreme Power Stone",
+    "icon": "item_ringofextremepower"
   },
   {
     "name": "Ring of Forestry",
@@ -5626,7 +6058,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of the Rabbits Foot"
+    "description": "This ring provides the benefits of the Rabbits Foot",
+    "icon": "item_ringofforestry"
   },
   {
     "name": "Ring of Life",
@@ -5639,7 +6072,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring heals me for 20% of all damage I deal"
+    "description": "This ring heals me for 20% of all damage I deal",
+    "icon": "item_ringoflife"
   },
   {
     "name": "Ring of Power",
@@ -5652,7 +6086,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of the Power Stone"
+    "description": "This ring provides the benefits of the Power Stone",
+    "icon": "item_ringofpower"
   },
   {
     "name": "Ring of Renewal",
@@ -5665,7 +6100,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of the Cauldron"
+    "description": "This ring provides the benefits of the Cauldron",
+    "icon": "item_ringofrenewal"
   },
   {
     "name": "Ring of Super Power",
@@ -5678,7 +6114,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring provides the benefits of the Super Power Stone"
+    "description": "This ring provides the benefits of the Super Power Stone",
+    "icon": "item_ringofsuperpower"
   },
   {
     "name": "Ring of Speed",
@@ -5691,7 +6128,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ring doubles my attack speed"
+    "description": "This ring doubles my attack speed",
+    "icon": "item_ringofspeed"
   },
   {
     "name": "Ring Fragments",
@@ -5704,7 +6142,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use these to craft powerful rings"
+    "description": "I can use these to craft powerful rings",
+    "icon": "item_ringfragments"
   },
   {
     "name": "Necklace of Attack",
@@ -5717,7 +6156,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A necklace that boosts my Attack"
+    "description": "A necklace that boosts my Attack",
+    "icon": "item_necklaceofattack"
   },
   {
     "name": "Necklace of Defence",
@@ -5730,7 +6170,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 250,
     "healthBonus": 0,
-    "description": "A necklace that boosts my Defence"
+    "description": "A necklace that boosts my Defence",
+    "icon": "item_necklaceofdefence"
   },
   {
     "name": "Necklace of Strength",
@@ -5743,7 +6184,8 @@ const items = [
     "strengthBonus": 250,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A necklace that boosts my Strength"
+    "description": "A necklace that boosts my Strength",
+    "icon": "item_necklaceofstrength"
   },
   {
     "name": "Necklace of Health",
@@ -5756,7 +6198,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 250,
-    "description": "A necklace that boosts my Health"
+    "description": "A necklace that boosts my Health",
+    "icon": "item_necklaceofhealth"
   },
   {
     "name": "Mystic Staff",
@@ -5769,7 +6212,8 @@ const items = [
     "strengthBonus": 3000,
     "defenceBonus": 2500,
     "healthBonus": 15000,
-    "description": "A mythical staff imbued with immense power"
+    "description": "A mythical staff imbued with immense power",
+    "icon": "item_mysticstaff"
   },
   {
     "name": "Massive Exp Scroll",
@@ -5782,7 +6226,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants a massive amount of experience to any skill"
+    "description": "Grants a massive amount of experience to any skill",
+    "icon": "item_massiveexpscroll"
   },
   {
     "name": "Completion Cape",
@@ -5795,7 +6240,8 @@ const items = [
     "strengthBonus": 900,
     "defenceBonus": 750,
     "healthBonus": 2500,
-    "description": "Provides the benefits of all skill capes plus epic stats"
+    "description": "Provides the benefits of all skill capes plus epic stats",
+    "icon": "item_completioncape"
   },
   {
     "name": "Supporters Crown",
@@ -5808,7 +6254,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 1000,
-    "description": "A crown created solely for Supporters"
+    "description": "A crown created solely for Supporters",
+    "icon": "item_supporterscrown"
   },
   {
     "name": "Crown of the Invested",
@@ -5821,7 +6268,8 @@ const items = [
     "strengthBonus": 750,
     "defenceBonus": 750,
     "healthBonus": 2500,
-    "description": "A crown created solely for Invested Supporters"
+    "description": "A crown created solely for Invested Supporters",
+    "icon": "item_crownoftheinvested"
   },
   {
     "name": "Challenger Boots",
@@ -5834,7 +6282,8 @@ const items = [
     "strengthBonus": 50,
     "defenceBonus": 75,
     "healthBonus": 250,
-    "description": "Awarded to dedicated challengers"
+    "description": "Awarded to dedicated challengers",
+    "icon": "item_challengerboots"
   },
   {
     "name": "Challenger Gloves",
@@ -5847,7 +6296,8 @@ const items = [
     "strengthBonus": 75,
     "defenceBonus": 75,
     "healthBonus": 250,
-    "description": "Awarded to dedicated challengers"
+    "description": "Awarded to dedicated challengers",
+    "icon": "item_challengergloves"
   },
   {
     "name": "Challenger Hat",
@@ -5860,7 +6310,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 350,
-    "description": "Awarded to dedicated challengers"
+    "description": "Awarded to dedicated challengers",
+    "icon": "item_challengerhat"
   },
   {
     "name": "Challenger Top",
@@ -5873,7 +6324,8 @@ const items = [
     "strengthBonus": 150,
     "defenceBonus": 150,
     "healthBonus": 750,
-    "description": "Awarded to dedicated challengers"
+    "description": "Awarded to dedicated challengers",
+    "icon": "item_challengertop"
   },
   {
     "name": "Challenger Legs",
@@ -5886,7 +6338,8 @@ const items = [
     "strengthBonus": 125,
     "defenceBonus": 125,
     "healthBonus": 500,
-    "description": "Awarded to dedicated challengers"
+    "description": "Awarded to dedicated challengers",
+    "icon": "item_challengerlegs"
   },
   {
     "name": "Magic Watering Can",
@@ -5899,7 +6352,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Equipping this blessing allows automatic harvest and replanting of seeds in the farm"
+    "description": "Equipping this blessing allows automatic harvest and replanting of seeds in the farm",
+    "icon": "item_magicwateringcan"
   },
   {
     "name": "Restoration Fragment 1",
@@ -5912,7 +6366,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft something powerful"
+    "description": "I can use this to craft something powerful",
+    "icon": "item_restorationfragment1"
   },
   {
     "name": "Restoration Fragment 2",
@@ -5925,7 +6380,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft something powerful"
+    "description": "I can use this to craft something powerful",
+    "icon": "item_restorationfragment2"
   },
   {
     "name": "Restoration Fragment 3",
@@ -5938,7 +6394,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft something powerful"
+    "description": "I can use this to craft something powerful",
+    "icon": "item_restorationfragment3"
   },
   {
     "name": "Restoration Fragment 4",
@@ -5951,7 +6408,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft something powerful"
+    "description": "I can use this to craft something powerful",
+    "icon": "item_restorationfragment4"
   },
   {
     "name": "Restoration Fragment 5",
@@ -5964,7 +6422,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft something powerful"
+    "description": "I can use this to craft something powerful",
+    "icon": "item_restorationfragment5"
   },
   {
     "name": "Necklace of Restoration",
@@ -5977,7 +6436,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 400,
     "healthBonus": 1500,
-    "description": "This powerful necklace heals me for 40% of all damage I deal"
+    "description": "This powerful necklace heals me for 40% of all damage I deal",
+    "icon": "item_necklaceofrestoration"
   },
   {
     "name": "Vains Flail",
@@ -5990,7 +6450,8 @@ const items = [
     "strengthBonus": 450,
     "defenceBonus": 300,
     "healthBonus": 0,
-    "description": "A flail gifted by the legendary Slayer Master"
+    "description": "A flail gifted by the legendary Slayer Master",
+    "icon": "item_vainsflail"
   },
   {
     "name": "Vains Gloves",
@@ -6003,7 +6464,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 1500,
-    "description": "A pair of gloves gifted by the legendary Slayer Master"
+    "description": "A pair of gloves gifted by the legendary Slayer Master",
+    "icon": "item_vainsgloves"
   },
   {
     "name": "Vains Sword",
@@ -6016,7 +6478,8 @@ const items = [
     "strengthBonus": 450,
     "defenceBonus": 400,
     "healthBonus": 0,
-    "description": "A sword gifted by the legendary Slayer Master"
+    "description": "A sword gifted by the legendary Slayer Master",
+    "icon": "item_vainssword"
   },
   {
     "name": "Book of Death",
@@ -6029,7 +6492,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 300,
-    "description": "A powerful book with strange text inside"
+    "description": "A powerful book with strange text inside",
+    "icon": "item_bookofdeath"
   },
   {
     "name": "Book of Necromancy",
@@ -6042,7 +6506,8 @@ const items = [
     "strengthBonus": 750,
     "defenceBonus": 0,
     "healthBonus": 500,
-    "description": "A book all about an ancient form of dark magic"
+    "description": "A book all about an ancient form of dark magic",
+    "icon": "item_bookofnecromancy"
   },
   {
     "name": "Ancient Elven Book",
@@ -6055,7 +6520,8 @@ const items = [
     "strengthBonus": 1250,
     "defenceBonus": 1000,
     "healthBonus": 1500,
-    "description": "An incredibly rare book filled with ancient elven power"
+    "description": "An incredibly rare book filled with ancient elven power",
+    "icon": "item_ancientelvenbook"
   },
   {
     "name": "Spiked Shield",
@@ -6068,7 +6534,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 150,
     "healthBonus": 200,
-    "description": "Ohhh it is spikey"
+    "description": "Ohhh it is spikey",
+    "icon": "item_spikedshield"
   },
   {
     "name": "Mithril Shield",
@@ -6081,7 +6548,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 35,
     "healthBonus": 60,
-    "description": "A mid range shield"
+    "description": "A mid range shield",
+    "icon": "item_mithrilshield"
   },
   {
     "name": "Iron Shield",
@@ -6094,7 +6562,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 15,
     "healthBonus": 25,
-    "description": "A shield for beginners"
+    "description": "A shield for beginners",
+    "icon": "item_ironshield"
   },
   {
     "name": "Elven Crystal",
@@ -6107,7 +6576,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A rare crystal mined in the Immortal Realm"
+    "description": "A rare crystal mined in the Immortal Realm",
+    "icon": "item_elvencrystal"
   },
   {
     "name": "Elven Grace Potion",
@@ -6120,7 +6590,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Has a 25% chance to reduce incoming damage by 75%"
+    "description": "Has a 25% chance to reduce incoming damage by 75%",
+    "icon": "item_elvengracepotion"
   },
   {
     "name": "Avalanche Potion",
@@ -6133,7 +6604,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Deals 2000 damage to the target every second while in combat for 30 seconds"
+    "description": "Deals 2000 damage to the target every second while in combat for 30 seconds",
+    "icon": "item_avalanchepotion"
   },
   {
     "name": "Beach Shirt",
@@ -6146,7 +6618,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 500,
     "healthBonus": 1200,
-    "description": "The definition of smart casual"
+    "description": "The definition of smart casual",
+    "icon": "item_beachshirt"
   },
   {
     "name": "Beach Shorts",
@@ -6159,7 +6632,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 600,
     "healthBonus": 1200,
-    "description": "Nice weather for these"
+    "description": "Nice weather for these",
+    "icon": "item_beachshorts"
   },
   {
     "name": "Bikini Bottoms",
@@ -6172,7 +6646,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 750,
     "healthBonus": 1500,
-    "description": "It is amazing how defensive these are"
+    "description": "It is amazing how defensive these are",
+    "icon": "item_bikinibottoms"
   },
   {
     "name": "Bikini Top",
@@ -6185,7 +6660,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 600,
     "healthBonus": 1500,
-    "description": "How are these so protective"
+    "description": "How are these so protective",
+    "icon": "item_bikinitop"
   },
   {
     "name": "Ring of Sun",
@@ -6198,7 +6674,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Wow this thing is so bright"
+    "description": "Wow this thing is so bright",
+    "icon": "item_ringofsun"
   },
   {
     "name": "Sandals",
@@ -6211,7 +6688,8 @@ const items = [
     "strengthBonus": 40,
     "defenceBonus": 100,
     "healthBonus": 500,
-    "description": "Got ma flippy floppys"
+    "description": "Got ma flippy floppys",
+    "icon": "item_sandals"
   },
   {
     "name": "Sandcastle Necklace",
@@ -6224,7 +6702,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 500,
-    "description": "It must be a very small castle"
+    "description": "It must be a very small castle",
+    "icon": "item_sandcastlenecklace"
   },
   {
     "name": "Spade",
@@ -6237,7 +6716,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 1500,
-    "description": "I can bury my enemies with this"
+    "description": "I can bury my enemies with this",
+    "icon": "item_spade"
   },
   {
     "name": "Sunglasses",
@@ -6250,7 +6730,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 2500,
-    "description": "I am just so cool my enemies are stunned so they attack 50% slower"
+    "description": "I am just so cool my enemies are stunned so they attack 50% slower",
+    "icon": "item_sunglasses"
   },
   {
     "name": "Sun Hat",
@@ -6263,7 +6744,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 100,
     "healthBonus": 1500,
-    "description": "Helps keep my head cool"
+    "description": "Helps keep my head cool",
+    "icon": "item_sunhat"
   },
   {
     "name": "Towel Cape",
@@ -6276,7 +6758,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 200,
     "healthBonus": 1500,
-    "description": "Not all heroes wear actual capes you know"
+    "description": "Not all heroes wear actual capes you know",
+    "icon": "item_towelcape"
   },
   {
     "name": "Elven Plate",
@@ -6289,7 +6772,8 @@ const items = [
     "strengthBonus": 1000,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "A mythical platebody crafted by the Elves"
+    "description": "A mythical platebody crafted by the Elves",
+    "icon": "item_elvenplate"
   },
   {
     "name": "Elven Greaves",
@@ -6302,7 +6786,8 @@ const items = [
     "strengthBonus": 600,
     "defenceBonus": 1500,
     "healthBonus": 4000,
-    "description": "A mythical set of greaves crafted by the Elves"
+    "description": "A mythical set of greaves crafted by the Elves",
+    "icon": "item_elvengreaves"
   },
   {
     "name": "Elven Helm",
@@ -6315,7 +6800,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "A mythical helmet crafted by the Elves"
+    "description": "A mythical helmet crafted by the Elves",
+    "icon": "item_elvenhelm"
   },
   {
     "name": "Elven Gloves",
@@ -6328,7 +6814,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 600,
     "healthBonus": 2000,
-    "description": "A mythical pair of gloves crafted by the Elves"
+    "description": "A mythical pair of gloves crafted by the Elves",
+    "icon": "item_elvengloves"
   },
   {
     "name": "Elven Boots",
@@ -6341,7 +6828,8 @@ const items = [
     "strengthBonus": 250,
     "defenceBonus": 1000,
     "healthBonus": 3000,
-    "description": "A mythical pair of boots crafted by the Elves"
+    "description": "A mythical pair of boots crafted by the Elves",
+    "icon": "item_elvenboots"
   },
   {
     "name": "Elven Sword",
@@ -6354,7 +6842,8 @@ const items = [
     "strengthBonus": 4000,
     "defenceBonus": 3000,
     "healthBonus": 15000,
-    "description": "A mythical sword crafted by the Elves"
+    "description": "A mythical sword crafted by the Elves",
+    "icon": "item_elvensword"
   },
   {
     "name": "Elven Armour Fragment",
@@ -6367,7 +6856,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to create some Mythical armour"
+    "description": "I can use this to create some Mythical armour",
+    "icon": "item_elvenarmourfragment"
   },
   {
     "name": "Elven Weapon Fragment",
@@ -6380,7 +6870,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to create a Mythical Weapon"
+    "description": "I can use this to create a Mythical Weapon",
+    "icon": "item_elvenweaponfragment"
   },
   {
     "name": "Wooden Stick",
@@ -6393,7 +6884,8 @@ const items = [
     "strengthBonus": 500,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Erm this is cool"
+    "description": "Erm this is cool",
+    "icon": "item_woodenstick"
   },
   {
     "name": "Eternal Ring",
@@ -6406,7 +6898,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 200,
     "healthBonus": 500,
-    "description": "Provides the benefits of the Rings of Life Death and Speed"
+    "description": "Provides the benefits of the Rings of Life Death and Speed",
+    "icon": "item_eternalring"
   },
   {
     "name": "Pickaxe of the Gods",
@@ -6419,7 +6912,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 50,
     "healthBonus": 250,
-    "description": "This Pickaxe triples all ores I mine"
+    "description": "This Pickaxe triples all ores I mine",
+    "icon": "item_pickaxeofthegods"
   },
   {
     "name": "Thieving Gloves",
@@ -6432,7 +6926,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "These stealthy gloves allow me to never get caught and pickpocket faster"
+    "description": "These stealthy gloves allow me to never get caught and pickpocket faster",
+    "icon": "item_thievinggloves"
   },
   {
     "name": "Chefs Hat",
@@ -6445,7 +6940,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This marvelous hat multiplies the food I cook"
+    "description": "This marvelous hat multiplies the food I cook",
+    "icon": "item_chefshat"
   },
   {
     "name": "Flame Gloves",
@@ -6458,7 +6954,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Wow hot stuff"
+    "description": "Wow hot stuff",
+    "icon": "item_flamegloves"
   },
   {
     "name": "Treasure Scroll",
@@ -6471,7 +6968,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I wonder where this leads"
+    "description": "I wonder where this leads",
+    "icon": "item_treasurescroll"
   },
   {
     "name": "Casket of Treasure",
@@ -6484,7 +6982,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Contains some juicy loot"
+    "description": "Contains some juicy loot",
+    "icon": "item_casketoftreasure"
   },
   {
     "name": "Diamond",
@@ -6497,7 +6996,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A precious gemstone"
+    "description": "A precious gemstone",
+    "icon": "item_diamond"
   },
   {
     "name": "Copper Ore",
@@ -6510,7 +7010,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Pretty common"
+    "description": "Pretty common",
+    "icon": "item_copperore"
   },
   {
     "name": "Iridium Ore",
@@ -6523,7 +7024,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely rare metal"
+    "description": "An extremely rare metal",
+    "icon": "item_iridiumore"
   },
   {
     "name": "Platinum Ore",
@@ -6536,7 +7038,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely rare metal"
+    "description": "An extremely rare metal",
+    "icon": "item_platinumore"
   },
   {
     "name": "Rhodium Ore",
@@ -6549,7 +7052,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely rare metal"
+    "description": "An extremely rare metal",
+    "icon": "item_rhodiumore"
   },
   {
     "name": "Stone Arrows",
@@ -6562,7 +7066,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An arrow with a stone tip"
+    "description": "An arrow with a stone tip",
+    "icon": "item_stonearrows"
   },
   {
     "name": "Copper Arrows",
@@ -6575,7 +7080,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An arrow with a copper tip"
+    "description": "An arrow with a copper tip",
+    "icon": "item_copperarrows"
   },
   {
     "name": "Iron Arrows",
@@ -6588,7 +7094,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An arrow with an iron tip"
+    "description": "An arrow with an iron tip",
+    "icon": "item_ironarrows"
   },
   {
     "name": "Mithril Arrows",
@@ -6601,7 +7108,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An arrow with a mithril tip"
+    "description": "An arrow with a mithril tip",
+    "icon": "item_mithrilarrows"
   },
   {
     "name": "Dragon Arrows",
@@ -6614,7 +7122,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An arrow with a dragon tip"
+    "description": "An arrow with a dragon tip",
+    "icon": "item_dragonarrows"
   },
   {
     "name": "Platinum Arrows",
@@ -6627,7 +7136,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A powerful arrow with a top made from Platinum"
+    "description": "A powerful arrow with a top made from Platinum",
+    "icon": "item_platinumarrows"
   },
   {
     "name": "Rhodium Arrows",
@@ -6640,7 +7150,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A powerful arrow with a top made from Rhodium"
+    "description": "A powerful arrow with a top made from Rhodium",
+    "icon": "item_rhodiumarrows"
   },
   {
     "name": "Iridium Arrows",
@@ -6653,7 +7164,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A powerful arrow with a top made from Iridium"
+    "description": "A powerful arrow with a top made from Iridium",
+    "icon": "item_iridiumarrows"
   },
   {
     "name": "Queens Arrows",
@@ -6666,7 +7178,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely powerful arrow used by Queens"
+    "description": "An extremely powerful arrow used by Queens",
+    "icon": "item_queensarrows"
   },
   {
     "name": "Kings Arrows",
@@ -6679,7 +7192,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely powerful arrow used by Kings"
+    "description": "An extremely powerful arrow used by Kings",
+    "icon": "item_kingsarrows"
   },
   {
     "name": "Elven Arrows",
@@ -6692,7 +7206,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An extremely powerful arrow that holds the power of the Elves"
+    "description": "An extremely powerful arrow that holds the power of the Elves",
+    "icon": "item_elvenarrows"
   },
   {
     "name": "Evergreen Arrow Shafts",
@@ -6705,7 +7220,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_evergreenarrowshafts"
   },
   {
     "name": "Oak Arrow Shafts",
@@ -6718,7 +7234,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_oakarrowshafts"
   },
   {
     "name": "Maple Arrow Shafts",
@@ -6731,7 +7248,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_maplearrowshafts"
   },
   {
     "name": "Fir Arrow Shafts",
@@ -6744,7 +7262,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_firarrowshafts"
   },
   {
     "name": "Redwood Arrow Shafts",
@@ -6757,7 +7276,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_redwoodarrowshafts"
   },
   {
     "name": "Cedar Arrow Shafts",
@@ -6770,7 +7290,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_cedararrowshafts"
   },
   {
     "name": "Chestnut Arrow Shafts",
@@ -6783,7 +7304,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_chestnutarrowshafts"
   },
   {
     "name": "Ginkgo Arrow Shafts",
@@ -6796,7 +7318,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I should add some feathers to these"
+    "description": "I should add some feathers to these",
+    "icon": "item_ginkgoarrowshafts"
   },
   {
     "name": "Evergreen Headless Arrows",
@@ -6809,7 +7332,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_evergreenheadlessarrows"
   },
   {
     "name": "Oak Headless Arrows",
@@ -6822,7 +7346,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_oakheadlessarrows"
   },
   {
     "name": "Maple Headless Arrows",
@@ -6835,7 +7360,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_mapleheadlessarrows"
   },
   {
     "name": "Fir Headless Arrows",
@@ -6848,7 +7374,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_firheadlessarrows"
   },
   {
     "name": "Redwood Headless Arrows",
@@ -6861,7 +7388,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_redwoodheadlessarrows"
   },
   {
     "name": "Cedar Headless Arrows",
@@ -6874,7 +7402,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_cedarheadlessarrows"
   },
   {
     "name": "Chestnut Headless Arrows",
@@ -6887,7 +7416,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_chestnutheadlessarrows"
   },
   {
     "name": "Ginkgo Headless Arrows",
@@ -6900,7 +7430,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This needs a tip"
+    "description": "This needs a tip",
+    "icon": "item_ginkgoheadlessarrows"
   },
   {
     "name": "Stone Arrowheads",
@@ -6913,7 +7444,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of stone"
+    "description": "Arrowheads made of stone",
+    "icon": "item_stonearrowheads"
   },
   {
     "name": "Copper Arrowheads",
@@ -6926,7 +7458,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Copper"
+    "description": "Arrowheads made of Copper",
+    "icon": "item_copperarrowheads"
   },
   {
     "name": "Iron Arrowheads",
@@ -6939,7 +7472,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Iron"
+    "description": "Arrowheads made of Iron",
+    "icon": "item_ironarrowheads"
   },
   {
     "name": "Mithril Arrowheads",
@@ -6952,7 +7486,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Mithril"
+    "description": "Arrowheads made of Mithril",
+    "icon": "item_mithrilarrowheads"
   },
   {
     "name": "Dragon Arrowheads",
@@ -6965,7 +7500,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Dragon Ore"
+    "description": "Arrowheads made of Dragon Ore",
+    "icon": "item_dragonarrowheads"
   },
   {
     "name": "Platinum Arrowheads",
@@ -6978,7 +7514,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Platinum"
+    "description": "Arrowheads made of Platinum",
+    "icon": "item_platinumarrowheads"
   },
   {
     "name": "Rhodium Arrowheads",
@@ -6991,7 +7528,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Rhodium"
+    "description": "Arrowheads made of Rhodium",
+    "icon": "item_rhodiumarrowheads"
   },
   {
     "name": "Iridium Arrowheads",
@@ -7004,7 +7542,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made of Iridium"
+    "description": "Arrowheads made of Iridium",
+    "icon": "item_iridiumarrowheads"
   },
   {
     "name": "Queens Arrowheads",
@@ -7017,7 +7556,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made from Queens Weapon Fragments"
+    "description": "Arrowheads made from Queens Weapon Fragments",
+    "icon": "item_queensarrowheads"
   },
   {
     "name": "Kings Arrowheads",
@@ -7030,7 +7570,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made from Kings Weapon Fragments"
+    "description": "Arrowheads made from Kings Weapon Fragments",
+    "icon": "item_kingsarrowheads"
   },
   {
     "name": "Elven Arrowheads",
@@ -7043,7 +7584,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Arrowheads made with the power of the elves"
+    "description": "Arrowheads made with the power of the elves",
+    "icon": "item_elvenarrowheads"
   },
   {
     "name": "Evergreen Bow",
@@ -7056,7 +7598,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from an Evergreen Log"
+    "description": "A bow made from an Evergreen Log",
+    "icon": "item_evergreenbow"
   },
   {
     "name": "Oak Bow",
@@ -7069,7 +7612,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from an Oak Log"
+    "description": "A bow made from an Oak Log",
+    "icon": "item_oakbow"
   },
   {
     "name": "Maple Bow",
@@ -7082,7 +7626,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Maple Log"
+    "description": "A bow made from a Maple Log",
+    "icon": "item_maplebow"
   },
   {
     "name": "Fir Bow",
@@ -7095,7 +7640,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Fir Log"
+    "description": "A bow made from a Fir Log",
+    "icon": "item_firbow"
   },
   {
     "name": "Redwood Bow",
@@ -7108,7 +7654,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Redwood Log"
+    "description": "A bow made from a Redwood Log",
+    "icon": "item_redwoodbow"
   },
   {
     "name": "Cedar Bow",
@@ -7121,7 +7668,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Cedar Log"
+    "description": "A bow made from a Cedar Log",
+    "icon": "item_cedarbow"
   },
   {
     "name": "Chestnut Bow",
@@ -7134,7 +7682,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Chestnut Log"
+    "description": "A bow made from a Chestnut Log",
+    "icon": "item_chestnutbow"
   },
   {
     "name": "Ginkgo Bow",
@@ -7147,7 +7696,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made from a Ginkgo Log"
+    "description": "A bow made from a Ginkgo Log",
+    "icon": "item_ginkgobow"
   },
   {
     "name": "Queens Bow",
@@ -7160,7 +7710,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow made wielded by Queens"
+    "description": "A bow made wielded by Queens",
+    "icon": "item_queensbow"
   },
   {
     "name": "Kings Bow",
@@ -7173,7 +7724,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A bow wielded by Kings"
+    "description": "A bow wielded by Kings",
+    "icon": "item_kingsbow"
   },
   {
     "name": "Elven Bow",
@@ -7186,7 +7738,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A powerful bow wielded by the high elves"
+    "description": "A powerful bow wielded by the high elves",
+    "icon": "item_elvenbow"
   },
   {
     "name": "Sword of Feroxi",
@@ -7199,7 +7752,8 @@ const items = [
     "strengthBonus": 7000,
     "defenceBonus": 4000,
     "healthBonus": 15000,
-    "description": "A legendary sword that once belonged to Feroxi the God of War"
+    "description": "A legendary sword that once belonged to Feroxi the God of War",
+    "icon": "item_swordofferoxi"
   },
   {
     "name": "Bow of Kynosian",
@@ -7212,7 +7766,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 4000,
     "healthBonus": 10000,
-    "description": "A powerful bow that once belonged to Kynosian the God of Archery"
+    "description": "A powerful bow that once belonged to Kynosian the God of Archery",
+    "icon": "item_bowofkynosian"
   },
   {
     "name": "Hatchet of Copina",
@@ -7225,7 +7780,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 400,
-    "description": "A hatchet blessed with the power of Copina the Goddess of Skilling"
+    "description": "A hatchet blessed with the power of Copina the Goddess of Skilling",
+    "icon": "item_hatchetofcopina"
   },
   {
     "name": "Pickaxe of Copina",
@@ -7238,7 +7794,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 400,
-    "description": "A Pickaxe blessed with the power of Copina the Goddess of Skilling"
+    "description": "A Pickaxe blessed with the power of Copina the Goddess of Skilling",
+    "icon": "item_pickaxeofcopina"
   },
   {
     "name": "Rod of Copina",
@@ -7251,7 +7808,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A Fishing Rod blessed with the power of Copina the Goddess of Skilling"
+    "description": "A Fishing Rod blessed with the power of Copina the Goddess of Skilling",
+    "icon": "item_rodofcopina"
   },
   {
     "name": "Opulinas Robe Top",
@@ -7264,7 +7822,8 @@ const items = [
     "strengthBonus": 800,
     "defenceBonus": 1600,
     "healthBonus": 5000,
-    "description": "A legendary robe top that once belonged to Opulina the Goddess of Wealth"
+    "description": "A legendary robe top that once belonged to Opulina the Goddess of Wealth",
+    "icon": "item_opulinasrobetop"
   },
   {
     "name": "Opulinas Robe Bottoms",
@@ -7277,7 +7836,8 @@ const items = [
     "strengthBonus": 1200,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "A legendary robe that once belonged to Opulina the Goddess of Wealth"
+    "description": "A legendary robe that once belonged to Opulina the Goddess of Wealth",
+    "icon": "item_opulinasrobebottoms"
   },
   {
     "name": "Shield of Feroxi",
@@ -7290,7 +7850,8 @@ const items = [
     "strengthBonus": 1200,
     "defenceBonus": 1500,
     "healthBonus": 2000,
-    "description": "A legendary shield that once belonged to Feroxi the God of War"
+    "description": "A legendary shield that once belonged to Feroxi the God of War",
+    "icon": "item_shieldofferoxi"
   },
   {
     "name": "Quiver of Kynosian",
@@ -7303,7 +7864,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A magical quiver that once belonged to Kynosian the God of Archery"
+    "description": "A magical quiver that once belonged to Kynosian the God of Archery",
+    "icon": "item_quiverofkynosian"
   },
   {
     "name": "Scythe of Aurial",
@@ -7316,7 +7878,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ancient scythe is imbued with the powers of Aurial the Goddess of Harvest"
+    "description": "This ancient scythe is imbued with the powers of Aurial the Goddess of Harvest",
+    "icon": "item_scytheofaurial"
   },
   {
     "name": "Shield of Amaran",
@@ -7329,7 +7892,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 2000,
     "healthBonus": 15000,
-    "description": "A legendary shield that once belonged to Amaran the God of Immortality"
+    "description": "A legendary shield that once belonged to Amaran the God of Immortality",
+    "icon": "item_shieldofamaran"
   },
   {
     "name": "Kynosian Arrows",
@@ -7342,7 +7906,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Extremely powerful arrows used by Kynosian the God of Archery"
+    "description": "Extremely powerful arrows used by Kynosian the God of Archery",
+    "icon": "item_kynosianarrows"
   },
   {
     "name": "Crown of the Gods",
@@ -7355,7 +7920,8 @@ const items = [
     "strengthBonus": 500,
     "defenceBonus": 500,
     "healthBonus": 1500,
-    "description": "A powerful Crown worn by Gods and Goddesses"
+    "description": "A powerful Crown worn by Gods and Goddesses",
+    "icon": "item_crownofthegods"
   },
   {
     "name": "Boots of Feroxi",
@@ -7368,7 +7934,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 1500,
     "healthBonus": 4500,
-    "description": "A powerful protective piece of armour worn by Feroxi the God of War"
+    "description": "A powerful protective piece of armour worn by Feroxi the God of War",
+    "icon": "item_bootsofferoxi"
   },
   {
     "name": "Gloves of Feroxi",
@@ -7381,7 +7948,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "A powerful protective piece of armour worn by Feroxi the God of War"
+    "description": "A powerful protective piece of armour worn by Feroxi the God of War",
+    "icon": "item_glovesofferoxi"
   },
   {
     "name": "Plate of Feroxi",
@@ -7394,7 +7962,8 @@ const items = [
     "strengthBonus": 1500,
     "defenceBonus": 3000,
     "healthBonus": 9000,
-    "description": "A powerful protective piece of armour worn by Feroxi the God of War"
+    "description": "A powerful protective piece of armour worn by Feroxi the God of War",
+    "icon": "item_plateofferoxi"
   },
   {
     "name": "Helm of Feroxi",
@@ -7407,7 +7976,8 @@ const items = [
     "strengthBonus": 600,
     "defenceBonus": 1800,
     "healthBonus": 4000,
-    "description": "A powerful protective piece of armour worn by Feroxi the God of War"
+    "description": "A powerful protective piece of armour worn by Feroxi the God of War",
+    "icon": "item_helmofferoxi"
   },
   {
     "name": "Greaves of Feroxi",
@@ -7420,7 +7990,8 @@ const items = [
     "strengthBonus": 900,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "A powerful protective piece of armour worn by Feroxi the God of War"
+    "description": "A powerful protective piece of armour worn by Feroxi the God of War",
+    "icon": "item_greavesofferoxi"
   },
   {
     "name": "Knife of Copina",
@@ -7433,7 +8004,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A powerful Fletching tool used by Copina the God of Skilling"
+    "description": "A powerful Fletching tool used by Copina the God of Skilling",
+    "icon": "item_knifeofcopina"
   },
   {
     "name": "Kynosian Boots",
@@ -7446,7 +8018,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1500,
     "healthBonus": 4500,
-    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery"
+    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery",
+    "icon": "item_kynosianboots"
   },
   {
     "name": "Kynosian Gloves",
@@ -7459,7 +8032,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery"
+    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery",
+    "icon": "item_kynosiangloves"
   },
   {
     "name": "Kynosian Top",
@@ -7472,7 +8046,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 3000,
     "healthBonus": 9000,
-    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery"
+    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery",
+    "icon": "item_kynosiantop"
   },
   {
     "name": "Kynosian Hat",
@@ -7485,7 +8060,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1800,
     "healthBonus": 4000,
-    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery"
+    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery",
+    "icon": "item_kynosianhat"
   },
   {
     "name": "Kynosian Legs",
@@ -7498,7 +8074,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery"
+    "description": "A powerful protective piece of armour worn by Kynosian the God of Archery",
+    "icon": "item_kynosianlegs"
   },
   {
     "name": "Sword of Cognium",
@@ -7511,7 +8088,8 @@ const items = [
     "strengthBonus": 4500,
     "defenceBonus": 3800,
     "healthBonus": 12000,
-    "description": "A powerful sword once owned by Cognium the God of Cogs"
+    "description": "A powerful sword once owned by Cognium the God of Cogs",
+    "icon": "item_swordofcognium"
   },
   {
     "name": "Balloon Sword",
@@ -7524,7 +8102,8 @@ const items = [
     "strengthBonus": 500,
     "defenceBonus": 500,
     "healthBonus": 1000,
-    "description": "It is amazing how you can make a sword from a balloon"
+    "description": "It is amazing how you can make a sword from a balloon",
+    "icon": "item_balloonsword"
   },
   {
     "name": "Black Partyhat",
@@ -7537,7 +8116,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 4500,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_blackpartyhat"
   },
   {
     "name": "Blue Partyhat",
@@ -7550,7 +8130,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 4200,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_bluepartyhat"
   },
   {
     "name": "Cog Partyhat",
@@ -7563,7 +8144,8 @@ const items = [
     "strengthBonus": 250,
     "defenceBonus": 500,
     "healthBonus": 3900,
-    "description": "Happy Birthday CogTree"
+    "description": "Happy Birthday CogTree",
+    "icon": "item_cogpartyhat"
   },
   {
     "name": "Pink Partyhat",
@@ -7576,7 +8158,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 3900,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_pinkpartyhat"
   },
   {
     "name": "Red Partyhat",
@@ -7589,7 +8172,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 3600,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_redpartyhat"
   },
   {
     "name": "White Partyhat",
@@ -7602,7 +8186,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 3300,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_whitepartyhat"
   },
   {
     "name": "Yellow Partyhat",
@@ -7615,7 +8200,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 3000,
-    "description": "Happy Birthday CherryTree"
+    "description": "Happy Birthday CherryTree",
+    "icon": "item_yellowpartyhat"
   },
   {
     "name": "Berserker Ring",
@@ -7628,7 +8214,8 @@ const items = [
     "strengthBonus": 75,
     "defenceBonus": 50,
     "healthBonus": 150,
-    "description": "Provides the benefits of the Ring of Speed and the Super Power Stone"
+    "description": "Provides the benefits of the Ring of Speed and the Super Power Stone",
+    "icon": "item_berserkerring"
   },
   {
     "name": "Eternal Berserker Ring",
@@ -7641,7 +8228,8 @@ const items = [
     "strengthBonus": 750,
     "defenceBonus": 500,
     "healthBonus": 1000,
-    "description": "Provides the benefits of the Eternal Ring with an added hefty damage bonus"
+    "description": "Provides the benefits of the Eternal Ring with an added hefty damage bonus",
+    "icon": "item_eternalberserkerring"
   },
   {
     "name": "Ultra Comp Cape",
@@ -7654,7 +8242,8 @@ const items = [
     "strengthBonus": 1200,
     "defenceBonus": 1000,
     "healthBonus": 3000,
-    "description": "Worn by legends"
+    "description": "Worn by legends",
+    "icon": "item_ultracompcape"
   },
   {
     "name": "No Life Cape",
@@ -7667,7 +8256,8 @@ const items = [
     "strengthBonus": 2500,
     "defenceBonus": 2000,
     "healthBonus": 10000,
-    "description": "Shocked if anyone can actually wear this cape"
+    "description": "Shocked if anyone can actually wear this cape",
+    "icon": "item_nolifecape"
   },
   {
     "name": "Illuminant Gem",
@@ -7680,7 +8270,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An Ancient Lantern once owned by Copina (Created by BeastZephyr)"
+    "description": "An Ancient Lantern once owned by Copina (Created by BeastZephyr)",
+    "icon": "item_illuminantgem"
   },
   {
     "name": "Cognium Ring",
@@ -7693,7 +8284,8 @@ const items = [
     "strengthBonus": 350,
     "defenceBonus": 200,
     "healthBonus": 500,
-    "description": "A legendary Ring once owned by the God Cognium"
+    "description": "A legendary Ring once owned by the God Cognium",
+    "icon": "item_cogniumring"
   },
   {
     "name": "Wooden Partyhat",
@@ -7706,7 +8298,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 750,
     "healthBonus": 6000,
-    "description": "Happy Wood Day CherryTree"
+    "description": "Happy Wood Day CherryTree",
+    "icon": "item_woodenpartyhat"
   },
   {
     "name": "Death Princess Rune",
@@ -7719,7 +8312,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "A legendary stone that harnesses the power of Noctyra the Goddess of Death (Created by Middy)"
+    "description": "A legendary stone that harnesses the power of Noctyra the Goddess of Death (Created by Middy)",
+    "icon": "item_deathprincessrune"
   },
   {
     "name": "Birthday Wood",
@@ -7732,7 +8326,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 15000,
-    "description": "Yes that is a piece of Wood with a Partyhat on"
+    "description": "Yes that is a piece of Wood with a Partyhat on",
+    "icon": "item_birthdaywood"
   },
   {
     "name": "Apprentice Top",
@@ -7745,7 +8340,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 60,
     "healthBonus": 75,
-    "description": "A top worn by Apprentice Slayers"
+    "description": "A top worn by Apprentice Slayers",
+    "icon": "item_apprenticetop"
   },
   {
     "name": "Apprentice Gloves",
@@ -7758,7 +8354,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 30,
     "healthBonus": 20,
-    "description": "Gloves worn by Apprentice Slayers"
+    "description": "Gloves worn by Apprentice Slayers",
+    "icon": "item_apprenticegloves"
   },
   {
     "name": "Apprentice Boots",
@@ -7771,7 +8368,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 30,
     "healthBonus": 20,
-    "description": "Boots worn by Apprentice Slayers"
+    "description": "Boots worn by Apprentice Slayers",
+    "icon": "item_apprenticeboots"
   },
   {
     "name": "Apprentice Legs",
@@ -7784,7 +8382,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 50,
     "healthBonus": 60,
-    "description": "Greaves worn by Apprentice Slayers"
+    "description": "Greaves worn by Apprentice Slayers",
+    "icon": "item_apprenticelegs"
   },
   {
     "name": "Apprentice Helm",
@@ -7797,7 +8396,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 40,
     "healthBonus": 60,
-    "description": "A helm worn by Apprentice Slayers"
+    "description": "A helm worn by Apprentice Slayers",
+    "icon": "item_apprenticehelm"
   },
   {
     "name": "Master Top",
@@ -7810,7 +8410,8 @@ const items = [
     "strengthBonus": 60,
     "defenceBonus": 500,
     "healthBonus": 750,
-    "description": "A top worn by Master Slayers"
+    "description": "A top worn by Master Slayers",
+    "icon": "item_mastertop"
   },
   {
     "name": "Master Gloves",
@@ -7823,7 +8424,8 @@ const items = [
     "strengthBonus": 20,
     "defenceBonus": 300,
     "healthBonus": 120,
-    "description": "Gloves worn by Master Slayers"
+    "description": "Gloves worn by Master Slayers",
+    "icon": "item_mastergloves"
   },
   {
     "name": "Master Boots",
@@ -7836,7 +8438,8 @@ const items = [
     "strengthBonus": 20,
     "defenceBonus": 150,
     "healthBonus": 120,
-    "description": "Boots worn by Master Slayers"
+    "description": "Boots worn by Master Slayers",
+    "icon": "item_masterboots"
   },
   {
     "name": "Master Legs",
@@ -7849,7 +8452,8 @@ const items = [
     "strengthBonus": 40,
     "defenceBonus": 420,
     "healthBonus": 400,
-    "description": "Greaves worn by Master Slayers"
+    "description": "Greaves worn by Master Slayers",
+    "icon": "item_masterlegs"
   },
   {
     "name": "Master Helm",
@@ -7862,7 +8466,8 @@ const items = [
     "strengthBonus": 30,
     "defenceBonus": 300,
     "healthBonus": 200,
-    "description": "A helm worn by Master Slayers"
+    "description": "A helm worn by Master Slayers",
+    "icon": "item_masterhelm"
   },
   {
     "name": "Primal Top",
@@ -7875,7 +8480,8 @@ const items = [
     "strengthBonus": 750,
     "defenceBonus": 1600,
     "healthBonus": 4000,
-    "description": "A top worn by Legendary Slayers"
+    "description": "A top worn by Legendary Slayers",
+    "icon": "item_primaltop"
   },
   {
     "name": "Primal Gloves",
@@ -7888,7 +8494,8 @@ const items = [
     "strengthBonus": 150,
     "defenceBonus": 500,
     "healthBonus": 1600,
-    "description": "Gloves worn by Legendary Slayers"
+    "description": "Gloves worn by Legendary Slayers",
+    "icon": "item_primalgloves"
   },
   {
     "name": "Primal Boots",
@@ -7901,7 +8508,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 750,
     "healthBonus": 2000,
-    "description": "Boots worn by Legendary Slayers"
+    "description": "Boots worn by Legendary Slayers",
+    "icon": "item_primalboots"
   },
   {
     "name": "Primal Legs",
@@ -7914,7 +8522,8 @@ const items = [
     "strengthBonus": 450,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "Greaves worn by Legendary Slayers"
+    "description": "Greaves worn by Legendary Slayers",
+    "icon": "item_primallegs"
   },
   {
     "name": "Primal Helm",
@@ -7927,7 +8536,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 1000,
     "healthBonus": 2500,
-    "description": "A helm worn by Legendary Slayers"
+    "description": "A helm worn by Legendary Slayers",
+    "icon": "item_primalhelm"
   },
   {
     "name": "Soul Reaper Top",
@@ -7940,7 +8550,8 @@ const items = [
     "strengthBonus": 1500,
     "defenceBonus": 3000,
     "healthBonus": 9000,
-    "description": "This outfit helps reap the souls of my enemies"
+    "description": "This outfit helps reap the souls of my enemies",
+    "icon": "item_soulreapertop"
   },
   {
     "name": "Soul Reaper Gloves",
@@ -7953,7 +8564,8 @@ const items = [
     "strengthBonus": 300,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "This outfit helps reap the souls of my enemies"
+    "description": "This outfit helps reap the souls of my enemies",
+    "icon": "item_soulreapergloves"
   },
   {
     "name": "Soul Reaper Boots",
@@ -7966,7 +8578,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 1500,
     "healthBonus": 4500,
-    "description": "This outfit helps reap the souls of my enemies"
+    "description": "This outfit helps reap the souls of my enemies",
+    "icon": "item_soulreaperboots"
   },
   {
     "name": "Soul Reaper Legs",
@@ -7979,7 +8592,8 @@ const items = [
     "strengthBonus": 900,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "This outfit helps reap the souls of my enemies"
+    "description": "This outfit helps reap the souls of my enemies",
+    "icon": "item_soulreaperlegs"
   },
   {
     "name": "Soul Reaper Helm",
@@ -7992,7 +8606,8 @@ const items = [
     "strengthBonus": 600,
     "defenceBonus": 1800,
     "healthBonus": 4000,
-    "description": "This outfit helps reap the souls of my enemies"
+    "description": "This outfit helps reap the souls of my enemies",
+    "icon": "item_soulreaperhelm"
   },
   {
     "name": "Soul Thread",
@@ -8005,7 +8620,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can use this to craft epic gear"
+    "description": "I can use this to craft epic gear",
+    "icon": "item_soulthread"
   },
   {
     "name": "Soul Gem",
@@ -8018,7 +8634,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can spend this in the Slayer shop"
+    "description": "I can spend this in the Slayer shop",
+    "icon": "item_soulgem"
   },
   {
     "name": "Ring of Souls",
@@ -8031,7 +8648,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 300,
-    "description": "Who needs a Slayer master when I have myself"
+    "description": "Who needs a Slayer master when I have myself",
+    "icon": "item_ringofsouls"
   },
   {
     "name": "Dragonhide Legs",
@@ -8044,7 +8662,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 250,
     "healthBonus": 1000,
-    "description": "Armour made from the hide of a dragon"
+    "description": "Armour made from the hide of a dragon",
+    "icon": "item_dragonhidelegs"
   },
   {
     "name": "Dragonhide Boots",
@@ -8057,7 +8676,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 150,
     "healthBonus": 600,
-    "description": "Armour made from the hide of a dragon"
+    "description": "Armour made from the hide of a dragon",
+    "icon": "item_dragonhideboots"
   },
   {
     "name": "Dragonhide Gloves",
@@ -8070,7 +8690,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 150,
     "healthBonus": 600,
-    "description": "Armour made from the hide of a dragon"
+    "description": "Armour made from the hide of a dragon",
+    "icon": "item_dragonhidegloves"
   },
   {
     "name": "Dragonhide Helm",
@@ -8083,7 +8704,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 200,
     "healthBonus": 800,
-    "description": "Armour made from the hide of a dragon"
+    "description": "Armour made from the hide of a dragon",
+    "icon": "item_dragonhidehelm"
   },
   {
     "name": "Dragonhide Top",
@@ -8096,7 +8718,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 300,
     "healthBonus": 1200,
-    "description": "Armour made from the hide of a dragon"
+    "description": "Armour made from the hide of a dragon",
+    "icon": "item_dragonhidetop"
   },
   {
     "name": "Blessed Sacrifice",
@@ -8109,7 +8732,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 15000,
-    "description": "A huge damage increase at a cost (Created by Blessed)"
+    "description": "A huge damage increase at a cost (Created by Blessed)",
+    "icon": "item_blessedsacrifice"
   },
   {
     "name": "Blessed Eternal Sacrifice",
@@ -8122,7 +8746,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 25000,
-    "description": "A huge damage increase at a cost (Created by Blessed)"
+    "description": "A huge damage increase at a cost (Created by Blessed)",
+    "icon": "item_blessedeternalsacrifice"
   },
   {
     "name": "Necklace of Amaran",
@@ -8135,7 +8760,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 3500,
     "healthBonus": 30000,
-    "description": "A necklace worn by the god of Health"
+    "description": "A necklace worn by the god of Health",
+    "icon": "item_necklaceofamaran"
   },
   {
     "name": "Ghostly Cloak",
@@ -8148,7 +8774,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "The enemy can not hit what they can not see"
+    "description": "The enemy can not hit what they can not see",
+    "icon": "item_ghostlycloak"
   },
   {
     "name": "Ghostly Top",
@@ -8161,7 +8788,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1500,
     "healthBonus": 4500,
-    "description": "The enemy can not hit what they can not see"
+    "description": "The enemy can not hit what they can not see",
+    "icon": "item_ghostlytop"
   },
   {
     "name": "Ghostly Legs",
@@ -8174,7 +8802,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1000,
     "healthBonus": 3000,
-    "description": "The enemy can not hit what they can not see"
+    "description": "The enemy can not hit what they can not see",
+    "icon": "item_ghostlylegs"
   },
   {
     "name": "Ghostly Hood",
@@ -8187,7 +8816,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1000,
     "healthBonus": 3000,
-    "description": "The enemy can not hit what they can not see"
+    "description": "The enemy can not hit what they can not see",
+    "icon": "item_ghostlyhood"
   },
   {
     "name": "Pumpkin",
@@ -8200,7 +8830,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This would make an awesome Pie"
+    "description": "This would make an awesome Pie",
+    "icon": "item_pumpkin"
   },
   {
     "name": "Pumpkin Pie",
@@ -8213,7 +8844,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Super hearty healing me for 100% of my health"
+    "description": "Super hearty healing me for 100% of my health",
+    "icon": "item_pumpkinpie"
   },
   {
     "name": "Burnt Pumpkin Pie",
@@ -8226,7 +8858,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Oops"
+    "description": "Oops",
+    "icon": "item_burntpumpkinpie"
   },
   {
     "name": "Staff of Skulls",
@@ -8239,7 +8872,8 @@ const items = [
     "strengthBonus": 1000,
     "defenceBonus": 1000,
     "healthBonus": 5000,
-    "description": "I can now harness the power of the undead"
+    "description": "I can now harness the power of the undead",
+    "icon": "item_staffofskulls"
   },
   {
     "name": "Pumpkin Pie Recipe Scroll",
@@ -8252,7 +8886,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can unlock the ability to make Pumpkin Pie with this scroll"
+    "description": "I can unlock the ability to make Pumpkin Pie with this scroll",
+    "icon": "item_pumpkinpierecipescroll"
   },
   {
     "name": "Skull Shield",
@@ -8265,7 +8900,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1000,
     "healthBonus": 5000,
-    "description": "I call upon the previous owner of this skull to help me in battle"
+    "description": "I call upon the previous owner of this skull to help me in battle",
+    "icon": "item_skullshield"
   },
   {
     "name": "Divine Protection Potion",
@@ -8278,7 +8914,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "Grants me help from the gods during battle"
+    "description": "Grants me help from the gods during battle",
+    "icon": "item_divineprotectionpotion"
   },
   {
     "name": "Divine Protection Scroll",
@@ -8291,7 +8928,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can unlock the ability to brew Divine Protection Potions with this scroll"
+    "description": "I can unlock the ability to brew Divine Protection Potions with this scroll",
+    "icon": "item_divineprotectionscroll"
   },
   {
     "name": "Scythe of Aurial (E)",
@@ -8304,7 +8942,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An enhanced version of the Scythe of Aurial"
+    "description": "An enhanced version of the Scythe of Aurial",
+    "icon": "item_blessedscytheofaurial"
   },
   {
     "name": "Mystic Staff (E)",
@@ -8317,7 +8956,8 @@ const items = [
     "strengthBonus": 3000,
     "defenceBonus": 2500,
     "healthBonus": 15000,
-    "description": "An enhanced version of the Mystic Staff"
+    "description": "An enhanced version of the Mystic Staff",
+    "icon": "item_blessedmysticstaff"
   },
   {
     "name": "Necklace of Restoration (E)",
@@ -8330,7 +8970,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 400,
     "healthBonus": 1500,
-    "description": "An enhanced version of the Necklace of Restoration"
+    "description": "An enhanced version of the Necklace of Restoration",
+    "icon": "item_blessednecklaceofrestoration"
   },
   {
     "name": "Thieving Gloves (E)",
@@ -8343,7 +8984,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An enhanced version of the Thieving Gloves"
+    "description": "An enhanced version of the Thieving Gloves",
+    "icon": "item_blessedthievinggloves"
   },
   {
     "name": "Ring of Souls (E)",
@@ -8356,7 +8998,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 300,
-    "description": "An enhanced version of the Ring of Souls"
+    "description": "An enhanced version of the Ring of Souls",
+    "icon": "item_blessedringofsouls"
   },
   {
     "name": "Bow of Kynosian (E)",
@@ -8369,7 +9012,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 5000,
     "healthBonus": 10000,
-    "description": "An enhanced version of the Bow of Kynosian"
+    "description": "An enhanced version of the Bow of Kynosian",
+    "icon": "item_blessedbowofkynosian"
   },
   {
     "name": "Sword of Feroxi (E)",
@@ -8382,7 +9026,8 @@ const items = [
     "strengthBonus": 7000,
     "defenceBonus": 4000,
     "healthBonus": 15000,
-    "description": "An enhanced version of the Sword of Feroxi"
+    "description": "An enhanced version of the Sword of Feroxi",
+    "icon": "item_blessedswordofferoxi"
   },
   {
     "name": "Mystic Dagger (E)",
@@ -8395,7 +9040,8 @@ const items = [
     "strengthBonus": 650,
     "defenceBonus": 50,
     "healthBonus": 50,
-    "description": "An enhanced version of the Mystic Dagger"
+    "description": "An enhanced version of the Mystic Dagger",
+    "icon": "item_blessedmysticdagger"
   },
   {
     "name": "Crown of Opulina",
@@ -8408,7 +9054,8 @@ const items = [
     "strengthBonus": 600,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "A legendary Crown worn by Opulina the Goddess of Wealth"
+    "description": "A legendary Crown worn by Opulina the Goddess of Wealth",
+    "icon": "item_crownofopulina"
   },
   {
     "name": "Enhancement Ticket",
@@ -8421,7 +9068,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "This ticket allows me to bless items making them more powerful"
+    "description": "This ticket allows me to bless items making them more powerful",
+    "icon": "item_blessingticket"
   },
   {
     "name": "Apprentice Sword",
@@ -8434,7 +9082,8 @@ const items = [
     "strengthBonus": 100,
     "defenceBonus": 100,
     "healthBonus": 50,
-    "description": "A sword used by Apprentice Slayers"
+    "description": "A sword used by Apprentice Slayers",
+    "icon": "item_apprenticesword"
   },
   {
     "name": "Master Sword",
@@ -8447,7 +9096,8 @@ const items = [
     "strengthBonus": 1250,
     "defenceBonus": 750,
     "healthBonus": 500,
-    "description": "A sword used by master slayers"
+    "description": "A sword used by master slayers",
+    "icon": "item_mastersword"
   },
   {
     "name": "Primal Sword",
@@ -8460,7 +9110,8 @@ const items = [
     "strengthBonus": 2500,
     "defenceBonus": 1500,
     "healthBonus": 1000,
-    "description": "A Sword used by legendary slayers"
+    "description": "A Sword used by legendary slayers",
+    "icon": "item_primalsword"
   },
   {
     "name": "Soul Reaper Sword",
@@ -8473,7 +9124,8 @@ const items = [
     "strengthBonus": 8000,
     "defenceBonus": 4500,
     "healthBonus": 15000,
-    "description": "The ulatimate Sword of the Slayer Master"
+    "description": "The ulatimate Sword of the Slayer Master",
+    "icon": "item_soulreapersword"
   },
   {
     "name": "Scythe of Noctyra",
@@ -8486,7 +9138,8 @@ const items = [
     "strengthBonus": 9000,
     "defenceBonus": 5000,
     "healthBonus": 10000,
-    "description": "Filled with the power of darkness this legendary scythe once belonged to Noctyra the Goddess of Death"
+    "description": "Filled with the power of darkness this legendary scythe once belonged to Noctyra the Goddess of Death",
+    "icon": "item_scytheofnoctyra"
   },
   {
     "name": "Old Fishing Rod",
@@ -8499,7 +9152,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 500,
-    "description": "You can not beat a classic"
+    "description": "You can not beat a classic",
+    "icon": "item_oldfishingrod"
   },
   {
     "name": "Dark Thread",
@@ -8512,7 +9166,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I could use this to upgrade my slayer gear"
+    "description": "I could use this to upgrade my slayer gear",
+    "icon": "item_darkthread"
   },
   {
     "name": "Energy Overload Scroll",
@@ -8525,7 +9180,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I have never felt power like this before"
+    "description": "I have never felt power like this before",
+    "icon": "item_energyoverloadscroll"
   },
   {
     "name": "Blue Santa Hat",
@@ -8538,7 +9194,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 500,
     "healthBonus": 2000,
-    "description": "It appears to be blue"
+    "description": "It appears to be blue",
+    "icon": "item_bluesantahat"
   },
   {
     "name": "Candy Cane Scythe",
@@ -8551,7 +9208,8 @@ const items = [
     "strengthBonus": 200,
     "defenceBonus": 150,
     "healthBonus": 0,
-    "description": "Sticky"
+    "description": "Sticky",
+    "icon": "item_candycanescythe"
   },
   {
     "name": "Christmas Cracker",
@@ -8564,7 +9222,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I could pull this to find a silly joke"
+    "description": "I could pull this to find a silly joke",
+    "icon": "item_christmascracker"
   },
   {
     "name": "Golden Cracker",
@@ -8577,7 +9236,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "I can pull this to find an even sillier joke"
+    "description": "I can pull this to find an even sillier joke",
+    "icon": "item_goldencracker"
   },
   {
     "name": "Snowflake Partyhat",
@@ -8590,7 +9250,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1500,
     "healthBonus": 10000,
-    "description": "It appears to be party time"
+    "description": "It appears to be party time",
+    "icon": "item_snowflakepartyhat"
   },
   {
     "name": "Old Fishing Rod (E)",
@@ -8603,7 +9264,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "You can not beat a classic especially when it is enhanced"
+    "description": "You can not beat a classic especially when it is enhanced",
+    "icon": "item_blessedoldfishingrod"
   },
   {
     "name": "Knife of Copina (E)",
@@ -8616,7 +9278,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An enhanced version of the Knife of Copina"
+    "description": "An enhanced version of the Knife of Copina",
+    "icon": "item_blessedknifeofcopina"
   },
   {
     "name": "Kynosian Boots (E)",
@@ -8629,7 +9292,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1500,
     "healthBonus": 4500,
-    "description": "An enhanced version of the Kynosian Boots"
+    "description": "An enhanced version of the Kynosian Boots",
+    "icon": "item_blessedkynosianboots"
   },
   {
     "name": "Kynosian Gloves (E)",
@@ -8642,7 +9306,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1200,
     "healthBonus": 3000,
-    "description": "An enhanced version of the Kynosian Gloves"
+    "description": "An enhanced version of the Kynosian Gloves",
+    "icon": "item_blessedkynosiangloves"
   },
   {
     "name": "Kynosian Hat (E)",
@@ -8655,7 +9320,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 1800,
     "healthBonus": 4000,
-    "description": "An enhanced version of the Kynosian Hat"
+    "description": "An enhanced version of the Kynosian Hat",
+    "icon": "item_blessedkynosianhat"
   },
   {
     "name": "Kynosian Legs (E)",
@@ -8668,7 +9334,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 2000,
     "healthBonus": 6000,
-    "description": "An enhanced version of the Kynosian Legs"
+    "description": "An enhanced version of the Kynosian Legs",
+    "icon": "item_blessedkynosianlegs"
   },
   {
     "name": "Kynosian Top (E)",
@@ -8681,7 +9348,8 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 3000,
     "healthBonus": 9000,
-    "description": "An enhanced version of the Kynosian Top"
+    "description": "An enhanced version of the Kynosian Top",
+    "icon": "item_blessedkynosiantop"
   },
   {
     "name": "Scythe of Noctyra (E)",
@@ -8694,7 +9362,8 @@ const items = [
     "strengthBonus": 9000,
     "defenceBonus": 5000,
     "healthBonus": 10000,
-    "description": "Filled with the power of darkness this legendary scythe once belonged to Noctyra the Goddess of Death"
+    "description": "Filled with the power of darkness this legendary scythe once belonged to Noctyra the Goddess of Death",
+    "icon": "item_blessedscytheofnoctyra"
   },
   {
     "name": "Pickaxe of Copina (E)",
@@ -8707,7 +9376,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 400,
-    "description": "An enhanced version of the Pickaxe of Copina"
+    "description": "An enhanced version of the Pickaxe of Copina",
+    "icon": "item_blessedpickaxeofcopina"
   },
   {
     "name": "Hatchet of Copina (E)",
@@ -8720,7 +9390,8 @@ const items = [
     "strengthBonus": 400,
     "defenceBonus": 400,
     "healthBonus": 400,
-    "description": "An enhanced version of the Hatchet of Copina"
+    "description": "An enhanced version of the Hatchet of Copina",
+    "icon": "item_blessedhatchetofcopina"
   },
   {
     "name": "Rod of Copina (E)",
@@ -8733,6 +9404,7 @@ const items = [
     "strengthBonus": 0,
     "defenceBonus": 0,
     "healthBonus": 0,
-    "description": "An enhanced version of the Rod of Copina"
+    "description": "An enhanced version of the Rod of Copina",
+    "icon": "item_blessedrodofcopina"
   }
 ];
