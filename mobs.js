@@ -4103,10 +4103,21 @@ const slayerMastersTasks = [
   ];
 
 
+const slayerMastersDif = ["Blade", "Tracer", "Crux", "Tide", "Quill", "Lumen", "Vain", "Feroxi", "Adamet"];
 const slayerMastersKillCoins = [1, 2, 5, 10, 20, 25, 40, 60, 100];
 const slayerMastersLevelUnlock = [1, 20, 35, 50, 70, 85, 99, 108, 120];
 const slayerMastersMinTask = [5, 10, 20, 25, 40, 60, 90, 100, 120];
 const slayerMastersMaxTask = [10, 20, 30, 40, 60, 90, 120, 150, 200];
+
+const slayerMasterMap = {
+  slayerMastersDif:slayerMastersDif,
+  slayerMastersTasks:slayerMastersTasks,
+  slayerMastersKillCoins:slayerMastersKillCoins,
+  slayerMastersLevelUnlock:slayerMastersLevelUnlock,
+  slayerMastersMinTask:slayerMastersMinTask,
+  slayerMastersMaxTask:slayerMastersMaxTask,
+}
+
 
 
 const allGods = ["Amaran", "Aurial", "Cognium", "Copina", "Feroxi", "Kynosian", "Noctyra", "Opulina"];
