@@ -137,7 +137,7 @@
         <div id="requiredDigitsContainer" class="flex justify-center gap-6 py-8 px-4 bg-black/20 rounded-lg min-h-[160px]"></div>
 
         <!-- Settings Section -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 bg-black/20 p-6 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-x-8 gap-y-6 bg-black/20 p-6 rounded-lg">
           <div class="flex flex-col items-center">
             <label for="dials" class="text-lg mb-3">Digits</label>
             <input id="dials" type="number" min="1" max="10" value="6" class="w-full text-lg text-center h-12">
@@ -156,6 +156,11 @@
           <div class="flex flex-col items-center">
             <label for="codeCount" class="text-lg mb-3">Count</label>
             <input id="codeCount" type="number" min="1" value="50" class="w-full text-lg text-center h-12">
+          </div>
+
+          <div class="flex flex-col items-center">
+            <label for="groupSize" class="text-lg mb-3">Groups of</label>
+            <input id="groupSize" type="number" min="1" value="5" class="w-full text-lg text-center h-12">
           </div>
         </div>
 
@@ -215,6 +220,8 @@
     handleNumberInput(digitsInput, 1, 10, () => requestAnimationFrame(updateMaxCombinations));
     handleNumberInput(startIndexInput, 0, Number.MAX_SAFE_INTEGER);
     handleNumberInput(codeCountInput, 1, Number.MAX_SAFE_INTEGER);
+    const groupSizeInput = document.getElementById("groupSize");
+    handleNumberInput(groupSizeInput, 1, Number.MAX_SAFE_INTEGER);
 
     document.getElementById("generate").addEventListener("click", generateCodes);
     document.getElementById("copy").addEventListener("click", copyToClipboard);
@@ -404,8 +411,18 @@
       // Generate codes using only the dial values
       const results = generateNeededCodes(length, dialValues, startIndex, codeCount);
 
+      // Group the results based on groupSize
+      const groupSize = parseInt(groupSizeInput.value, 10);
+      const groupedResults = [];
+      for (let i = 0; i < results.length; i++) {
+        groupedResults.push(results[i]);
+        if ((i + 1) % groupSize === 0 && i !== results.length - 1) {
+          groupedResults.push(''); // Add empty line between groups
+        }
+      }
+      
       // Output to the textarea
-      outputArea.value = results.join("\n");
+      outputArea.value = groupedResults.join("\n");
     }
 
     function generateNeededCodes(length, dialValues, startIndex, codeCount) {
