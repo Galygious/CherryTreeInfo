@@ -338,7 +338,7 @@
       
       // Validate minimum length
       if (length < dialCount) {
-        alert(Code length must be at least ${dialCount} to include all dial numbers);
+        alert(`Code length must be at least ${dialCount} to include all dial numbers`);
         digitsInput.value = dialCount;
         return Math.pow(dialCount, dialCount);
       }
@@ -346,7 +346,7 @@
       // Calculate combinations that include all dial numbers at least once
       const maxCombos = calculateCombinationsWithAllDigits(length, dialCount);
       document.getElementById("maxCombinations").textContent = 
-        Maximum possible combinations: ${maxCombos.toLocaleString()};
+        `Maximum possible combinations: ${maxCombos.toLocaleString()}`;
       return maxCombos;
     }
 
@@ -390,11 +390,11 @@
       
       // Validate inputs against maximum combinations
       if (startIndex >= maxCombos) {
-        alert(Start index cannot exceed maximum combinations (${maxCombos}));
+        alert(`Start index cannot exceed maximum combinations (${maxCombos})`);
         return;
       }
       if (startIndex + codeCount > maxCombos) {
-        alert(Cannot generate ${codeCount} codes starting at index ${startIndex} - would exceed maximum combinations (${maxCombos}));
+        alert(`Cannot generate ${codeCount} codes starting at index ${startIndex} - would exceed maximum combinations (${maxCombos})`);
         return;
       }
 
@@ -404,7 +404,7 @@
 
       // Validate minimum length
       if (length < dialValues.length) {
-        alert(Code length must be at least ${dialValues.length} to include all dial numbers);
+        alert(`Code length must be at least ${dialValues.length} to include all dial numbers`);
         return;
       }
 
