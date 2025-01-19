@@ -1,20 +1,184 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Energy Upgrade Cost Calculator</title><style>body{font-family:Arial,sans-serif;margin:0;padding:0;background-color:#f4f4f9}.container{max-width:400px;margin:auto;padding:20px;background:#fff;box-shadow:0 4px 6px rgba(0,0,0,.1);border-radius:8px}h1{font-size:1.5em;text-align:center;margin-bottom:20px}label{display:block;margin:10px 0 5px;font-weight:700}input{width:100%;padding:10px;margin-bottom:15px;border:1px solid #ddd;border-radius:4px;font-size:1em}button{width:100%;padding:10px;background-color:#28a745;color:#fff;border:none;border-radius:4px;font-size:1em;cursor:pointer}button:hover{background-color:#218838}.result{margin-top:20px;font-size:1.2em;text-align:center;color:#333}nav{background-color:#333;padding:10px;text-align:center}nav a{color:#fff;text-decoration:none;margin:0 15px;font-size:1.2em}nav a:hover{text-decoration:underline}</style></head><body><a href="index.html">Mobs</a><a href="items.min.html">Items</a><a href="calculator.min.html">Energy Calculator</a><a href="vaultcrackers.html">Vault Code Generator</a></nav><div class="container"><h1>Energy Upgrade Cost Calculator</h1><label for="currentEnergy">Current Max Energy:</label> <input type="number" id="currentEnergy" placeholder="Enter your current max energy"> <label for="desiredEnergy">Desired Max Energy:</label> <input type="number" id="desiredEnergy" placeholder="Enter your desired max energy"> <button onclick="calculateCost()">Calculate Cost</button><div class="result" id="result"></div></div><script>function calculateCost() {
-            const baseMaxStamina = 50; // The base max stamina
-            const stamCost = 3; // The stamina cost per level increase
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Energy Upgrade Cost Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Reusing custom styles from the Password Generator page */
+    .dial {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 12px;
+      min-width: 80px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .dial input {
+      width: 60px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: white;
+      margin: 8px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .dial button {
+      width: 100%;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 6px;
+    }
+    .dial button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+    .dial button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    nav {
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 1.2em;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    input[type="number"] {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"]:focus {
+      border-color: rgba(255, 255, 255, 0.3);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+    button {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+    textarea {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Mobs</a>
+    <a href="items.min.html">Items</a>
+    <a href="calculator.min.html">Energy Calculator</a>
+    <a href="vaultcrackers.html">Vault Code Generator</a>
+  </nav>
 
-            const currentEnergy = parseInt(document.getElementById('currentEnergy').value, 10);
-            const desiredEnergy = parseInt(document.getElementById('desiredEnergy').value, 10);
+  <div class="min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8 flex-grow flex flex-col">
+      <h1 class="text-4xl font-bold mb-12 text-center text-white">Energy Upgrade Cost Calculator</h1>
 
-            if (isNaN(currentEnergy) || isNaN(desiredEnergy) || desiredEnergy <= currentEnergy || (desiredEnergy - currentEnergy) % 5 !== 0) {
-                document.getElementById('result').textContent = "Please enter valid values: Desired energy must be greater than current energy and in increments of 5.";
-                return;
-            }
+      <div class="max-w-md mx-auto w-full space-y-6 bg-gray-800/30 p-8 rounded-xl backdrop-blur-sm border border-white/10">
+        <!-- Input Section -->
+        <div class="space-y-4">
+          <div>
+            <label for="currentEnergy" class="block text-lg mb-2">Current Max Energy:</label>
+            <input type="number" id="currentEnergy" placeholder="Enter your current max energy" class="w-full text-lg text-center h-12">
+          </div>
+          <div>
+            <label for="desiredEnergy" class="block text-lg mb-2">Desired Max Energy:</label>
+            <input type="number" id="desiredEnergy" placeholder="Enter your desired max energy" class="w-full text-lg text-center h-12">
+          </div>
+          <button id="calculate" class="w-full py-4 bg-blue-600 hover:bg-blue-700 transition-colors text-xl font-medium rounded-lg shadow-lg">
+            Calculate Cost
+          </button>
+        </div>
 
-            let totalCost = 0;
+        <!-- Result Section -->
+        <div class="result text-center text-lg mt-4">
+          <div id="result" class="text-gray-300"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            for (let energy = currentEnergy + 5; energy <= desiredEnergy; energy += 5) {
-                totalCost += ((energy - baseMaxStamina) + stamCost);
-            }
+  <script>
+    document.getElementById("calculate").addEventListener("click", calculateCost);
 
-            document.getElementById('result').textContent = `Total cost: ${totalCost} gold coins`;
-        }</script></body></html>
+    function calculateCost() {
+      const baseMaxStamina = 50; // The base max stamina
+      const stamCost = 3; // The stamina cost per level increase
+
+      const currentEnergy = parseInt(document.getElementById('currentEnergy').value, 10);
+      const desiredEnergy = parseInt(document.getElementById('desiredEnergy').value, 10);
+
+      if (isNaN(currentEnergy) || isNaN(desiredEnergy) || desiredEnergy <= currentEnergy || (desiredEnergy - currentEnergy) % 5 !== 0) {
+        document.getElementById('result').textContent = "Please enter valid values: Desired energy must be greater than current energy and in increments of 5.";
+        return;
+      }
+
+      let totalCost = 0;
+
+      for (let energy = currentEnergy + 5; energy <= desiredEnergy; energy += 5) {
+        totalCost += ((energy - baseMaxStamina) + stamCost);
+      }
+
+      document.getElementById('result').textContent = `Total cost: ${totalCost} gold coins`;
+    }
+  </script>
+</body>
+</html>
