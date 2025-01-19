@@ -348,42 +348,28 @@
       // If length is less than dialCount, no valid combinations exist
       if (length < dialCount) return 0;
 
-      // Calculate using Stirling numbers of the second kind
-      // This gives us the number of ways to partition length positions into dialCount non-empty subsets
-      // Each subset represents positions where a particular dial number appears
-      let total = 0;
-      
-      // We need exactly dialCount different numbers in each valid code
-      const k = dialCount;
-      
-      // Calculate using the formula for Stirling numbers of the second kind
-      for (let i = 0; i < k; i++) {
-        const sign = Math.pow(-1, i);
-        const coef = nCr(k, i);
-        const term = Math.pow(k - i, length);
-        total += sign * coef * term;
+      // Calculate using dynamic programming
+      // dp[i][mask] represents number of ways to fill i positions using digits from mask
+      const dp = Array(length + 1).fill().map(() => Array(1 << dialCount).fill(0));
+      dp[0][0] = 1;
+
+      // For each position
+      for (let i = 0; i < length; i++) {
+        // For each current state of used digits
+        for (let mask = 0; mask < (1 << dialCount); mask++) {
+          if (dp[i][mask] === 0) continue;
+          
+          // Try using each available digit
+          for (let digit = 0; digit < dialCount; digit++) {
+            const newMask = mask | (1 << digit);
+            dp[i + 1][newMask] += dp[i][mask];
+          }
+        }
       }
-      
-      total = Math.abs(total / factorial(k));
-      
-      // Multiply by the number of ways to arrange dialCount numbers
-      // This gives us the total number of valid combinations
-      total *= factorial(dialCount);
-      
-      return Math.floor(total);
-    }
 
-    // Helper function to calculate combinations (nCr)
-    function nCr(n, r) {
-      return factorial(n) / (factorial(r) * factorial(n - r));
-    }
-
-    // Helper function to calculate factorial
-    function factorial(n) {
-      if (n <= 1) return 1;
-      let result = 1;
-      for (let i = 2; i <= n; i++) result *= i;
-      return result;
+      // Sum all states where all digits are used (mask has all bits set)
+      const fullMask = (1 << dialCount) - 1;
+      return dp[length][fullMask];
     }
 
     function generateCodes() {
@@ -424,51 +410,54 @@
 
     function generateNeededCodes(length, dialValues, startIndex, codeCount) {
       const results = [];
-      let validCodesSeen = 0;
-      const path = new Array(length);
-      const used = new Array(dialValues.length).fill(false);
       
-      function backtrack(position, requiredCount) {
-        if (results.length >= codeCount) return;
-
-        // If we've placed all digits
-        if (position === length) {
-          if (requiredCount === dialValues.length) {
-            if (validCodesSeen < startIndex) {
-              validCodesSeen++;
-            } else {
-              results.push(path.join(""));
-            }
-          }
-          return;
-        }
-
-        // If we still need to place required digits
-        if (requiredCount < dialValues.length) {
-          // Try placing each unused required digit
-          for (let i = 0; i < dialValues.length; i++) {
-            if (!used[i]) {
-              used[i] = true;
-              path[position] = dialValues[i];
-              backtrack(position + 1, requiredCount + 1);
-              used[i] = false;
-              if (results.length >= codeCount) return;
-            }
-          }
-        }
+      // Sort dial values to ensure consistent ordering
+      const sortedDialValues = [...dialValues].sort((a, b) => a - b);
+      
+      // Generate codes in lexicographical order
+      function* generateValidCodes() {
+        const code = new Array(length).fill(sortedDialValues[0]);
         
-        // If we've already placed all required digits or need more positions
-        if (requiredCount === dialValues.length || position > dialValues.length - 1) {
-          // Fill remaining positions with any dial digit
-          for (const digit of dialValues) {
-            path[position] = digit;
-            backtrack(position + 1, requiredCount);
-            if (results.length >= codeCount) return;
+        while (true) {
+          // Check if current code is valid (contains all digits)
+          const usedDigits = new Set(code);
+          if (sortedDialValues.every(digit => usedDigits.has(digit))) {
+            yield code.join("");
           }
+          
+          // Generate next code
+          let pos = length - 1;
+          while (pos >= 0) {
+            const currentIndex = sortedDialValues.indexOf(code[pos]);
+            if (currentIndex < sortedDialValues.length - 1) {
+              code[pos] = sortedDialValues[currentIndex + 1];
+              break;
+            }
+            code[pos] = sortedDialValues[0];
+            pos--;
+          }
+          if (pos < 0) break;
         }
       }
-
-      backtrack(0, 0);
+      
+      // Skip to startIndex and collect codeCount valid codes
+      const generator = generateValidCodes();
+      let skipped = 0;
+      
+      // Skip codes until we reach startIndex
+      while (skipped < startIndex) {
+        const {value, done} = generator.next();
+        if (done) break;
+        skipped++;
+      }
+      
+      // Collect requested number of codes
+      while (results.length < codeCount) {
+        const {value, done} = generator.next();
+        if (done) break;
+        results.push(value);
+      }
+      
       return results;
     }
 
