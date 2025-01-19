@@ -1,1 +1,265 @@
-<!DOCTYPE html><html><head><title>Equipment Database</title><link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet"><style>th{cursor:pointer}.sort-asc::after{content:" ↑"}.sort-desc::after{content:" ↓"}.table-responsive{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:1px;justify-content:flex-start;align-items:flex-start}th:hover{background-color:#f3f4f6}.section{margin-bottom:.5rem}.section-button{width:100%;text-align:left;padding:.75rem 1rem;background-color:#f3f4f6;border:1px solid #e5e7eb;border-radius:.375rem;font-weight:500;transition:background-color .2s}.section-button:hover{background-color:#e5e7eb}.section-button::after{content:" ▼";float:right}.section-button.collapsed::after{content:" ▶"}.section-content{display:none;padding:1rem;border:1px solid #e5e7eb;border-top:none;border-bottom-left-radius:.375rem;border-bottom-right-radius:.375rem;margin-top:-.5rem}.section-content.expanded{display:block}.item-container{display:inline-flex;align-items:center;margin-right:20px;width:100%}table.w-full.border-collapse{border-collapse:collapse}table.w-full.border-collapse td,table.w-full.border-collapse th{padding:.5rem;line-height:1.2;vertical-align:middle}nav{background-color:#333;padding:10px;text-align:center}nav a{color:#fff;text-decoration:none;margin:0 15px;font-size:1.2em}nav a:hover{text-decoration:underline}</style></head><body class="bg-gray-100"><nav><a href="index.html">Mobs</a> <a href="items.min.html">Items</a> <a href="calculator.min.html">Energy Calculator</a></nav><div class="max-w-6xl mx-auto"><div class="bg-white rounded-lg shadow p-6"><h1 class="text-2xl font-bold mb-4">Equipment Database</h1><div id="sections"></div></div></div><script src="archery.min.js" defer></script><script src="mobs.min.js" defer></script><script src="items.min.js" defer></script><script src="itemspage.min.js" defer></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Equipment Database</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Reusing custom styles from the Password Generator page */
+    .dial {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 12px;
+      min-width: 80px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .dial input {
+      width: 60px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: white;
+      margin: 8px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .dial button {
+      width: 100%;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 6px;
+    }
+    .dial button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+    .dial button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    nav {
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 1.2em;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    th {
+      cursor: pointer;
+      position: relative;
+    }
+    th:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    th.sort-asc::after {
+      content: " ↑";
+      position: absolute;
+      right: 8px;
+    }
+    th.sort-desc::after {
+      content: " ↓";
+      position: absolute;
+      right: 8px;
+    }
+    /* Section Styles */
+    .section {
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+    .section-button {
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.375rem;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      cursor: pointer;
+    }
+    .section-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .section-button::after {
+      content: "▼";
+      transition: transform 0.2s;
+    }
+    .section-button.collapsed::after {
+      content: "▶";
+    }
+    .section-content {
+      display: none;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: none;
+      border-bottom-left-radius: 0.375rem;
+      border-bottom-right-radius: 0.375rem;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    .section-content.expanded {
+      display: block;
+    }
+    /* Responsive Table Container */
+    .table-responsive {
+      margin-top: 0.5rem;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.375rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Mobs</a>
+    <a href="items.min.html">Items</a>
+    <a href="calculator.min.html">Energy Calculator</a>
+    <a href="vaultcrackers.html">Vault Code Generator</a>
+  </nav>
+
+  <div class="min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8 flex-grow">
+      <h1 class="text-4xl font-bold mb-12 text-center text-white">Equipment Database</h1>
+
+      <div class="bg-gray-800/30 p-8 rounded-xl backdrop-blur-sm border border-white/10">
+        <div id="sections" class="space-y-6">
+          <!-- Sections will be dynamically injected here -->
+          <!-- Example Section -->
+          <!--
+          <div class="section">
+            <button class="section-button">Section Title</button>
+            <div class="section-content">
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th data-sort="name">Name</th>
+                      <th data-sort="type">Type</th>
+                      <th data-sort="rarity">Rarity</th>
+                      <th data-sort="value">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Example Item</td>
+                      <td>Sword</td>
+                      <td>Rare</td>
+                      <td>1500</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ensure that your JavaScript files are updated to handle the new structure and styling -->
+  <script src="archery.min.js" defer></script>
+  <script src="mobs.min.js" defer></script>
+  <script src="items.min.js" defer></script>
+  <script src="itemspage.min.js" defer></script>
+  
+  <script>
+    // Example JavaScript to handle section toggling and table sorting
+    document.addEventListener("DOMContentLoaded", () => {
+      const sectionButtons = document.querySelectorAll(".section-button");
+      sectionButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          const content = button.nextElementSibling;
+          const isExpanded = content.classList.contains("expanded");
+          
+          // Toggle the content
+          content.classList.toggle("expanded");
+          
+          // Update the button's arrow
+          button.classList.toggle("collapsed", isExpanded);
+        });
+      });
+
+      // Example Table Sorting Functionality
+      const tables = document.querySelectorAll("table");
+      tables.forEach(table => {
+        const headers = table.querySelectorAll("th");
+        headers.forEach(header => {
+          header.addEventListener("click", () => {
+            const sortKey = header.getAttribute("data-sort");
+            const tableBody = table.querySelector("tbody");
+            const rows = Array.from(tableBody.querySelectorAll("tr"));
+            const currentSort = header.classList.contains("sort-asc") ? "asc" : 
+                               header.classList.contains("sort-desc") ? "desc" : null;
+            // Remove sort classes from all headers
+            headers.forEach(h => h.classList.remove("sort-asc", "sort-desc"));
+            
+            // Determine the new sort order
+            const newSort = currentSort === "asc" ? "desc" : "asc";
+            header.classList.add(`sort-${newSort}`);
+
+            // Sort the rows
+            rows.sort((a, b) => {
+              const aText = a.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+              const bText = b.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+              
+              if (!isNaN(aText) && !isNaN(bText)) {
+                return newSort === "asc" ? aText - bText : bText - aText;
+              } else {
+                return newSort === "asc" ? aText.localeCompare(bText) : bText.localeCompare(aText);
+              }
+            });
+
+            // Append sorted rows
+            rows.forEach(row => tableBody.appendChild(row));
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
