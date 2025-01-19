@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Generator</title>
     <style>
+        .dial {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .dial input {
+            width: 50px;
+            text-align: center;
+            margin: 0 5px;
+        }
         nav {
             background-color: #333;
             padding: 10px;
@@ -32,12 +42,12 @@
 
     <label for="dials">Number of Required Digits (Dials):</label>
     <input id="dials" type="number" min="1" max="10" value="6">
+    <button id="createDials">Set Dials</button>
+
+    <div id="requiredDigitsContainer"></div>
 
     <label for="digits">Total Code Length:</label>
     <input id="digits" type="number" min="1" max="10" value="8">
-
-    <label for="requiredDigits">Required Digits (comma-separated):</label>
-    <input id="requiredDigits" type="text" placeholder="e.g., 0,1,2,3,4,5">
 
     <label for="startIndex">Start Index:</label>
     <input id="startIndex" type="number" min="0" value="0">
@@ -53,17 +63,59 @@
     <button id="copy">Copy to Clipboard</button>
 
     <script>
+        document.getElementById("createDials").addEventListener("click", createDials);
         document.getElementById("generate").addEventListener("click", generateCodes);
         document.getElementById("copy").addEventListener("click", copyToClipboard);
 
+        function createDials() {
+            const dialsCount = parseInt(document.getElementById("dials").value);
+            const container = document.getElementById("requiredDigitsContainer");
+            container.innerHTML = ""; // Clear existing dials
+
+            for (let i = 0; i < dialsCount; i++) {
+                const dial = document.createElement("div");
+                dial.className = "dial";
+
+                const label = document.createElement("span");
+                label.textContent = `Dial ${i + 1}: `;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = "0";
+                input.max = "9";
+                input.value = "0";
+
+                const upButton = document.createElement("button");
+                upButton.textContent = "▲";
+                upButton.onclick = () => {
+                    if (input.value < 9) input.value = parseInt(input.value) + 1;
+                };
+
+                const downButton = document.createElement("button");
+                downButton.textContent = "▼";
+                downButton.onclick = () => {
+                    if (input.value > 0) input.value = parseInt(input.value) - 1;
+                };
+
+                dial.appendChild(label);
+                dial.appendChild(downButton);
+                dial.appendChild(input);
+                dial.appendChild(upButton);
+
+                container.appendChild(dial);
+            }
+        }
+
         function generateCodes() {
-            const dials = parseInt(document.getElementById("dials").value);
+            const dialsCount = parseInt(document.getElementById("dials").value);
             const digits = parseInt(document.getElementById("digits").value);
-            const requiredDigits = document.getElementById("requiredDigits").value.split(",").map(d => d.trim());
             const startIndex = parseInt(document.getElementById("startIndex").value);
             const codeCount = parseInt(document.getElementById("codeCount").value);
 
-            if (requiredDigits.length !== dials) {
+            const requiredDigits = Array.from(document.querySelectorAll("#requiredDigitsContainer input"))
+                .map(input => input.value);
+
+            if (requiredDigits.length !== dialsCount) {
                 alert("Number of required digits must match the number of dials.");
                 return;
             }
@@ -81,28 +133,28 @@
         function generateAllCodes(length, requiredDigits) {
             const allDigits = Array.from({ length: 10 }, (_, i) => i.toString());
 
-            // Filter combinations to include required digits
-            const combinations = generateCombinations(allDigits, length);
-            return combinations.filter(code => requiredDigits.every(d => code.includes(d))).sort();
-        }
-
-        function generateCombinations(digits, length) {
-            const results = [];
-
-            function backtrack(path) {
+            const combinations = [];
+            function backtrack(path, usedRequired) {
                 if (path.length === length) {
-                    results.push(path.join(""));
+                    if (usedRequired.size === requiredDigits.length) {
+                        combinations.push(path.join(""));
+                    }
                     return;
                 }
-                for (const digit of digits) {
+
+                for (const digit of allDigits) {
+                    const isRequired = requiredDigits.includes(digit);
+                    const nextUsedRequired = new Set(usedRequired);
+                    if (isRequired) nextUsedRequired.add(digit);
+
                     path.push(digit);
-                    backtrack(path);
+                    backtrack(path, nextUsedRequired);
                     path.pop();
                 }
             }
 
-            backtrack([]);
-            return results;
+            backtrack([], new Set());
+            return combinations;
         }
 
         function copyToClipboard() {
