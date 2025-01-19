@@ -117,34 +117,6 @@
       font-family: 'Courier New', monospace;
       resize: vertical;
     }
-
-    /* New styles for the output container */
-    .output-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .output-group {
-      flex: 1 1 200px;
-      display: flex;
-      flex-direction: column;
-    }
-    .output-group label {
-      margin-bottom: 8px;
-      font-weight: 600;
-      text-align: center;
-    }
-    .output-group textarea {
-      height: 200px;
-      overflow-y: auto;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .output-container {
-        flex-direction: column;
-      }
-    }
   </style>
 </head>
 <body>
@@ -200,10 +172,7 @@
         <!-- Output Section -->
         <div class="space-y-4 bg-black/20 p-6 rounded-lg">
           <h2 class="text-2xl font-semibold">Generated Codes</h2>
-          
-          <!-- New Output Container -->
-          <div id="outputContainer" class="output-container"></div>
-          
+          <textarea id="output" rows="10" class="w-full rounded-lg text-lg" readonly></textarea>
           <button id="copy" class="w-full py-3 bg-green-600 hover:bg-green-700 transition-colors rounded-lg text-lg">
             Copy to Clipboard
           </button>
@@ -217,7 +186,7 @@
     const digitsInput     = document.getElementById("digits");
     const startIndexInput = document.getElementById("startIndex");
     const codeCountInput  = document.getElementById("codeCount");
-    const outputContainer = document.getElementById("outputContainer");
+    const outputArea      = document.getElementById("output");
 
     // Handle number input validation and updates
     function handleNumberInput(input, min, max, callback) {
@@ -225,7 +194,7 @@
         requestAnimationFrame(() => {
           let val = parseInt(input.value) || min;
           if (val < min) val = min;
-          if (max !== undefined && val > max) val = max;
+          if (val > max) val = max;
           input.value = val;
           if (callback) callback();
         });
@@ -369,15 +338,15 @@
       
       // Validate minimum length
       if (length < dialCount) {
-        alert(`Code length must be at least ${dialCount} to include all dial numbers`);
+        alert(Code length must be at least ${dialCount} to include all dial numbers);
         digitsInput.value = dialCount;
-        return calculateCombinations(length, dialCount);
+        return Math.pow(dialCount, dialCount);
       }
       
       // Calculate combinations that include all dial numbers at least once
       const maxCombos = calculateCombinationsWithAllDigits(length, dialCount);
       document.getElementById("maxCombinations").textContent = 
-        `Maximum possible combinations: ${maxCombos.toLocaleString()}`;
+        Maximum possible combinations: ${maxCombos.toLocaleString()};
       return maxCombos;
     }
 
@@ -421,29 +390,26 @@
       
       // Validate inputs against maximum combinations
       if (startIndex >= maxCombos) {
-        alert(`Start index cannot exceed maximum combinations (${maxCombos})`);
+        alert(Start index cannot exceed maximum combinations (${maxCombos}));
         return;
       }
       if (startIndex + codeCount > maxCombos) {
-        alert(`Cannot generate ${codeCount} codes starting at index ${startIndex} - would exceed maximum combinations (${maxCombos})`);
+        alert(Cannot generate ${codeCount} codes starting at index ${startIndex} - would exceed maximum combinations (${maxCombos}));
         return;
       }
 
       // Collect the digits from the dials
-      const dialInputs = Array.from(document.querySelectorAll("#requiredDigitsContainer input"))
+      const dialValues = Array.from(document.querySelectorAll("#requiredDigitsContainer input"))
                               .map(input => parseInt(input.value, 10));
-      
-      // Sort the dial digits to arrange output fields from lowest to highest
-      const sortedDialValues = [...dialInputs].sort((a, b) => a - b);
 
       // Validate minimum length
-      if (length < sortedDialValues.length) {
-        alert(`Code length must be at least ${sortedDialValues.length} to include all dial numbers`);
+      if (length < dialValues.length) {
+        alert(Code length must be at least ${dialValues.length} to include all dial numbers);
         return;
       }
 
       // Generate codes using only the dial values
-      const results = generateNeededCodes(length, sortedDialValues, startIndex, codeCount);
+      const results = generateNeededCodes(length, dialValues, startIndex, codeCount);
 
       // Group the results based on groupSize
       const groupSize = parseInt(groupSizeInput.value, 10);
@@ -455,39 +421,8 @@
         }
       }
       
-      // Distribute codes into separate fields based on starting digit
-      const codesByStartingDigit = {};
-      sortedDialValues.forEach(digit => {
-        codesByStartingDigit[digit] = [];
-      });
-
-      groupedResults.forEach(code => {
-        if (code === '') return; // Skip empty lines
-        const startingDigit = parseInt(code.charAt(0), 10);
-        if (codesByStartingDigit.hasOwnProperty(startingDigit)) {
-          codesByStartingDigit[startingDigit].push(code);
-        }
-      });
-
-      // Clear previous output
-      outputContainer.innerHTML = "";
-
-      // Create output fields for each starting digit
-      sortedDialValues.forEach(digit => {
-        const group = document.createElement("div");
-        group.className = "output-group";
-
-        const label = document.createElement("label");
-        label.textContent = `Starting with ${digit}`;
-        group.appendChild(label);
-
-        const textarea = document.createElement("textarea");
-        textarea.readOnly = true;
-        textarea.value = codesByStartingDigit[digit].join("\n");
-        group.appendChild(textarea);
-
-        outputContainer.appendChild(group);
-      });
+      // Output to the textarea
+      outputArea.value = groupedResults.join("\n");
     }
 
     function generateNeededCodes(length, dialValues, startIndex, codeCount) {
@@ -544,17 +479,10 @@
     }
 
     function copyToClipboard() {
-      const textToCopy = Array.from(outputContainer.querySelectorAll("textarea"))
-                              .map(textarea => textarea.value)
-                              .join("\n\n");
+      const textToCopy = outputArea.value;
       if (!navigator.clipboard) {
-        // Fallback for browsers that do not support navigator.clipboard
-        const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = textToCopy;
-        document.body.appendChild(tempTextarea);
-        tempTextarea.select();
+        outputArea.select();
         document.execCommand("copy");
-        document.body.removeChild(tempTextarea);
         alert("Codes copied to clipboard!");
         return;
       }
