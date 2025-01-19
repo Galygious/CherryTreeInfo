@@ -4,30 +4,118 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Password Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .dial {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      margin: 5px 0;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 12px;
+      min-width: 80px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .dial input {
-      width: 50px;
+      width: 60px;
       text-align: center;
-      margin: 0 5px;
+      font-size: 28px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: white;
+      margin: 8px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .dial button {
+      width: 100%;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 6px;
+    }
+    .dial button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+    .dial button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
     nav {
-      background-color: #333;
-      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 15px;
       text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     nav a {
       color: white;
       text-decoration: none;
       margin: 0 15px;
       font-size: 1.2em;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
     nav a:hover {
-      text-decoration: underline;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    input[type="number"] {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"]:focus {
+      border-color: rgba(255, 255, 255, 0.3);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+    button {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+    textarea {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
     }
   </style>
 </head>
@@ -38,29 +126,55 @@
     <a href="calculator.min.html">Energy Calculator</a>
     <a href="vaultcrackers.html">Vault Code Generator</a>
   </nav>
-  <h1>Password Generator</h1>
 
-  <label for="dials">Number of Required Digits (Dials):</label>
-  <input id="dials" type="number" min="1" max="10" value="6">
-  <button id="createDials">Set Dials</button>
+  <div class="min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8 flex-grow flex flex-col">
+      <h1 class="text-4xl font-bold mb-12 text-center text-white">Vault Code Generator</h1>
 
-  <div id="requiredDigitsContainer"></div>
+      <div class="max-w-7xl mx-auto w-full space-y-8 bg-gray-800/30 p-8 rounded-xl backdrop-blur-sm border border-white/10">
+        <!-- Dials Display -->
+        <div id="maxCombinations" class="text-gray-300 text-center text-lg mb-6"></div>
+        <div id="requiredDigitsContainer" class="flex justify-center gap-6 py-8 px-4 bg-black/20 rounded-lg min-h-[160px]"></div>
 
-  <label for="digits">Total Code Length:</label>
-  <input id="digits" type="number" min="1" max="10" value="8">
+        <!-- Settings Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 bg-black/20 p-6 rounded-lg">
+          <div class="flex flex-col items-center">
+            <label for="dials" class="text-lg mb-3">Digits</label>
+            <input id="dials" type="number" min="1" max="10" value="6" class="w-full text-lg text-center h-12">
+          </div>
 
-  <label for="startIndex">Start Index:</label>
-  <input id="startIndex" type="number" min="0" value="0">
+          <div class="flex flex-col items-center">
+            <label for="digits" class="text-lg mb-3">Length</label>
+            <input id="digits" type="number" min="1" max="10" value="8" class="w-full text-lg text-center h-12">
+          </div>
 
-  <label for="codeCount">Number of Codes:</label>
-  <input id="codeCount" type="number" min="1" value="50">
+          <div class="flex flex-col items-center">
+            <label for="startIndex" class="text-lg mb-3">Start</label>
+            <input id="startIndex" type="number" min="0" value="0" class="w-full text-lg text-center h-12">
+          </div>
 
-  <button id="generate">Generate Codes</button>
+          <div class="flex flex-col items-center">
+            <label for="codeCount" class="text-lg mb-3">Count</label>
+            <input id="codeCount" type="number" min="1" value="50" class="w-full text-lg text-center h-12">
+          </div>
+        </div>
 
-  <h2>Generated Codes</h2>
-  <textarea id="output" rows="10" cols="50" readonly></textarea>
-  <br/>
-  <button id="copy">Copy to Clipboard</button>
+        <!-- Generate Button -->
+        <button id="generate" class="w-full py-4 bg-blue-600 hover:bg-blue-700 transition-colors text-xl font-medium rounded-lg shadow-lg">
+          Generate Codes
+        </button>
+
+        <!-- Output Section -->
+        <div class="space-y-4 bg-black/20 p-6 rounded-lg">
+          <h2 class="text-2xl font-semibold">Generated Codes</h2>
+          <textarea id="output" rows="10" class="w-full rounded-lg text-lg" readonly></textarea>
+          <button id="copy" class="w-full py-3 bg-green-600 hover:bg-green-700 transition-colors rounded-lg text-lg">
+            Copy to Clipboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     const dialsInput      = document.getElementById("dials");
@@ -69,141 +183,288 @@
     const codeCountInput  = document.getElementById("codeCount");
     const outputArea      = document.getElementById("output");
 
-    document.getElementById("createDials").addEventListener("click", createDials);
+    // Handle number input validation and updates
+    function handleNumberInput(input, min, max, callback) {
+      const updateValue = () => {
+        requestAnimationFrame(() => {
+          let val = parseInt(input.value) || min;
+          if (val < min) val = min;
+          if (val > max) val = max;
+          input.value = val;
+          if (callback) callback();
+        });
+      };
+
+      // Immediate update on input/keydown
+      input.addEventListener("input", updateValue);
+      input.addEventListener("keydown", (e) => {
+        if (e.key >= '0' && e.key <= '9' || e.key === 'Backspace' || e.key === 'Delete') {
+          requestAnimationFrame(updateValue);
+        }
+      });
+      
+      input.addEventListener("blur", updateValue);
+      input.addEventListener("change", updateValue);
+
+      // Initial update
+      updateValue();
+    }
+
+    // Set up input handlers for all number inputs
+    handleNumberInput(dialsInput, 1, 10, () => requestAnimationFrame(createDials));
+    handleNumberInput(digitsInput, 1, 10, () => requestAnimationFrame(updateMaxCombinations));
+    handleNumberInput(startIndexInput, 0, Number.MAX_SAFE_INTEGER);
+    handleNumberInput(codeCountInput, 1, Number.MAX_SAFE_INTEGER);
+
     document.getElementById("generate").addEventListener("click", generateCodes);
     document.getElementById("copy").addEventListener("click", copyToClipboard);
+    
+    // Initialize the display
+    updateMaxCombinations();
+    createDials();
 
     // Creates the dial UI elements dynamically
     function createDials() {
+      // Update max combinations when creating dials
+      updateMaxCombinations();
       const dialsCount = parseInt(dialsInput.value, 10);
       const container = document.getElementById("requiredDigitsContainer");
       container.innerHTML = ""; // Clear existing dials
+
+      // Keep track of used numbers
+      const usedNumbers = new Set();
 
       for (let i = 0; i < dialsCount; i++) {
         const dial = document.createElement("div");
         dial.className = "dial";
 
-        const label = document.createElement("span");
-        label.textContent = `Dial ${i + 1}: `;
-
         const input = document.createElement("input");
         input.type = "number";
         input.min = "0";
         input.max = "9";
-        input.value = "0";
+        input.value = i % 10; // Initial value
+        input.readOnly = true;
+
+        // Function to check if a number is available
+        const isNumberAvailable = (num) => !usedNumbers.has(num);
+
+        // Function to find next available number
+        const findNextAvailable = (current, direction) => {
+          let num = current;
+          do {
+            num = (num + direction + 10) % 10;
+            if (isNumberAvailable(num)) return num;
+          } while (num !== current);
+          return current;
+        };
+
+        // Function to update buttons state
+        const updateButtonsState = () => {
+          const currentVal = parseInt(input.value, 10);
+          let hasNextUp = false;
+          let hasNextDown = false;
+          
+          // Check if any numbers are available in either direction
+          for (let i = 1; i <= 9; i++) {
+            if (isNumberAvailable((currentVal + i) % 10)) hasNextUp = true;
+            if (isNumberAvailable((currentVal - i + 10) % 10)) hasNextDown = true;
+          }
+          
+          upButton.disabled = !hasNextUp;
+          downButton.disabled = !hasNextDown;
+        };
 
         const upButton = document.createElement("button");
         upButton.textContent = "▲";
         upButton.onclick = () => {
-          if (input.value < 9) {
-            input.value = parseInt(input.value, 10) + 1;
-          }
+          const currentVal = parseInt(input.value, 10);
+          usedNumbers.delete(currentVal);
+          const newVal = findNextAvailable(currentVal, 1);
+          input.value = newVal;
+          usedNumbers.add(newVal);
+          updateButtonsState();
         };
 
         const downButton = document.createElement("button");
         downButton.textContent = "▼";
         downButton.onclick = () => {
-          if (input.value > 0) {
-            input.value = parseInt(input.value, 10) - 1;
-          }
+          const currentVal = parseInt(input.value, 10);
+          usedNumbers.delete(currentVal);
+          const newVal = findNextAvailable(currentVal, -1);
+          input.value = newVal;
+          usedNumbers.add(newVal);
+          updateButtonsState();
         };
 
-        dial.appendChild(label);
-        dial.appendChild(downButton);
-        dial.appendChild(input);
+        // Add scroll wheel support
+        dial.onwheel = (e) => {
+          e.preventDefault();
+          const currentVal = parseInt(input.value, 10);
+          usedNumbers.delete(currentVal);
+          const newVal = findNextAvailable(currentVal, e.deltaY < 0 ? 1 : -1);
+          input.value = newVal;
+          usedNumbers.add(newVal);
+          updateButtonsState();
+        };
+
+        // Set initial value ensuring uniqueness
+        let initialVal = i % 10;
+        while (usedNumbers.has(initialVal)) {
+          initialVal = (initialVal + 1) % 10;
+        }
+        input.value = initialVal;
+        usedNumbers.add(initialVal);
+
         dial.appendChild(upButton);
+        dial.appendChild(input);
+        dial.appendChild(downButton);
 
         container.appendChild(dial);
+        updateButtonsState();
       }
     }
 
-    /**
-     * Generates codes according to the user inputs using an on-the-fly approach.
-     * Only the needed subset is created (skipping until startIndex is reached).
-     */
+    // Calculate and display maximum possible combinations
+    function updateMaxCombinations() {
+      const length = parseInt(digitsInput.value, 10);
+      const dialCount = parseInt(dialsInput.value, 10);
+      
+      // Validate minimum length
+      if (length < dialCount) {
+        alert(`Code length must be at least ${dialCount} to include all dial numbers`);
+        digitsInput.value = dialCount;
+        return Math.pow(dialCount, dialCount);
+      }
+      
+      // Calculate combinations that include all dial numbers at least once
+      const maxCombos = calculateCombinationsWithAllDigits(length, dialCount);
+      document.getElementById("maxCombinations").textContent = 
+        `Maximum possible combinations: ${maxCombos.toLocaleString()}`;
+      return maxCombos;
+    }
+
+    // Calculate combinations that must include all dial numbers at least once
+    function calculateCombinationsWithAllDigits(length, dialCount) {
+      // If length is less than dialCount, no valid combinations exist
+      if (length < dialCount) return 0;
+
+      // Calculate using Stirling numbers of the second kind
+      // This gives us the number of ways to partition length positions into dialCount non-empty subsets
+      // Each subset represents positions where a particular dial number appears
+      let total = 0;
+      
+      // We need exactly dialCount different numbers in each valid code
+      const k = dialCount;
+      
+      // Calculate using the formula for Stirling numbers of the second kind
+      for (let i = 0; i < k; i++) {
+        const sign = Math.pow(-1, i);
+        const coef = nCr(k, i);
+        const term = Math.pow(k - i, length);
+        total += sign * coef * term;
+      }
+      
+      total = Math.abs(total / factorial(k));
+      
+      // Multiply by the number of ways to arrange dialCount numbers
+      // This gives us the total number of valid combinations
+      total *= factorial(dialCount);
+      
+      return Math.floor(total);
+    }
+
+    // Helper function to calculate combinations (nCr)
+    function nCr(n, r) {
+      return factorial(n) / (factorial(r) * factorial(n - r));
+    }
+
+    // Helper function to calculate factorial
+    function factorial(n) {
+      if (n <= 1) return 1;
+      let result = 1;
+      for (let i = 2; i <= n; i++) result *= i;
+      return result;
+    }
+
     function generateCodes() {
       // Parse user inputs
-      const dialsCount = parseInt(dialsInput.value, 10);
-      const length     = parseInt(digitsInput.value, 10);
+      const length = parseInt(digitsInput.value, 10);
       const startIndex = parseInt(startIndexInput.value, 10);
-      const codeCount  = parseInt(codeCountInput.value, 10);
+      const codeCount = parseInt(codeCountInput.value, 10);
+      
+      // Get maximum possible combinations
+      const maxCombos = updateMaxCombinations();
+      
+      // Validate inputs against maximum combinations
+      if (startIndex >= maxCombos) {
+        alert(`Start index cannot exceed maximum combinations (${maxCombos})`);
+        return;
+      }
+      if (startIndex + codeCount > maxCombos) {
+        alert(`Cannot generate ${codeCount} codes starting at index ${startIndex} - would exceed maximum combinations (${maxCombos})`);
+        return;
+      }
 
-      // Collect the required digits from the dials
+      // Collect the digits from the dials
       const dialValues = Array.from(document.querySelectorAll("#requiredDigitsContainer input"))
                               .map(input => parseInt(input.value, 10));
-      if (dialValues.length !== dialsCount) {
-        alert("Number of required digits must match the number of dials.");
+
+      // Validate minimum length
+      if (length < dialValues.length) {
+        alert(`Code length must be at least ${dialValues.length} to include all dial numbers`);
         return;
       }
 
-      // Convert the list of required digits into a unique set (to handle duplicates correctly).
-      const uniqueDialValues = [...new Set(dialValues)];
-
-      // If the number of unique required digits exceeds the code length, no valid codes are possible.
-      if (uniqueDialValues.length > length) {
-        outputArea.value = "";
-        alert("No valid codes possible because required digits exceed the total code length.");
-        return;
-      }
-
-      // Build a bitmask representing which digits (0-9) are required
-      let requiredBitmask = 0;
-      for (const d of uniqueDialValues) {
-        requiredBitmask |= (1 << d);  // set the bit for digit d
-      }
-
-      // Generate codes on the fly
-      const results = generateNeededCodes(length, requiredBitmask, startIndex, codeCount);
+      // Generate codes using only the dial values
+      const results = generateNeededCodes(length, dialValues, startIndex, codeCount);
 
       // Output to the textarea
       outputArea.value = results.join("\n");
     }
 
-    /**
-     * Generate codes of given 'length' that include all digits from 'requiredBitmask'.
-     * Returns up to 'codeCount' codes, skipping the first 'startIndex' valid codes.
-     *
-     * The codes are generated in ascending lexicographical order (digits 0..9).
-     */
-    function generateNeededCodes(length, requiredBitmask, startIndex, codeCount) {
+    function generateNeededCodes(length, dialValues, startIndex, codeCount) {
       const results = [];
-      let validCodesSeen = 0;  // how many valid codes we've enumerated so far
-      const path = [];
-
-      function backtrack(position, usedMask) {
-        // If we've already found enough codes, stop exploring further
+      let validCodesSeen = 0;
+      const path = new Array(length);
+      const used = new Array(dialValues.length).fill(false);
+      
+      function backtrack(position, requiredCount) {
         if (results.length >= codeCount) return;
 
-        // If we've placed all digits:
+        // If we've placed all digits
         if (position === length) {
-          // Check if we've used all the required bits
-          if ((usedMask & requiredBitmask) === requiredBitmask) {
-            // We have a valid code
+          if (requiredCount === dialValues.length) {
             if (validCodesSeen < startIndex) {
-              // Skip this code
               validCodesSeen++;
             } else {
-              // Record this code
               results.push(path.join(""));
             }
           }
           return;
         }
 
-        // Try digits 0..9
-        for (let digit = 0; digit < 10; digit++) {
-          // Choose this digit
-          path.push(digit);
-          // Calculate new usedMask
-          const newMask = usedMask | (1 << digit);
-
-          backtrack(position + 1, newMask);
-
-          // Backtrack
-          path.pop();
-
-          // If we already have the requested number of codes, break early
-          if (results.length >= codeCount) break;
+        // If we still need to place required digits
+        if (requiredCount < dialValues.length) {
+          // Try placing each unused required digit
+          for (let i = 0; i < dialValues.length; i++) {
+            if (!used[i]) {
+              used[i] = true;
+              path[position] = dialValues[i];
+              backtrack(position + 1, requiredCount + 1);
+              used[i] = false;
+              if (results.length >= codeCount) return;
+            }
+          }
+        }
+        
+        // If we've already placed all required digits or need more positions
+        if (requiredCount === dialValues.length || position > dialValues.length - 1) {
+          // Fill remaining positions with any dial digit
+          for (const digit of dialValues) {
+            path[position] = digit;
+            backtrack(position + 1, requiredCount);
+            if (results.length >= codeCount) return;
+          }
         }
       }
 
@@ -211,13 +472,9 @@
       return results;
     }
 
-    /**
-     * Copy the current output to the clipboard using the modern Clipboard API.
-     */
     function copyToClipboard() {
       const textToCopy = outputArea.value;
       if (!navigator.clipboard) {
-        // Fallback for very old browsers:
         outputArea.select();
         document.execCommand("copy");
         alert("Codes copied to clipboard!");
