@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Test Page</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        #status {
+            margin: 10px 0;
+            font-weight: bold;
+            color: red;
+        }
+        #renderTest {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lease Management</h1>
+    <div id="status"></div>
+    <button id="createLease" disabled>Create 1-Minute Lease</button>
+    <button id="refresh">Refresh Data</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Lease ID</th>
+                <th>Ranges</th>
+                <th>Expires In</th>
+            </tr>
+        </thead>
+        <tbody id="leaseTable">
+            <tr>
+                <td colspan="3">No leases yet.</td>
+            </tr>
+        </tbody>
+    </table>
+    <canvas id="renderTest" width="1000" height="100"></canvas>
+    <div id="tooltip"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
+            const BASKET_NAME = "LeaseBasket";
+            const MAX_RETRIES = 3;
+            const INITIAL_BACKOFF_MS = 10000;
+            const API_CALL_INTERVAL = 3500;
+            const BUTTON_COOLDOWN = 1000;
+            const LEASE_CREATION_LIMIT = 20;
+            let leaseCreationCount = 0;
+            let leaseCreationTimer;
+
+            class FetchQueue {
+                constructor() {
+                    this.queue = [];
+                    this.isProcessing = false;
+                    this.currentBackoff = INITIAL_BACKOFF_MS;
+                }
+
+                enqueue(fetchFunction) {
+                    return new Promise((resolve, reject) => {
+                        this.queue.push({ 
+                            fetchFunction, 
+                            resolve, 
+                            reject,
+                            retries: MAX_RETRIES
+                        });
+                        console.log(`[${new Date().toISOString()}] Fetch enqueued.`);
+                        this.processQueue();
+                    });
+                }
+
+                async processQueue() {
+                    if (this.isProcessing) return;
+                    this.isProcessing = true;
+
+                    while (this.queue.length > 0) {
+                        const item = this.queue[0];
+                        const timestamp = new Date().toISOString();
+                        console.log(`[${timestamp}] Processing fetch request. Retries left: ${item.retries}`);
+
+                        try {
+                            const result = await item.fetchFunction();
+                            
+                            if (result.status === 429) {
+                                if (item.retries > 0) {
+                                    item.retries--;
+                                    console.warn(`[${timestamp}] Rate limited. Backing off for ${this.currentBackoff}ms. Retries left: ${item.retries}`);
+                                    await this.delay(this.currentBackoff);
+                                    this.currentBackoff *= 2;
+                                    continue;
+                                } else {
+                                    throw new Error("Maximum retry attempts reached due to rate limiting.");
+                                }
+                            }
+
+                            if (!result.ok) {
+                                throw new Error(`HTTP Error: ${result.status}`);
+                            }
+                            this.queue.shift();
+                            this.currentBackoff = INITIAL_BACKOFF_MS;
+                            item.resolve(result);
+                            
+                            await this.delay(API_CALL_INTERVAL);
+                        } catch (error) {
+                            if (item.retries > 0) {
+                                item.retries--;
+                                console.warn(`[${timestamp}] Error: ${error.message}. Retrying in ${this.currentBackoff}ms. Retries left: ${item.retries}`);
+                                await this.delay(this.currentBackoff);
+                                this.currentBackoff *= 2;
+                                continue; 
+                            } else {
+                                this.queue.shift();
+                                this.currentBackoff = INITIAL_BACKOFF_MS;
+                                item.reject(error);
+                            }
+                        }
+                    }
+
+                    this.isProcessing = false;
+                }
+
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            }
+
+            const fetchQueue = new FetchQueue(API_CALL_INTERVAL);
+
+            const leaseButton = document.getElementById("createLease");
+            const refreshButton = document.getElementById("refresh");
+            const leaseTable = document.getElementById("leaseTable");
+            const statusDiv = document.getElementById("status");
+
+            let localData = { leases: [] };
+            let isFetching = false;
+            let pendingRemovals = new Set();
+
+            function generateUUID() {
+                var d = new Date().getTime();
+                var d2 = (performance && performance.now && (performance.now()*1000)) || 0;
+                return 'lease_' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16;
+                    if(d > 0){
+                        r = (d + r)%16 | 0;
+                        d = Math.floor(d/16);
+                    } else {
+                        r = (d2 + r)%16 | 0;
+                        d2 = Math.floor(d2/16);
+                    }
+                    return (c==='x' ? r : (r&0x3|0x8)).toString(16);
+                });
+            }
+
+            async function fetchWithRetry(url, options = {}) {
+                const timestamp = new Date().toISOString();
+                console.log(`[${timestamp}] Enqueuing fetch: ${url} with options:`, options);
+                statusDiv.textContent = `Fetching data...`;
+
+                try {
+                    const response = await fetchQueue.enqueue(() => fetch(url, options));
+                    statusDiv.textContent = "";
+                    return response;
+                } catch (error) {
+                    if (error.message === 'Failed to fetch') {
+                        statusDiv.textContent = `Network/CORS error. Please check your connection or contact support.`;
+                    } else {
+                        statusDiv.textContent = `Error: ${error.message}. No more retries left.`;
+                    }
+                    throw error;
+                }
+            }
+
+            function deduplicateLeases(leases) {
+                const uniqueLeases = [];
+                const leaseIds = new Set();
+
+                leases.forEach(lease => {
+                    if (!leaseIds.has(lease.lease_id)) {
+                        leaseIds.add(lease.lease_id);
+                        uniqueLeases.push(lease);
+                    }
+                });
+
+                return uniqueLeases;
+            }
+
+            async function overwriteBasket(newData) {
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(newData),
+                    });
+
+                    const text = await response.text();
+                    const successTimestamp = new Date().toISOString();
+                    console.log(`[${successTimestamp}] Basket overwritten successfully:`, text);
+                    
+                    // After successful overwrite, our local data is the source of truth
+                    // since Pantry returns a text confirmation, not the updated data
+                } catch (err) {
+                    console.error("Error overwriting basket:", err);
+                }
+            }
+
+            async function createLease() {
+                if (leaseCreationCount >= LEASE_CREATION_LIMIT) {
+                    statusDiv.textContent = "Lease creation limit reached. Please wait...";
+                    return;
+                }
+
+                leaseCreationCount++;
+                if (!leaseCreationTimer) {
+                    leaseCreationTimer = setTimeout(() => {
+                        leaseCreationCount = 0;
+                        clearTimeout(leaseCreationTimer);
+                        leaseCreationTimer = null;
+                    }, 60000);
+                }
+
+                leaseButton.disabled = true;
+                refreshButton.disabled = true;
+                statusDiv.textContent = "Creating new lease...";
+
+                const newLease = {
+                    lease_id: generateUUID(),
+                    ranges: [[10000000, 10000001]],
+                    expiration: Date.now() + 60000,
+                };
+
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ leases: [newLease] }),
+                    });
+
+                    const updatedData = await response.json();
+                    const successTimestamp = new Date().toISOString();
+                    console.log(`[${successTimestamp}] Lease added successfully:`, updatedData);
+
+                    localData.leases = updatedData.leases;
+
+                    renderTable(localData.leases);
+                } catch (err) {
+                    console.error("Error adding new lease:", err);
+                }
+
+                setTimeout(() => {
+                    leaseButton.disabled = false;
+                    refreshButton.disabled = false;
+                    statusDiv.textContent = "";
+                }, BUTTON_COOLDOWN);
+            }
+
+            function renderTable(leases) {
+                if (!leaseTable) {
+                    console.error("Error: leaseTable element not found in the DOM.");
+                    return;
+                }
+
+                // Filter out leases that are pending removal and sort by expiration time
+                const visibleLeases = leases
+                    .filter(lease => !pendingRemovals.has(lease.lease_id))
+                    .sort((a, b) => a.expiration - b.expiration);
+
+                function formatTimeLeft(ms) {
+                    if (ms <= 0) return "Expired";
+                    
+                    const seconds = Math.ceil(ms / 1000);
+                    if (seconds < 60) {
+                        return `${seconds} seconds`;
+                    }
+                    
+                    const minutes = Math.floor(seconds / 60);
+                    const hours = Math.floor(minutes / 60);
+                    const remainingMinutes = minutes % 60;
+                    
+                    if (hours > 0) {
+                        return `${hours}h ${remainingMinutes}m`;
+                    } else {
+                        return `${minutes}m`;
+                    }
+                }
+
+                leaseTable.innerHTML = visibleLeases.length
+                    ? visibleLeases.map(lease => {
+                        const timeLeft = Math.max(0, lease.expiration - Date.now());
+                        return `
+                            <tr>
+                                <td>${lease.lease_id}</td>
+                                <td>${lease.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
+                                <td>${formatTimeLeft(timeLeft)}</td>
+                            </tr>
+                        `;
+                    }).join("")
+                    : `<tr><td colspan="3">No leases yet.</td></tr>`;
+            }
+
+            async function removeExpiredLeases() {
+                if (isFetching) return;
+                isFetching = true;
+
+                try {
+                    // Get current basket from backend
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" }
+                    });
+                    const backendData = await response.json();
+                    
+                    // Check for expired leases
+                    const now = Date.now();
+                    const originalLeases = backendData.leases || [];
+                    const validLeases = originalLeases.filter(lease => lease.expiration > now);
+                    const expiredCount = originalLeases.length - validLeases.length;
+                    
+                    // Check for duplicates
+                    const deduplicatedLeases = deduplicateLeases(validLeases);
+                    const duplicateCount = validLeases.length - deduplicatedLeases.length;
+                    
+                    // Only update if we have changes
+                    if (expiredCount > 0 || duplicateCount > 0) {
+                        const timestamp = new Date().toISOString();
+                        if (expiredCount > 0) {
+                            console.log(`[${timestamp}] Removing ${expiredCount} expired lease(s)...`);
+                        }
+                        if (duplicateCount > 0) {
+                            console.log(`[${timestamp}] Removing ${duplicateCount} duplicate lease(s)...`);
+                        }
+                        
+                        // Update backend with cleaned data
+                        backendData.leases = deduplicatedLeases;
+                        await overwriteBasket(backendData);
+                    }
+
+                    // Update local state
+                    localData = backendData;
+                    pendingRemovals.clear();
+                    renderTable(localData.leases);
+                
+                    // Update bitmap display
+                    const bitmap = await fetchBitmap();
+                    renderBitmap(bitmap);
+                } catch (err) {
+                    console.error("Error removing expired leases:", err);
+                } finally {
+                    isFetching = false;
+                }
+            }
+
+            leaseButton.addEventListener("click", createLease);
+            refreshButton.addEventListener("click", removeExpiredLeases);
+
+            // Initial load
+            (async () => {
+                refreshButton.disabled = true;
+                try {
+                    await removeExpiredLeases();
+                    leaseButton.disabled = false;
+                } catch (err) {
+                    console.error("Error loading basket:", err);
+                } finally {
+                    refreshButton.disabled = false;
+                }
+            })();
+
+            // Track bitmap state counts
+            let bitmapCounts = {
+                processed: 0,  // 2s
+                pending: 0,    // 1s
+                remaining: 0   // 0s
+            };
+
+            async function fetchBitmap() {
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/bitmap`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" }
+                    });
+                    const data = await response.json();
+                    return data.bitmap || "";
+                } catch (err) {
+                    console.error("Error fetching bitmap:", err);
+                    return "";
+                }
+            }
+
+            function renderBitmap(bitmap) {
+                const canvas = document.getElementById('renderTest');
+                const ctx = canvas.getContext('2d');
+                const tooltip = document.getElementById('tooltip');
+                
+                // Clear canvas
+                ctx.fillStyle = '#333333'; // Dark grey for 0s
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                if (!bitmap) return;
+
+                const totalPixels = canvas.width * canvas.height;
+                const bitsPerPixel = Math.ceil(bitmap.length / totalPixels);
+                const bits = bitmap.split('');
+
+                // Reset counts
+                bitmapCounts.processed = 0;
+                bitmapCounts.pending = 0;
+                bitmapCounts.remaining = 0;
+
+                // Count states
+                bits.forEach(bit => {
+                    switch (bit) {
+                        case '2': bitmapCounts.processed++; break;
+                        case '1': bitmapCounts.pending++; break;
+                        case '0': bitmapCounts.remaining++; break;
+                    }
+                });
+                
+                // Store pixel colors for mouseover
+                const pixelStates = new Map(); // Store state for each pixel
+                
+                // Process bits in chunks of bitsPerPixel
+                for (let pixelIndex = 0; pixelIndex < totalPixels; pixelIndex++) {
+                    const startBitIndex = pixelIndex * bitsPerPixel;
+                    const endBitIndex = Math.min(startBitIndex + bitsPerPixel, bits.length);
+                    const chunk = bits.slice(startBitIndex, endBitIndex);
+                    
+                    // Calculate x,y from bottom-left to top-right
+                    const x = Math.floor(pixelIndex / canvas.height);
+                    const y = canvas.height - (pixelIndex % canvas.height) - 1;
+
+                    // Check the state of all bits in chunk
+                    if (chunk.length > 0) {
+                        const state = chunk[0]; // Take first bit as state since all should be same
+                        if (chunk.every(bit => bit === state)) { // Verify all bits match
+                            const pixelKey = `${x},${y}`;
+                            switch (state) {
+                                case '1':
+                                    ctx.fillStyle = '#DAA520'; // Goldenrod for 1s
+                                    ctx.fillRect(x, y, 1, 1);
+                                    pixelStates.set(pixelKey, 'pending');
+                                    break;
+                                case '2':
+                                    ctx.fillStyle = '#2ecc71'; // Green for 2s
+                                    ctx.fillRect(x, y, 1, 1);
+                                    pixelStates.set(pixelKey, 'processed');
+                                    break;
+                                case '0':
+                                    pixelStates.set(pixelKey, 'remaining');
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                // Add mouseover handlers
+                canvas.onmousemove = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = Math.floor((e.clientX - rect.left) / (rect.width / canvas.width));
+                    const y = Math.floor((e.clientY - rect.top) / (rect.height / canvas.height));
+                    const pixelKey = `${x},${canvas.height - y - 1}`; // Adjust y for bottom-up rendering
+                    const state = pixelStates.get(pixelKey);
+
+                    if (state) {
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = (e.pageX + 10) + 'px';
+                        tooltip.style.top = (e.pageY + 10) + 'px';
+
+                        switch (state) {
+                            case 'processed':
+                                tooltip.textContent = `${bitmapCounts.processed.toLocaleString()} Codes Processed`;
+                                break;
+                            case 'pending':
+                                tooltip.textContent = `${bitmapCounts.pending.toLocaleString()} Codes Pending`;
+                                break;
+                            case 'remaining':
+                                tooltip.textContent = `${bitmapCounts.remaining.toLocaleString()} Total possible remaining codes`;
+                                break;
+                        }
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                };
+
+                canvas.onmouseout = () => {
+                    tooltip.style.display = 'none';
+                };
+            }
+
+            // Update display and check for expired leases
+            setInterval(async () => {
+                const now = Date.now();
+                const expiredLeases = localData.leases.filter(lease => 
+                    lease.expiration <= now && !pendingRemovals.has(lease.lease_id)
+                );
+                
+                if (expiredLeases.length > 0) {
+                    // Mark expired leases as pending removal
+                    expiredLeases.forEach(lease => pendingRemovals.add(lease.lease_id));
+                    // Trigger removal in background
+                    removeExpiredLeases();
+                }
+                
+                // Update lease table
+                renderTable(localData.leases);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
