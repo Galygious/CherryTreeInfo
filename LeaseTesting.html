@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Test Page</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        #status {
+            margin: 10px 0;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lease Management</h1>
+    <div id="status"></div>
+    <button id="createLease" disabled>Create 1-Minute Lease</button>
+    <button id="refresh">Refresh Data</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Lease ID</th>
+                <th>Ranges</th>
+                <th>Expires In</th>
+            </tr>
+        </thead>
+        <tbody id="leaseTable">
+            <tr>
+                <td colspan="3">No leases yet.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Constants
+            const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787"; // Replace with your actual Pantry ID
+            const BASKET_NAME = "LeaseBasket"; // Ensure this is correct
+            const MAX_RETRIES = 5; // Maximum number of retry attempts
+            const RETRY_DELAY_MS = 1000; // Initial retry delay in milliseconds
+
+            // DOM Elements
+            const leaseButton = document.getElementById("createLease");
+            const refreshButton = document.getElementById("refresh");
+            const leaseTable = document.getElementById("leaseTable");
+            const statusDiv = document.getElementById("status");
+
+            // State
+            let localData = { leases: [] }; // Default local data structure
+            let cooldown = false;
+
+            /**
+             * Utility function to pause execution for a given duration.
+             * @param {number} ms - Milliseconds to wait.
+             * @returns {Promise} - Resolves after the specified delay.
+             */
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            /**
+             * Fetch wrapper with retry logic.
+             * @param {string} url - The URL to fetch.
+             * @param {object} options - Fetch options.
+             * @param {number} retries - Number of retries left.
+             * @param {number} backoff - Current backoff delay.
+             * @returns {Promise<Response>} - The fetch response.
+             */
+            async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES, backoff = RETRY_DELAY_MS) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status === 429) { // Too Many Requests
+                        if (retries > 0) {
+                            console.warn(`Rate limited. Retrying in ${backoff} ms... (${retries} retries left)`);
+                            statusDiv.textContent = `Rate limited. Retrying in ${backoff / 1000} seconds... (${retries} retries left)`;
+                            await delay(backoff);
+                            // Exponential backoff
+                            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                        } else {
+                            throw new Error("Maximum retry attempts reached due to rate limiting.");
+                        }
+                    } else if (!response.ok) { // Other HTTP errors
+                        const errorText = await response.text();
+                        throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
+                    }
+                    // Clear status if successful
+                    statusDiv.textContent = "";
+                    return response;
+                } catch (error) {
+                    if (retries > 0) {
+                        console.warn(`Fetch error: ${error.message}. Retrying in ${backoff} ms... (${retries} retries left)`);
+                        statusDiv.textContent = `Error: ${error.message}. Retrying in ${backoff / 1000} seconds... (${retries} retries left)`;
+                        await delay(backoff);
+                        return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                    } else {
+                        statusDiv.textContent = `Error: ${error.message}. No more retries left.`;
+                        throw error;
+                    }
+                }
+            }
+
+            /**
+             * Fetch basket data and initialize local data.
+             */
+            async function fetchBasket() {
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" }
+                    });
+
+                    const data = await response.json();
+
+                    // Clean expired leases and overwrite the basket if changes are made
+                    const cleanedData = cleanExpiredLeases(data);
+                    if (cleanedData.updated) {
+                        await overwriteBasket(cleanedData.data); // Overwrite the basket with cleaned data
+                    }
+
+                    localData = cleanedData.data; // Update local state
+                    renderTable(localData.leases);
+                    leaseButton.disabled = false; // Enable the button after data load
+                } catch (err) {
+                    console.error("Error fetching basket:", err);
+                }
+            }
+
+            /**
+             * Clean expired leases from the provided data.
+             * @param {object} data - The basket data.
+             * @returns {object} - Object containing updated status and cleaned data.
+             */
+            function cleanExpiredLeases(data) {
+                const now = Date.now();
+                const originalLeases = data.leases || [];
+                const validLeases = originalLeases.filter(lease => lease.expiration > now);
+
+                // Check if any leases were removed
+                const updated = validLeases.length !== originalLeases.length;
+
+                return {
+                    updated, // Indicates if changes were made
+                    data: { ...data, leases: validLeases } // Return cleaned data
+                };
+            }
+
+            /**
+             * Overwrite basket data with POST.
+             * @param {object} newData - The new basket data.
+             */
+            async function overwriteBasket(newData) {
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "POST", // Use POST to overwrite the entire basket
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(newData),
+                    });
+
+                    const updatedData = await response.json();
+                    console.log("Basket overwritten successfully:", updatedData);
+                } catch (err) {
+                    console.error("Error overwriting basket:", err);
+                }
+            }
+
+            /**
+             * Add a new lease to local data and update the basket with PUT.
+             */
+            async function createLease() {
+                if (cooldown) return;
+                cooldown = true;
+                leaseButton.disabled = true;
+                statusDiv.textContent = "Creating new lease...";
+
+                const newLease = {
+                    lease_id: `lease_${Date.now()}`,
+                    ranges: [[10000000, 10000001]], // Example range
+                    expiration: Date.now() + 60000, // 1-minute lease
+                };
+                localData.leases.push(newLease); // Add to local data
+
+                try {
+                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "PUT", // Use PUT to update the basket with the full leases array
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ leases: localData.leases }), // Send the full leases array
+                    });
+
+                    const updatedData = await response.json();
+                    console.log("Lease added successfully:", updatedData);
+                } catch (err) {
+                    console.error("Error adding new lease:", err);
+                }
+
+                setTimeout(() => {
+                    cooldown = false;
+                    leaseButton.disabled = false;
+                    statusDiv.textContent = "";
+                }, 1000); // 1-second cooldown
+
+                renderTable(localData.leases);
+            }
+
+            /**
+             * Render leases in the table.
+             * @param {Array} leases - Array of lease objects.
+             */
+            function renderTable(leases) {
+                if (!leaseTable) {
+                    console.error("Error: leaseTable element not found in the DOM.");
+                    return;
+                }
+
+                leaseTable.innerHTML = leases.length
+                    ? leases.map(lease => {
+                        const timeLeft = Math.max(0, lease.expiration - Date.now());
+                        return `
+                            <tr>
+                                <td>${lease.lease_id}</td>
+                                <td>${lease.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
+                                <td>${Math.ceil(timeLeft / 1000)} seconds</td>
+                            </tr>
+                        `;
+                    }).join("")
+                    : `<tr><td colspan="3">No leases yet.</td></tr>`;
+            }
+
+            /**
+             * Remove expired leases from local data and update the backend.
+             */
+            async function removeExpiredLeases() {
+                const now = Date.now();
+                const expiredLeases = localData.leases.filter(lease => lease.expiration <= now);
+
+                if (expiredLeases.length === 0) return; // No expired leases to remove
+
+                // Remove expired leases from localData
+                localData.leases = localData.leases.filter(lease => lease.expiration > now);
+
+                // Update the backend with the new leases array
+                try {
+                    await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ leases: localData.leases }),
+                    });
+                    console.log(`Removed ${expiredLeases.length} expired lease(s).`);
+                } catch (err) {
+                    console.error("Error removing expired leases:", err);
+                }
+
+                // Re-render the table to reflect changes
+                renderTable(localData.leases);
+            }
+
+            // Event listeners
+            leaseButton.addEventListener("click", createLease);
+            refreshButton.addEventListener("click", fetchBasket);
+
+            // Initialize page
+            (async () => {
+                await fetchBasket();
+            })();
+
+            // Timer update loop (local data only)
+            setInterval(() => {
+                renderTable(localData.leases);
+                removeExpiredLeases(); // Check and remove expired leases every second
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
