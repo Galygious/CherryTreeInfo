@@ -40,10 +40,8 @@
             align-items: center;
             overflow: hidden;
         }
-        .floating-error {
+        .floating-message {
             position: absolute;
-            background-color: rgba(255, 0, 0, 0.1);
-            color: red;
             padding: 10px 20px;
             border-radius: 4px;
             font-weight: bold;
@@ -51,6 +49,18 @@
             animation: floatDown 3s ease-in forwards;
             white-space: nowrap;
             pointer-events: none;
+        }
+        .floating-message.error {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #dc3545;
+        }
+        .floating-message.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        .floating-message.info {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #bbcc00;
         }
         @keyframes floatDown {
             0% {
@@ -280,7 +290,7 @@
                         
                         if (response.status === 429) {
                             console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
-                            showFloatingError(`Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`);
+                            showFloatingMessage(`Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`, 'error');
                             this.currentAction = `Waiting for server availability (${this.currentBackoff / 1000}s)`;
                             this.updateQueueDisplay();
                             await this.delay(this.currentBackoff);
@@ -311,7 +321,7 @@
                         item.resolve(data);
                     } catch (error) {
                         console.error("[API] Error:", error);
-                        showFloatingError(`Error: ${error.message}`);
+                        showFloatingMessage(`Error: ${error.message}`, 'error');
                         item.reject(error);
                         this.queue.shift(); // Remove failed item
                         console.log('[Queue] Request failed. Queue length:', this.queue.length);
@@ -335,25 +345,25 @@
             // Initialize API Queue
             const apiQueue = new APIQueue();
 
-            function showFloatingError(message) {
-                let errorContainer = document.querySelector('.error-container');
-                if (!errorContainer) {
-                    errorContainer = document.createElement('div');
-                    errorContainer.className = 'error-container';
-                    document.body.appendChild(errorContainer);
+            function showFloatingMessage(message, type = 'info') {
+                let container = document.querySelector('.error-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'error-container';
+                    document.body.appendChild(container);
                 }
 
-                const error = document.createElement('div');
-                error.className = 'floating-error';
-                error.textContent = message;
-                errorContainer.appendChild(error);
+                const messageElement = document.createElement('div');
+                messageElement.className = `floating-message ${type}`;
+                messageElement.textContent = message;
+                container.appendChild(messageElement);
 
-                // Remove the error element after animation completes
-                error.addEventListener('animationend', () => {
-                    error.remove();
+                // Remove the message element after animation completes
+                messageElement.addEventListener('animationend', () => {
+                    messageElement.remove();
                     // Remove container if it's empty
-                    if (errorContainer.children.length === 0) {
-                        errorContainer.remove();
+                    if (container.children.length === 0) {
+                        container.remove();
                     }
                 });
             }
@@ -384,7 +394,7 @@
                 // Check if there's already a refresh in queue
                 if (apiQueue.hasRefreshInQueue()) {
                     console.log('[Fetch] Refresh already queued, skipping');
-                    showFloatingError("Refresh already in progress...");
+                    showFloatingMessage("Refresh already in progress...", 'info');
                     return;
                 }
 
@@ -454,7 +464,7 @@
             async function createLease() {
                 console.log('[Create] Creating new 10-minute lease');
                 leaseButton.disabled = true;
-                showFloatingError("Creating new lease...");
+                showFloatingMessage("Creating new lease...", 'success');
 
                 const newLease = {
                     lease_id: `lease_${Date.now()}`,
