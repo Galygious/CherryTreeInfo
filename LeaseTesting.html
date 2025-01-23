@@ -99,20 +99,20 @@
 
                 async processQueue() {
                     if (this.processing || this.queue.length === 0) {
-                        console.log('[Queue] Queue processing skipped:', 
-                            this.processing ? 'Already processing' : 'Queue empty');
+                        // console.log('[Queue] Queue processing skipped:', 
+                        //     this.processing ? 'Already processing' : 'Queue empty');
                         return;
                     }
                     
                     this.processing = true;
-                    console.log('[Queue] Starting queue processing');
+                    // console.log('[Queue] Starting queue processing');
 
                     const now = Date.now();
                     const timeSinceLastRequest = now - this.lastRequestTime;
                     
                     if (timeSinceLastRequest < API_COOLDOWN) {
                         const waitTime = API_COOLDOWN - timeSinceLastRequest;
-                        console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
+                        // console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
                         await this.delay(waitTime);
                     }
 
@@ -172,7 +172,7 @@
 
                     this.lastRequestTime = Date.now();
                     this.processing = false;
-                    console.log('[Queue] Processing complete');
+                    // console.log('[Queue] Processing complete');
                     
                     // Process next item after cooldown
                     setTimeout(() => this.processQueue(), API_COOLDOWN);
