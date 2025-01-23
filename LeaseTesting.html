@@ -37,7 +37,7 @@
 <body>
     <h1>Lease Management</h1>
     <div id="status"></div>
-    <button id="createLease" disabled>Create 1-Minute Lease</button>
+    <button id="createLease" disabled>Create 10-Minute Lease</button>
     <button id="refresh">Refresh Data</button>
     <table>
         <thead>
@@ -57,10 +57,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             // Constants
-            const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787"; // Replace with your actual Pantry ID
-            const BASKET_NAME = "LeaseBasket"; // Ensure this is correct
-            const MAX_RETRIES = 5; // Maximum number of retry attempts
-            const RETRY_DELAY_MS = 1000; // Initial retry delay in milliseconds
+            const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
+            const BASKET_NAME = "LeaseBasket";
+            const API_COOLDOWN = 3000; // 3 second cooldown between API requests
+            const INITIAL_BACKOFF = 10000; // 10 second initial backoff
+            const MAX_BACKOFF = 30000; // 30 second maximum backoff
+            const LEASE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
             // DOM Elements
             const leaseButton = document.getElementById("createLease");
@@ -69,165 +71,200 @@
             const statusDiv = document.getElementById("status");
 
             // State
-            let localData = { leases: [] }; // Default local data structure
-            let cooldown = false;
+            let localData = { leases: [] };
 
-            /**
-             * Utility function to pause execution for a given duration.
-             * @param {number} ms - Milliseconds to wait.
-             * @returns {Promise} - Resolves after the specified delay.
-             */
-            function delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            class APIQueue {
+                constructor() {
+                    this.queue = [];
+                    this.processing = false;
+                    this.currentBackoff = INITIAL_BACKOFF;
+                    this.lastRequestTime = 0;
+                }
 
-            /**
-             * Fetch wrapper with retry logic.
-             * @param {string} url - The URL to fetch.
-             * @param {object} options - Fetch options.
-             * @param {number} retries - Number of retries left.
-             * @param {number} backoff - Current backoff delay.
-             * @returns {Promise<Response>} - The fetch response.
-             */
-            async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES, backoff = RETRY_DELAY_MS) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.status === 429) { // Too Many Requests
-                        if (retries > 0) {
-                            console.warn(`Rate limited. Retrying in ${backoff} ms... (${retries} retries left)`);
-                            statusDiv.textContent = `Rate limited. Retrying in ${backoff / 1000} seconds... (${retries} retries left)`;
-                            await delay(backoff);
-                            // Exponential backoff
-                            return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                        } else {
-                            throw new Error("Maximum retry attempts reached due to rate limiting.");
+                async enqueue(request) {
+                    return new Promise((resolve, reject) => {
+                        this.queue.push({
+                            request,
+                            resolve,
+                            reject,
+                            retryCount: 0
+                        });
+                        this.processQueue();
+                    });
+                }
+
+                async processQueue() {
+                    if (this.processing || this.queue.length === 0) return;
+                    this.processing = true;
+
+                    const now = Date.now();
+                    const timeSinceLastRequest = now - this.lastRequestTime;
+                    
+                    if (timeSinceLastRequest < API_COOLDOWN) {
+                        await this.delay(API_COOLDOWN - timeSinceLastRequest);
+                    }
+
+                    const item = this.queue[0];
+                    try {
+                        const response = await fetch(item.request.url, {
+                            ...item.request.options,
+                            headers: { "Content-Type": "application/json" }
+                        });
+                        
+                        if (response.status === 429) {
+                            console.warn(`Rate limited. Backing off for ${this.currentBackoff}ms`);
+                            statusDiv.textContent = `Rate limited. Retrying in ${this.currentBackoff / 1000} seconds...`;
+                            await this.delay(this.currentBackoff);
+                            
+                            // Increase backoff time
+                            this.currentBackoff = Math.min(this.currentBackoff + 10000, MAX_BACKOFF);
+                            item.retryCount++;
+                            
+                            // Keep the item in queue for retry
+                            this.processing = false;
+                            this.processQueue();
+                            return;
                         }
-                    } else if (!response.ok) { // Other HTTP errors
-                        const errorText = await response.text();
-                        throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP Error: ${response.status}`);
+                        }
+
+                        // Success - reset backoff and process response
+                        this.currentBackoff = INITIAL_BACKOFF;
+                        const data = await response.json();
+                        this.queue.shift(); // Remove the processed item
+                        item.resolve(data);
+                        statusDiv.textContent = "";
+
+                    } catch (error) {
+                        console.error("API Error:", error);
+                        statusDiv.textContent = `Error: ${error.message}`;
+                        item.reject(error);
+                        this.queue.shift(); // Remove failed item
                     }
-                    // Clear status if successful
-                    statusDiv.textContent = "";
-                    return response;
-                } catch (error) {
-                    if (retries > 0) {
-                        console.warn(`Fetch error: ${error.message}. Retrying in ${backoff} ms... (${retries} retries left)`);
-                        statusDiv.textContent = `Error: ${error.message}. Retrying in ${backoff / 1000} seconds... (${retries} retries left)`;
-                        await delay(backoff);
-                        return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                    } else {
-                        statusDiv.textContent = `Error: ${error.message}. No more retries left.`;
-                        throw error;
-                    }
+
+                    this.lastRequestTime = Date.now();
+                    this.processing = false;
+                    
+                    // Process next item after cooldown
+                    setTimeout(() => this.processQueue(), API_COOLDOWN);
+                }
+
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
                 }
             }
 
-            /**
-             * Fetch basket data and initialize local data.
-             */
+            // Initialize API Queue
+            const apiQueue = new APIQueue();
+
+            function formatTimeLeft(milliseconds) {
+                const seconds = Math.ceil(milliseconds / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+
+                if (days > 0) {
+                    const remainingHours = hours % 24;
+                    const remainingMinutes = minutes % 60;
+                    return `${days}d ${remainingHours}h ${remainingMinutes}m`;
+                } else if (hours > 0) {
+                    const remainingMinutes = minutes % 60;
+                    return `${hours}h ${remainingMinutes}m`;
+                } else if (minutes > 0) {
+                    return `${minutes}m`;
+                } else {
+                    return `${seconds}s`;
+                }
+            }
+
             async function fetchBasket() {
                 try {
-                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" }
+                    const data = await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "GET"
+                        }
                     });
 
-                    const data = await response.json();
-
-                    // Clean expired leases and overwrite the basket if changes are made
                     const cleanedData = cleanExpiredLeases(data);
                     if (cleanedData.updated) {
-                        await overwriteBasket(cleanedData.data); // Overwrite the basket with cleaned data
+                        await overwriteBasket(cleanedData.data);
                     }
 
-                    localData = cleanedData.data; // Update local state
+                    localData = cleanedData.data;
                     renderTable(localData.leases);
-                    leaseButton.disabled = false; // Enable the button after data load
+                    leaseButton.disabled = false;
                 } catch (err) {
                     console.error("Error fetching basket:", err);
                 }
             }
 
-            /**
-             * Clean expired leases from the provided data.
-             * @param {object} data - The basket data.
-             * @returns {object} - Object containing updated status and cleaned data.
-             */
             function cleanExpiredLeases(data) {
                 const now = Date.now();
-                const originalLeases = data.leases || [];
+                if (data === null || typeof data !== 'object') {
+                    data = { leases: [] };
+                }
+                if (!('leases' in data)) {
+                    data.leases = [];
+                }
+                const originalLeases = Array.isArray(data.leases) ? data.leases : [];
                 const validLeases = originalLeases.filter(lease => lease.expiration > now);
 
-                // Check if any leases were removed
-                const updated = validLeases.length !== originalLeases.length;
-
                 return {
-                    updated, // Indicates if changes were made
-                    data: { ...data, leases: validLeases } // Return cleaned data
+                    updated: validLeases.length !== originalLeases.length,
+                    data: { ...data, leases: validLeases }
                 };
             }
 
-            /**
-             * Overwrite basket data with POST.
-             * @param {object} newData - The new basket data.
-             */
             async function overwriteBasket(newData) {
                 try {
-                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
-                        method: "POST", // Use POST to overwrite the entire basket
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(newData),
+                    await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "POST",
+                            body: JSON.stringify(newData)
+                        }
                     });
-
-                    const updatedData = await response.json();
-                    console.log("Basket overwritten successfully:", updatedData);
+                    console.log("Basket overwritten successfully");
                 } catch (err) {
                     console.error("Error overwriting basket:", err);
                 }
             }
 
-            /**
-             * Add a new lease to local data and update the basket with PUT.
-             */
             async function createLease() {
-                if (cooldown) return;
-                cooldown = true;
                 leaseButton.disabled = true;
                 statusDiv.textContent = "Creating new lease...";
 
                 const newLease = {
                     lease_id: `lease_${Date.now()}`,
-                    ranges: [[10000000, 10000001]], // Example range
-                    expiration: Date.now() + 60000, // 1-minute lease
+                    ranges: [[10000000, 10000001]],
+                    expiration: Date.now() + LEASE_DURATION,
                 };
 
                 try {
-                    const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
-                        method: "PUT", // Use PUT to update the basket with the full leases array
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ leases: newLease }), // Send the full leases array
+                    // Only send the new lease for the PUT request since it's an append operation
+                    await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "PUT",
+                            body: JSON.stringify({ leases: [newLease] })
+                        }
                     });
-
-                    const updatedData = await response.json();
-                    console.log("Lease added successfully:", updatedData);
+                    console.log("Lease added successfully");
+                    localData.leases.push(newLease);
                 } catch (err) {
                     console.error("Error adding new lease:", err);
                 }
 
-                setTimeout(() => {
-                    cooldown = false;
-                    leaseButton.disabled = false;
-                    statusDiv.textContent = "";
-                }, 1000); // 1-second cooldown
-
+                leaseButton.disabled = false;
+                statusDiv.textContent = "";
                 renderTable(localData.leases);
             }
 
-            /**
-             * Render leases in the table.
-             * @param {Array} leases - Array of lease objects.
-             */
             function renderTable(leases) {
+                leases = Array.isArray(leases) ? leases : [];
                 if (!leaseTable) {
                     console.error("Error: leaseTable element not found in the DOM.");
                     return;
@@ -240,39 +277,39 @@
                             <tr>
                                 <td>${lease.lease_id}</td>
                                 <td>${lease.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
-                                <td>${Math.ceil(timeLeft / 1000)} seconds</td>
+                                <td>${formatTimeLeft(timeLeft)}</td>
                             </tr>
                         `;
                     }).join("")
                     : `<tr><td colspan="3">No leases yet.</td></tr>`;
             }
 
-            /**
-             * Remove expired leases from local data and update the backend.
-             */
             async function removeExpiredLeases() {
                 const now = Date.now();
+                if (!Array.isArray(localData.leases)) {
+                    localData.leases = [];
+                }
                 const expiredLeases = localData.leases.filter(lease => lease.expiration <= now);
 
-                if (expiredLeases.length === 0) return; // No expired leases to remove
+                if (expiredLeases.length === 0) return;
 
-                // Remove expired leases from localData
-                localData.leases = localData.leases.filter(lease => lease.expiration > now);
+                const validLeases = localData.leases.filter(lease => lease.expiration > now);
 
-                // Update the backend with the new leases array
                 try {
-                    await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ leases: localData.leases }),
+                    // Use POST to overwrite the entire basket with only valid leases
+                    await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "POST",
+                            body: JSON.stringify({ leases: validLeases })
+                        }
                     });
                     console.log(`Removed ${expiredLeases.length} expired lease(s).`);
+                    localData.leases = validLeases;
+                    renderTable(localData.leases);
                 } catch (err) {
                     console.error("Error removing expired leases:", err);
                 }
-
-                // Re-render the table to reflect changes
-                renderTable(localData.leases);
             }
 
             // Event listeners
@@ -280,14 +317,12 @@
             refreshButton.addEventListener("click", fetchBasket);
 
             // Initialize page
-            (async () => {
-                await fetchBasket();
-            })();
+            fetchBasket();
 
-            // Timer update loop (local data only)
+            // Timer update loop
             setInterval(() => {
                 renderTable(localData.leases);
-                removeExpiredLeases(); // Check and remove expired leases every second
+                removeExpiredLeases();
             }, 1000);
         });
     </script>
