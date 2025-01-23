@@ -5,27 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lease Test Page</title>
     <style>
+        body {
+            background-color: #1e2530;
+            color: #b8c7dc;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #e6edf7;
+            margin-bottom: 20px;
+        }
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #252d3b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
+            border-bottom: 1px solid #1e2530;
         }
         th {
-            background-color: #f4f4f4;
+            background-color: #2a3444;
+            color: #e6edf7;
+            font-weight: normal;
+        }
+        tr:last-child td {
+            border-bottom: none;
         }
         button {
             margin: 10px 0;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             cursor: pointer;
+            background-color: #2a3444;
+            color: #b8c7dc;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #3a4456;
         }
         button:disabled {
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5;
         }
         .error-container {
             position: fixed;
@@ -39,67 +69,77 @@
             flex-direction: column;
             align-items: center;
             overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .floating-message {
             position: absolute;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
             text-align: center;
             animation: floatDown 3s ease-in forwards;
             white-space: nowrap;
             pointer-events: none;
+            background-color: #252d3b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .floating-message.error {
-            background-color: rgba(255, 0, 0, 0.1);
-            color: #dc3545;
+            color: #ff6666;
+            border-left: 3px solid #ff6666;
         }
         .floating-message.success {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
+            color: #66ff8f;
+            border-left: 3px solid #66ff8f;
         }
         .floating-message.info {
-            background-color: rgba(0, 123, 255, 0.1);
-            color: #bbcc00;
+            color: #66a0ff;
+            border-left: 3px solid #66a0ff;
         }
         @keyframes floatDown {
             0% {
                 top: 10%;
                 opacity: 1;
+                transform: translateY(0);
             }
             100% {
                 top: 90%;
                 opacity: 0;
+                transform: translateY(20px);
             }
         }
         .queue-status-container {
-            height: 76px; /* Fixed height to prevent layout shifts */
-            margin: 10px 0;
+            height: 76px;
+            margin: 15px 0;
         }
         #queueStatus {
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px;
+            background-color: #252d3b;
+            border-radius: 8px;
             visibility: hidden;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         #queueStatus.visible {
             visibility: visible;
             opacity: 1;
         }
         .queue-info {
-            margin: 5px 0;
-            font-family: monospace;
+            margin: 8px 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
         }
         .processing {
-            color: #0066cc;
-            font-weight: bold;
+            color: #66a0ff;
+            font-weight: 500;
         }
         .queue-length {
-            color: #28a745;
-            font-weight: bold;
+            color: #ff9666;
+            font-weight: 500;
         }
     </style>
 </head>
