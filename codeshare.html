@@ -191,7 +191,6 @@
     <table>
         <thead>
             <tr>
-                <th>Share ID</th>
                 <th>Discord User</th>
                 <th>Ranges</th>
                 <th>Expires In</th>
@@ -437,6 +436,16 @@
             // Initialize API Queue
             const apiQueue = new APIQueue();
 
+            // Make copyToClipboard available globally
+            window.copyToClipboard = function(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showFloatingMessage("Copied to clipboard!", 'success');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    showFloatingMessage("Failed to copy to clipboard", 'error');
+                });
+            };
+
             async function validateDiscordId(id) {
                 try {
                     const response = await fetch(`https://discordlookup.mesalytic.moe/v1/user/${id}`);
@@ -656,14 +665,17 @@
                         const timeLeft = Math.max(0, share.expiration - Date.now());
                         return `
                             <tr>
-                                <td>${share.share_id}</td>
-                                <td>${share.discord_username || 'Unknown'}</td>
+                                <td>
+                                    <a href="#" onclick="copyToClipboard('<@${share.discord_id}>'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${share.discord_username || 'Unknown'}
+                                    </a>
+                                </td>
                                 <td>${share.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
                                 <td>${formatTimeLeft(timeLeft)}</td>
                             </tr>
                         `;
                     }).join("")
-                    : `<tr><td colspan="4">No shares yet.</td></tr>`;
+                    : `<tr><td colspan="3">No shares yet.</td></tr>`;
             }
 
             async function removeExpiredShares() {
