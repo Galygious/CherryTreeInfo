@@ -120,9 +120,36 @@
                     this.currentAction = null;
                 }
 
+                getActionMessage(request) {
+                    const method = request.options.method;
+                    const path = new URL(request.url).pathname;
+                    
+                    // Convert API requests to user-friendly messages
+                    if (method === 'GET') {
+                        return 'Fetching leases from the database';
+                    } else if (method === 'POST') {
+                        return 'Updating lease database';
+                    } else if (method === 'PUT') {
+                        return 'Creating new lease';
+                    }
+                    return 'Processing request...';
+                }
+
                 updateQueueDisplay() {
                     queueLengthSpan.textContent = this.queue.length;
-                    processingSpan.textContent = this.currentAction || 'None';
+                    
+                    // If there's a current action, show it
+                    if (this.currentAction) {
+                        processingSpan.textContent = this.currentAction;
+                    }
+                    // If no current action but items in queue, show next action
+                    else if (this.queue.length > 0) {
+                        processingSpan.textContent = this.getActionMessage(this.queue[0].request);
+                    }
+                    // If nothing in queue and not processing, show ready state
+                    else {
+                        processingSpan.textContent = 'Ready for next operation';
+                    }
 
                     // Show queue status if there are items in queue or processing
                     if (this.queue.length > 0 || this.processing) {
@@ -169,13 +196,15 @@
                     if (timeSinceLastRequest < API_COOLDOWN) {
                         const waitTime = API_COOLDOWN - timeSinceLastRequest;
                         console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
-                        this.currentAction = `Waiting ${waitTime}ms for cooldown`;
+                        // Keep showing the next action even during cooldown
+                        const nextItem = this.queue[0];
+                        this.currentAction = this.getActionMessage(nextItem.request);
                         this.updateQueueDisplay();
                         await this.delay(waitTime);
                     }
 
                     const item = this.queue[0];
-                    this.currentAction = `${item.request.options.method} ${new URL(item.request.url).pathname}`;
+                    this.currentAction = this.getActionMessage(item.request);
                     this.updateQueueDisplay();
                     
                     console.log('[Queue] Processing request:', item.request.options.method, item.request.url);
@@ -194,8 +223,8 @@
                         
                         if (response.status === 429) {
                             console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
-                            statusDiv.textContent = `Rate limited. Retrying in ${this.currentBackoff / 1000} seconds...`;
-                            this.currentAction = `Rate limited. Backing off for ${this.currentBackoff}ms`;
+                            statusDiv.textContent = `Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`;
+                            this.currentAction = `Waiting for server availability (${this.currentBackoff / 1000}s)`;
                             this.updateQueueDisplay();
                             await this.delay(this.currentBackoff);
                             
