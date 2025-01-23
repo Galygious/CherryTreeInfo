@@ -67,7 +67,17 @@
         .input-group {
             display: flex;
             gap: 10px;
-            align-items: center;
+            align-items: flex-end;
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-label {
+            color: #66a0ff;
+            font-size: 14px;
+            font-weight: 500;
         }
         .number-input {
             width: 100px;
@@ -186,9 +196,18 @@
     </div>
     <div class="input-container">
         <div class="input-group">
-            <input type="text" id="discordId" placeholder="Enter Discord User ID (e.g., 120842877046751234)" />
-            <input type="number" id="codeCount" class="number-input" placeholder="# of Codes" min="1" max="100" value="1" />
-            <input type="number" id="groupSize" class="number-input" placeholder="Group By" min="1" value="5" />
+            <div class="input-field">
+                <label for="discordId" class="input-label">Discord User ID</label>
+                <input type="text" id="discordId" placeholder="e.g., 120842877046751234" />
+            </div>
+            <div class="input-field">
+                <label for="codeCount" class="input-label">Number of Codes</label>
+                <input type="number" id="codeCount" class="number-input" min="1" max="100" value="1" />
+            </div>
+            <div class="input-field">
+                <label for="groupSize" class="input-label">Group Size</label>
+                <input type="number" id="groupSize" class="number-input" min="1" value="5" />
+            </div>
             <button id="createShare" disabled>Create 10-Minute Share</button>
         </div>
     </div>
@@ -199,7 +218,6 @@
                 <th>Discord User</th>
                 <th>Codes</th>
                 <th>Expires In</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="shareTable">
@@ -466,7 +484,7 @@
                     if (i > 0 && i % groupSize === 0) {
                         message += '\n';
                     }
-                    message += codes[i] + ' ';
+                    message += codes[i] + '\n';
                 }
 
                 copyToClipboard(message.trim());
@@ -735,17 +753,16 @@
                                         ${share.discord_username || 'Unknown'}
                                     </a>
                                 </td>
-                                <td>${getTotalCodesFromRanges(share.ranges)} codes (${share.ranges})</td>
-                                <td>${formatTimeLeft(timeLeft)}</td>
                                 <td>
-                                    <button onclick="copyCodes('${share.share_id}')" style="padding: 5px 10px; margin: 0;">
-                                        Copy Codes
-                                    </button>
+                                    <a href="#" onclick="copyCodes('${share.share_id}'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${getTotalCodesFromRanges(share.ranges)} codes (${share.ranges})
+                                    </a>
                                 </td>
+                                <td>${formatTimeLeft(timeLeft)}</td>
                             </tr>
                         `;
                     }).join("")
-                    : `<tr><td colspan="4">No shares yet.</td></tr>`;
+                    : `<tr><td colspan="3">No shares yet.</td></tr>`;
             }
 
             async function removeExpiredShares() {
