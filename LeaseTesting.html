@@ -336,14 +336,26 @@
             const apiQueue = new APIQueue();
 
             function showFloatingError(message) {
-                const errorContainer = document.querySelector('.error-container');
+                let errorContainer = document.querySelector('.error-container');
+                if (!errorContainer) {
+                    errorContainer = document.createElement('div');
+                    errorContainer.className = 'error-container';
+                    document.body.appendChild(errorContainer);
+                }
+
                 const error = document.createElement('div');
                 error.className = 'floating-error';
                 error.textContent = message;
                 errorContainer.appendChild(error);
 
                 // Remove the error element after animation completes
-                error.addEventListener('animationend', () => error.remove());
+                error.addEventListener('animationend', () => {
+                    error.remove();
+                    // Remove container if it's empty
+                    if (errorContainer.children.length === 0) {
+                        errorContainer.remove();
+                    }
+                });
             }
 
             function formatTimeLeft(milliseconds) {
