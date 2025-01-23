@@ -200,13 +200,12 @@
                     ranges: [[10000000, 10000001]], // Example range
                     expiration: Date.now() + 60000, // 1-minute lease
                 };
-                localData.leases.push(newLease); // Add to local data
 
                 try {
                     const response = await fetchWithRetry(`${PANTRY_URL}/basket/${BASKET_NAME}`, {
                         method: "PUT", // Use PUT to update the basket with the full leases array
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ leases: localData.leases }), // Send the full leases array
+                        body: JSON.stringify({ leases: newLease }), // Send the full leases array
                     });
 
                     const updatedData = await response.json();
