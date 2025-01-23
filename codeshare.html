@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lease Test Page</title>
+    <title>Share Test Page</title>
     <style>
         body {
             background-color: #1e2530;
@@ -144,26 +144,26 @@
     </style>
 </head>
 <body>
-    <h1>Lease Management</h1>
+    <h1>Share Management</h1>
     <div class="queue-status-container">
         <div id="queueStatus">
             <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
             <div class="queue-info">Processing: <span class="processing">None</span></div>
         </div>
     </div>
-    <button id="createLease" disabled>Create 10-Minute Lease</button>
+    <button id="createShare" disabled>Create 10-Minute Share</button>
     <button id="refresh">Refresh Data</button>
     <table>
         <thead>
             <tr>
-                <th>Lease ID</th>
+                <th>Share ID</th>
                 <th>Ranges</th>
                 <th>Expires In</th>
             </tr>
         </thead>
-        <tbody id="leaseTable">
+        <tbody id="shareTable">
             <tr>
-                <td colspan="3">No leases yet.</td>
+                <td colspan="3">No shares yet.</td>
             </tr>
         </tbody>
     </table>
@@ -176,18 +176,18 @@
             const API_COOLDOWN = 3000; // 3 second cooldown between API requests
             const INITIAL_BACKOFF = 10000; // 10 second initial backoff
             const MAX_BACKOFF = 30000; // 30 second maximum backoff
-            const LEASE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+            const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
             // DOM Elements
-            const leaseButton = document.getElementById("createLease");
+            const shareButton = document.getElementById("createShare");
             const refreshButton = document.getElementById("refresh");
-            const leaseTable = document.getElementById("leaseTable");
+            const shareTable = document.getElementById("shareTable");
             const queueStatus = document.getElementById("queueStatus");
             const queueLengthSpan = document.querySelector(".queue-length");
             const processingSpan = document.querySelector(".processing");
 
             // State
-            let localData = { leases: [] };
+            let localData = { shares: [] };
 
             class APIQueue {
                 constructor() {
@@ -196,10 +196,10 @@
                     this.currentBackoff = INITIAL_BACKOFF;
                     this.lastRequestTime = 0;
                     this.currentAction = null;
-                    this.removingExpiredLeases = false;
+                    this.removingExpiredShares = false;
                 }
 
-                hasExpiredLeaseRemovalInQueue() {
+                hasExpiredShareRemovalInQueue() {
                     return this.queue.some(item =>
                         item.request.options.method === 'POST' &&
                         new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
@@ -207,7 +207,7 @@
                     );
                 }
 
-                removeExpiredLeaseRequest() {
+                removeExpiredShareRequest() {
                     const index = this.queue.findIndex(item =>
                         item.request.options.method === 'POST' &&
                         new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
@@ -233,11 +233,11 @@
                     
                     // Convert API requests to user-friendly messages
                     if (method === 'GET') {
-                        return 'Fetching leases from the database';
+                        return 'Fetching shares from the database';
                     } else if (method === 'POST') {
-                        return 'Updating lease database';
+                        return 'Updating share database';
                     } else if (method === 'PUT') {
-                        return 'Creating new lease';
+                        return 'Creating new share';
                     }
                     return 'Processing request...';
                 }
@@ -447,41 +447,41 @@
                     });
 
                     console.log('[Fetch] Current basket data:', data);
-                    const cleanedData = cleanExpiredLeases(data);
+                    const cleanedData = cleanExpiredShares(data);
                     console.log('[Fetch] Cleaned data:', cleanedData);
                     
                     if (cleanedData.updated) {
-                        console.log('[Fetch] Expired leases found, updating basket');
+                        console.log('[Fetch] Expired shares found, updating basket');
                         await overwriteBasket(cleanedData.data);
                     }
 
                     localData = cleanedData.data;
-                    renderTable(localData.leases);
-                    leaseButton.disabled = false;
+                    renderTable(localData.shares);
+                    shareButton.disabled = false;
                 } catch (err) {
                     console.error("[Fetch] Error:", err);
                 }
             }
 
-            function cleanExpiredLeases(data) {
+            function cleanExpiredShares(data) {
                 const now = Date.now();
                 if (data === null || typeof data !== 'object') {
-                    data = { leases: [] };
+                    data = { shares: [] };
                 }
-                if (!('leases' in data)) {
-                    data.leases = [];
+                if (!('shares' in data)) {
+                    data.shares = [];
                 }
-                const originalLeases = Array.isArray(data.leases) ? data.leases : [];
-                const validLeases = originalLeases.filter(lease => lease.expiration > now);
+                const originalShares = Array.isArray(data.shares) ? data.shares : [];
+                const validShares = originalShares.filter(share => share.expiration > now);
                 
-                const expiredCount = originalLeases.length - validLeases.length;
+                const expiredCount = originalShares.length - validShares.length;
                 if (expiredCount > 0) {
-                    console.log('[Clean] Found expired leases:', expiredCount);
+                    console.log('[Clean] Found expired shares:', expiredCount);
                 }
 
                 return {
                     updated: expiredCount > 0,
-                    data: { ...data, leases: validLeases }
+                    data: { ...data, shares: validShares }
                 };
             }
 
@@ -501,103 +501,103 @@
                 }
             }
 
-            async function createLease() {
-                console.log('[Create] Creating new 10-minute lease');
-                leaseButton.disabled = true;
-                showFloatingMessage("Creating new lease...", 'success');
+            async function createShare() {
+                console.log('[Create] Creating new 10-minute share');
+                shareButton.disabled = true;
+                showFloatingMessage("Creating new share...", 'success');
 
-                const newLease = {
-                    lease_id: `lease_${Date.now()}`,
+                const newShare = {
+                    share_id: `share_${Date.now()}`,
                     ranges: [[10000000, 10000001]],
-                    expiration: Date.now() + LEASE_DURATION,
+                    expiration: Date.now() + SHARE_DURATION,
                 };
 
-                console.log('[Create] New lease:', newLease);
+                console.log('[Create] New share:', newShare);
 
                 try {
-                    // Only send the new lease for the PUT request since it's an append operation
+                    // Only send the new share for the PUT request since it's an append operation
                     await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
                         options: {
                             method: "PUT",
-                            body: JSON.stringify({ leases: [newLease] })
+                            body: JSON.stringify({ shares: [newShare] })
                         }
                     });
-                    console.log("[Create] Lease added successfully");
-                    localData.leases.push(newLease);
+                    console.log("[Create] Share added successfully");
+                    localData.shares.push(newShare);
                 } catch (err) {
                     console.error("[Create] Error:", err);
                 }
 
-                leaseButton.disabled = false;
-                renderTable(localData.leases);
+                shareButton.disabled = false;
+                renderTable(localData.shares);
             }
 
-            function renderTable(leases) {
-                leases = Array.isArray(leases) ? leases : [];
-                if (!leaseTable) {
-                    console.error("[Render] Error: leaseTable element not found in the DOM.");
+            function renderTable(shares) {
+                shares = Array.isArray(shares) ? shares : [];
+                if (!shareTable) {
+                    console.error("[Render] Error: shareTable element not found in the DOM.");
                     return;
                 }
 
-                leaseTable.innerHTML = leases.length
-                    ? leases.map(lease => {
-                        const timeLeft = Math.max(0, lease.expiration - Date.now());
+                shareTable.innerHTML = shares.length
+                    ? shares.map(share => {
+                        const timeLeft = Math.max(0, share.expiration - Date.now());
                         return `
                             <tr>
-                                <td>${lease.lease_id}</td>
-                                <td>${lease.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
+                                <td>${share.share_id}</td>
+                                <td>${share.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
                                 <td>${formatTimeLeft(timeLeft)}</td>
                             </tr>
                         `;
                     }).join("")
-                    : `<tr><td colspan="3">No leases yet.</td></tr>`;
+                    : `<tr><td colspan="3">No shares yet.</td></tr>`;
             }
 
-            async function removeExpiredLeases() {
-                // Skip if we're already processing expired leases
-                if (apiQueue.removingExpiredLeases) return;
+            async function removeExpiredShares() {
+                // Skip if we're already processing expired shares
+                if (apiQueue.removingExpiredShares) return;
 
                 const now = Date.now();
-                if (!Array.isArray(localData.leases)) {
-                    localData.leases = [];
+                if (!Array.isArray(localData.shares)) {
+                    localData.shares = [];
                     return;
                 }
 
-                const expiredLeases = localData.leases.filter(lease => lease.expiration <= now);
-                if (expiredLeases.length === 0) return;
+                const expiredShares = localData.shares.filter(share => share.expiration <= now);
+                if (expiredShares.length === 0) return;
 
-                console.log('[Remove] Found expired leases:', expiredLeases.length);
-                const validLeases = localData.leases.filter(lease => lease.expiration > now);
-                localData.leases = validLeases;
-                renderTable(localData.leases);
+                console.log('[Remove] Found expired shares:', expiredShares.length);
+                const validShares = localData.shares.filter(share => share.expiration > now);
+                localData.shares = validShares;
+                renderTable(localData.shares);
 
-                // If there's already a request to remove expired leases, remove it as this one will handle those changes
-                if (apiQueue.hasExpiredLeaseRemovalInQueue()) {
-                    apiQueue.removeExpiredLeaseRequest();
+                // If there's already a request to remove expired shares, remove it as this one will handle those changes
+                if (apiQueue.hasExpiredShareRemovalInQueue()) {
+                    apiQueue.removeExpiredShareRequest();
                 }
 
-                // Mark that we're processing expired leases
-                apiQueue.removingExpiredLeases = true;
+                // Mark that we're processing expired shares
+                apiQueue.removingExpiredShares = true;
 
                 try {
                     await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
                         options: {
                             method: "POST",
-                            body: JSON.stringify({ leases: validLeases })
+                            body: JSON.stringify({ shares: validShares })
                         }
                     });
                 } catch (err) {
                     console.error("[Remove] Error:", err);
                 } finally {
                     // Clear the flag when we're done
-                    apiQueue.removingExpiredLeases = false;
+                    apiQueue.removingExpiredShares = false;
                 }
             }
 
             // Event listeners
-            leaseButton.addEventListener("click", createLease);
+            shareButton.addEventListener("click", createShare);
             refreshButton.addEventListener("click", fetchBasket);
 
             // Initialize page
@@ -606,8 +606,8 @@
 
             // Timer update loop
             setInterval(() => {
-                renderTable(localData.leases);
-                removeExpiredLeases();
+                renderTable(localData.shares);
+                removeExpiredShares();
             }, 1000);
         });
     </script>
