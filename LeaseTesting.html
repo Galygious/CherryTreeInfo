@@ -146,6 +146,28 @@
                     this.currentBackoff = INITIAL_BACKOFF;
                     this.lastRequestTime = 0;
                     this.currentAction = null;
+                    this.removingExpiredLeases = false;
+                }
+
+                hasExpiredLeaseRemovalInQueue() {
+                    return this.queue.some(item =>
+                        item.request.options.method === 'POST' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
+                        item.request.options.body
+                    );
+                }
+
+                removeExpiredLeaseRequest() {
+                    const index = this.queue.findIndex(item =>
+                        item.request.options.method === 'POST' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
+                        item.request.options.body
+                    );
+                    if (index !== -1) {
+                        const [removed] = this.queue.splice(index, 1);
+                        removed.resolve(); // Resolve the promise since we're handling it with a newer request
+                        this.updateQueueDisplay();
+                    }
                 }
 
                 hasRefreshInQueue() {
@@ -380,7 +402,6 @@
             }
 
             function cleanExpiredLeases(data) {
-                console.log('[Clean] Checking for expired leases');
                 const now = Date.now();
                 if (data === null || typeof data !== 'object') {
                     data = { leases: [] };
@@ -390,15 +411,14 @@
                 }
                 const originalLeases = Array.isArray(data.leases) ? data.leases : [];
                 const validLeases = originalLeases.filter(lease => lease.expiration > now);
-
-                console.log('[Clean] Found leases:', {
-                    total: originalLeases.length,
-                    valid: validLeases.length,
-                    expired: originalLeases.length - validLeases.length
-                });
+                
+                const expiredCount = originalLeases.length - validLeases.length;
+                if (expiredCount > 0) {
+                    console.log('[Clean] Found expired leases:', expiredCount);
+                }
 
                 return {
-                    updated: validLeases.length !== originalLeases.length,
+                    updated: expiredCount > 0,
                     data: { ...data, leases: validLeases }
                 };
             }
@@ -458,8 +478,6 @@
                     return;
                 }
 
-                console.log('[Render] Updating table with leases:', leases.length);
-
                 leaseTable.innerHTML = leases.length
                     ? leases.map(lease => {
                         const timeLeft = Math.max(0, lease.expiration - Date.now());
@@ -475,20 +493,32 @@
             }
 
             async function removeExpiredLeases() {
-                console.log('[Remove] Checking for expired leases');
+                // Skip if we're already processing expired leases
+                if (apiQueue.removingExpiredLeases) return;
+
                 const now = Date.now();
                 if (!Array.isArray(localData.leases)) {
                     localData.leases = [];
+                    return;
                 }
-                const expiredLeases = localData.leases.filter(lease => lease.expiration <= now);
 
+                const expiredLeases = localData.leases.filter(lease => lease.expiration <= now);
                 if (expiredLeases.length === 0) return;
 
                 console.log('[Remove] Found expired leases:', expiredLeases.length);
                 const validLeases = localData.leases.filter(lease => lease.expiration > now);
+                localData.leases = validLeases;
+                renderTable(localData.leases);
+
+                // If there's already a request to remove expired leases, remove it as this one will handle those changes
+                if (apiQueue.hasExpiredLeaseRemovalInQueue()) {
+                    apiQueue.removeExpiredLeaseRequest();
+                }
+
+                // Mark that we're processing expired leases
+                apiQueue.removingExpiredLeases = true;
 
                 try {
-                    // Use POST to overwrite the entire basket with only valid leases
                     await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
                         options: {
@@ -496,11 +526,11 @@
                             body: JSON.stringify({ leases: validLeases })
                         }
                     });
-                    console.log(`[Remove] Removed ${expiredLeases.length} expired lease(s)`);
-                    localData.leases = validLeases;
-                    renderTable(localData.leases);
                 } catch (err) {
                     console.error("[Remove] Error:", err);
+                } finally {
+                    // Clear the flag when we're done
+                    apiQueue.removingExpiredLeases = false;
                 }
             }
 
