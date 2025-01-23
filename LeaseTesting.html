@@ -82,6 +82,9 @@
                 }
 
                 async enqueue(request) {
+                    console.log(`[Queue] Enqueueing ${request.options.method} request to ${request.url}`);
+                    console.log('[Queue] Current queue length:', this.queue.length);
+                    
                     return new Promise((resolve, reject) => {
                         this.queue.push({
                             request,
@@ -89,36 +92,54 @@
                             reject,
                             retryCount: 0
                         });
+                        console.log('[Queue] Request added. New queue length:', this.queue.length);
                         this.processQueue();
                     });
                 }
 
                 async processQueue() {
-                    if (this.processing || this.queue.length === 0) return;
+                    if (this.processing || this.queue.length === 0) {
+                        console.log('[Queue] Queue processing skipped:', 
+                            this.processing ? 'Already processing' : 'Queue empty');
+                        return;
+                    }
+                    
                     this.processing = true;
+                    console.log('[Queue] Starting queue processing');
 
                     const now = Date.now();
                     const timeSinceLastRequest = now - this.lastRequestTime;
                     
                     if (timeSinceLastRequest < API_COOLDOWN) {
-                        await this.delay(API_COOLDOWN - timeSinceLastRequest);
+                        const waitTime = API_COOLDOWN - timeSinceLastRequest;
+                        console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
+                        await this.delay(waitTime);
                     }
 
                     const item = this.queue[0];
+                    console.log('[Queue] Processing request:', item.request.options.method, item.request.url);
+                    
                     try {
+                        console.log('[API] Making request:', {
+                            url: item.request.url,
+                            method: item.request.options.method,
+                            body: item.request.options.body
+                        });
+
                         const response = await fetch(item.request.url, {
                             ...item.request.options,
                             headers: { "Content-Type": "application/json" }
                         });
                         
                         if (response.status === 429) {
-                            console.warn(`Rate limited. Backing off for ${this.currentBackoff}ms`);
+                            console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
                             statusDiv.textContent = `Rate limited. Retrying in ${this.currentBackoff / 1000} seconds...`;
                             await this.delay(this.currentBackoff);
                             
                             // Increase backoff time
                             this.currentBackoff = Math.min(this.currentBackoff + 10000, MAX_BACKOFF);
                             item.retryCount++;
+                            console.log(`[Queue] Retry ${item.retryCount}. New backoff: ${this.currentBackoff}ms`);
                             
                             // Keep the item in queue for retry
                             this.processing = false;
@@ -133,19 +154,25 @@
                         // Success - reset backoff and process response
                         this.currentBackoff = INITIAL_BACKOFF;
                         const data = await response.json();
+                        console.log('[API] Response:', data);
+                        
                         this.queue.shift(); // Remove the processed item
+                        console.log('[Queue] Request completed. Queue length:', this.queue.length);
+                        
                         item.resolve(data);
                         statusDiv.textContent = "";
 
                     } catch (error) {
-                        console.error("API Error:", error);
+                        console.error("[API] Error:", error);
                         statusDiv.textContent = `Error: ${error.message}`;
                         item.reject(error);
                         this.queue.shift(); // Remove failed item
+                        console.log('[Queue] Request failed. Queue length:', this.queue.length);
                     }
 
                     this.lastRequestTime = Date.now();
                     this.processing = false;
+                    console.log('[Queue] Processing complete');
                     
                     // Process next item after cooldown
                     setTimeout(() => this.processQueue(), API_COOLDOWN);
@@ -180,6 +207,7 @@
             }
 
             async function fetchBasket() {
+                console.log('[Fetch] Getting basket contents');
                 try {
                     const data = await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
@@ -188,8 +216,12 @@
                         }
                     });
 
+                    console.log('[Fetch] Current basket data:', data);
                     const cleanedData = cleanExpiredLeases(data);
+                    console.log('[Fetch] Cleaned data:', cleanedData);
+                    
                     if (cleanedData.updated) {
+                        console.log('[Fetch] Expired leases found, updating basket');
                         await overwriteBasket(cleanedData.data);
                     }
 
@@ -197,11 +229,12 @@
                     renderTable(localData.leases);
                     leaseButton.disabled = false;
                 } catch (err) {
-                    console.error("Error fetching basket:", err);
+                    console.error("[Fetch] Error:", err);
                 }
             }
 
             function cleanExpiredLeases(data) {
+                console.log('[Clean] Checking for expired leases');
                 const now = Date.now();
                 if (data === null || typeof data !== 'object') {
                     data = { leases: [] };
@@ -212,6 +245,12 @@
                 const originalLeases = Array.isArray(data.leases) ? data.leases : [];
                 const validLeases = originalLeases.filter(lease => lease.expiration > now);
 
+                console.log('[Clean] Found leases:', {
+                    total: originalLeases.length,
+                    valid: validLeases.length,
+                    expired: originalLeases.length - validLeases.length
+                });
+
                 return {
                     updated: validLeases.length !== originalLeases.length,
                     data: { ...data, leases: validLeases }
@@ -219,6 +258,7 @@
             }
 
             async function overwriteBasket(newData) {
+                console.log('[Overwrite] Updating basket with:', newData);
                 try {
                     await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
@@ -227,13 +267,14 @@
                             body: JSON.stringify(newData)
                         }
                     });
-                    console.log("Basket overwritten successfully");
+                    console.log("[Overwrite] Basket updated successfully");
                 } catch (err) {
-                    console.error("Error overwriting basket:", err);
+                    console.error("[Overwrite] Error:", err);
                 }
             }
 
             async function createLease() {
+                console.log('[Create] Creating new 10-minute lease');
                 leaseButton.disabled = true;
                 statusDiv.textContent = "Creating new lease...";
 
@@ -242,6 +283,8 @@
                     ranges: [[10000000, 10000001]],
                     expiration: Date.now() + LEASE_DURATION,
                 };
+
+                console.log('[Create] New lease:', newLease);
 
                 try {
                     // Only send the new lease for the PUT request since it's an append operation
@@ -252,10 +295,10 @@
                             body: JSON.stringify({ leases: [newLease] })
                         }
                     });
-                    console.log("Lease added successfully");
+                    console.log("[Create] Lease added successfully");
                     localData.leases.push(newLease);
                 } catch (err) {
-                    console.error("Error adding new lease:", err);
+                    console.error("[Create] Error:", err);
                 }
 
                 leaseButton.disabled = false;
@@ -266,9 +309,11 @@
             function renderTable(leases) {
                 leases = Array.isArray(leases) ? leases : [];
                 if (!leaseTable) {
-                    console.error("Error: leaseTable element not found in the DOM.");
+                    console.error("[Render] Error: leaseTable element not found in the DOM.");
                     return;
                 }
+
+                console.log('[Render] Updating table with leases:', leases.length);
 
                 leaseTable.innerHTML = leases.length
                     ? leases.map(lease => {
@@ -285,6 +330,7 @@
             }
 
             async function removeExpiredLeases() {
+                console.log('[Remove] Checking for expired leases');
                 const now = Date.now();
                 if (!Array.isArray(localData.leases)) {
                     localData.leases = [];
@@ -293,6 +339,7 @@
 
                 if (expiredLeases.length === 0) return;
 
+                console.log('[Remove] Found expired leases:', expiredLeases.length);
                 const validLeases = localData.leases.filter(lease => lease.expiration > now);
 
                 try {
@@ -304,11 +351,11 @@
                             body: JSON.stringify({ leases: validLeases })
                         }
                     });
-                    console.log(`Removed ${expiredLeases.length} expired lease(s).`);
+                    console.log(`[Remove] Removed ${expiredLeases.length} expired lease(s)`);
                     localData.leases = validLeases;
                     renderTable(localData.leases);
                 } catch (err) {
-                    console.error("Error removing expired leases:", err);
+                    console.error("[Remove] Error:", err);
                 }
             }
 
@@ -317,6 +364,7 @@
             refreshButton.addEventListener("click", fetchBasket);
 
             // Initialize page
+            console.log('[Init] Starting application');
             fetchBasket();
 
             // Timer update loop
