@@ -69,6 +69,9 @@
             gap: 10px;
             align-items: center;
         }
+        .number-input {
+            width: 100px;
+        }
         input {
             flex: 1;
             background-color: #1e2530;
@@ -184,6 +187,8 @@
     <div class="input-container">
         <div class="input-group">
             <input type="text" id="discordId" placeholder="Enter Discord User ID (e.g., 120842877046751234)" />
+            <input type="number" id="codeCount" class="number-input" placeholder="# of Codes" min="1" max="100" value="1" />
+            <input type="number" id="groupSize" class="number-input" placeholder="Group By" min="1" value="5" />
             <button id="createShare" disabled>Create 10-Minute Share</button>
         </div>
     </div>
@@ -192,8 +197,9 @@
         <thead>
             <tr>
                 <th>Discord User</th>
-                <th>Ranges</th>
+                <th>Codes</th>
                 <th>Expires In</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="shareTable">
@@ -212,6 +218,7 @@
             const INITIAL_BACKOFF = 10000; // 10 second initial backoff
             const MAX_BACKOFF = 30000; // 30 second maximum backoff
             const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+            const MAX_CODES = 100; // Maximum number of codes per share
 
             // DOM Elements
             const shareButton = document.getElementById("createShare");
@@ -436,7 +443,7 @@
             // Initialize API Queue
             const apiQueue = new APIQueue();
 
-            // Make copyToClipboard available globally
+            // Make functions available globally
             window.copyToClipboard = function(text) {
                 navigator.clipboard.writeText(text).then(() => {
                     showFloatingMessage("Copied to clipboard!", 'success');
@@ -445,6 +452,43 @@
                     showFloatingMessage("Failed to copy to clipboard", 'error');
                 });
             };
+
+            window.copyCodes = function(shareId) {
+                const share = localData.shares.find(s => s.share_id === shareId);
+                if (!share) return;
+
+                const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
+                let message = `<@${share.discord_id}>\n`;
+                
+                // Generate and group codes
+                const codes = generateCodesFromRanges(share.ranges);
+                for (let i = 0; i < codes.length; i++) {
+                    if (i > 0 && i % groupSize === 0) {
+                        message += '\n';
+                    }
+                    message += codes[i] + ' ';
+                }
+
+                copyToClipboard(message.trim());
+            };
+
+            function generateCodesFromRanges(ranges) {
+                const codes = [];
+                ranges.split(',').forEach(range => {
+                    const [start, end] = range.split('-').map(Number);
+                    for (let i = start; i <= end; i++) {
+                        codes.push(`code${i}`); // This will be replaced with the actual generator
+                    }
+                });
+                return codes;
+            }
+
+            function getTotalCodesFromRanges(ranges) {
+                return ranges.split(',').reduce((total, range) => {
+                    const [start, end] = range.split('-').map(Number);
+                    return total + (end - start + 1);
+                }, 0);
+            }
 
             async function validateDiscordId(id) {
                 try {
@@ -620,13 +664,34 @@
                     return;
                 }
 
+                const codeCount = Math.min(
+                    parseInt(document.getElementById('codeCount').value) || 1,
+                    MAX_CODES
+                );
+
+                if (codeCount < 1) {
+                    showFloatingMessage("Please enter a valid number of codes", 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
                 showFloatingMessage("Creating new share...", 'success');
 
+                // Get the next available range based on existing shares
+                let startRange = 0;
+                localData.shares.forEach(share => {
+                    share.ranges.split(',').forEach(range => {
+                        const [_, end] = range.split('-').map(Number);
+                        startRange = Math.max(startRange, end + 1);
+                    });
+                });
+
+                const endRange = startRange + codeCount - 1;
                 const newShare = {
                     share_id: `share_${Date.now()}`,
                     discord_id: discordId,
                     discord_username: discordValidation.username,
-                    ranges: [[10000000, 10000001]],
+                    ranges: `${startRange}-${endRange}`,
                     expiration: Date.now() + SHARE_DURATION,
                 };
 
@@ -670,12 +735,17 @@
                                         ${share.discord_username || 'Unknown'}
                                     </a>
                                 </td>
-                                <td>${share.ranges.map(range => `[${range[0]}, ${range[1]}]`).join(", ")}</td>
+                                <td>${getTotalCodesFromRanges(share.ranges)} codes (${share.ranges})</td>
                                 <td>${formatTimeLeft(timeLeft)}</td>
+                                <td>
+                                    <button onclick="copyCodes('${share.share_id}')" style="padding: 5px 10px; margin: 0;">
+                                        Copy Codes
+                                    </button>
+                                </td>
                             </tr>
                         `;
                     }).join("")
-                    : `<tr><td colspan="3">No shares yet.</td></tr>`;
+                    : `<tr><td colspan="4">No shares yet.</td></tr>`;
             }
 
             async function removeExpiredShares() {
