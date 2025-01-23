@@ -27,10 +27,40 @@
             cursor: not-allowed;
             opacity: 0.6;
         }
-        #status {
-            margin: 10px 0;
-            font-weight: bold;
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        .floating-error {
+            position: absolute;
+            background-color: rgba(255, 0, 0, 0.1);
             color: red;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            animation: floatDown 3s ease-in forwards;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        @keyframes floatDown {
+            0% {
+                top: 10%;
+                opacity: 1;
+            }
+            100% {
+                top: 90%;
+                opacity: 0;
+            }
         }
         .queue-status-container {
             height: 76px; /* Fixed height to prevent layout shifts */
@@ -65,7 +95,6 @@
 </head>
 <body>
     <h1>Lease Management</h1>
-    <div id="status"></div>
     <div class="queue-status-container">
         <div id="queueStatus">
             <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
@@ -103,7 +132,6 @@
             const leaseButton = document.getElementById("createLease");
             const refreshButton = document.getElementById("refresh");
             const leaseTable = document.getElementById("leaseTable");
-            const statusDiv = document.getElementById("status");
             const queueStatus = document.getElementById("queueStatus");
             const queueLengthSpan = document.querySelector(".queue-length");
             const processingSpan = document.querySelector(".processing");
@@ -230,7 +258,7 @@
                         
                         if (response.status === 429) {
                             console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
-                            statusDiv.textContent = `Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`;
+                            showFloatingError(`Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`);
                             this.currentAction = `Waiting for server availability (${this.currentBackoff / 1000}s)`;
                             this.updateQueueDisplay();
                             await this.delay(this.currentBackoff);
@@ -259,11 +287,9 @@
                         console.log('[Queue] Request completed. Queue length:', this.queue.length);
                         
                         item.resolve(data);
-                        statusDiv.textContent = "";
-
                     } catch (error) {
                         console.error("[API] Error:", error);
-                        statusDiv.textContent = `Error: ${error.message}`;
+                        showFloatingError(`Error: ${error.message}`);
                         item.reject(error);
                         this.queue.shift(); // Remove failed item
                         console.log('[Queue] Request failed. Queue length:', this.queue.length);
@@ -286,6 +312,17 @@
 
             // Initialize API Queue
             const apiQueue = new APIQueue();
+
+            function showFloatingError(message) {
+                const errorContainer = document.querySelector('.error-container');
+                const error = document.createElement('div');
+                error.className = 'floating-error';
+                error.textContent = message;
+                errorContainer.appendChild(error);
+
+                // Remove the error element after animation completes
+                error.addEventListener('animationend', () => error.remove());
+            }
 
             function formatTimeLeft(milliseconds) {
                 const seconds = Math.ceil(milliseconds / 1000);
@@ -313,12 +350,7 @@
                 // Check if there's already a refresh in queue
                 if (apiQueue.hasRefreshInQueue()) {
                     console.log('[Fetch] Refresh already queued, skipping');
-                    statusDiv.textContent = "Refresh already in progress...";
-                    setTimeout(() => {
-                        if (statusDiv.textContent === "Refresh already in progress...") {
-                            statusDiv.textContent = "";
-                        }
-                    }, 2000);
+                    showFloatingError("Refresh already in progress...");
                     return;
                 }
 
@@ -390,7 +422,7 @@
             async function createLease() {
                 console.log('[Create] Creating new 10-minute lease');
                 leaseButton.disabled = true;
-                statusDiv.textContent = "Creating new lease...";
+                showFloatingError("Creating new lease...");
 
                 const newLease = {
                     lease_id: `lease_${Date.now()}`,
@@ -416,7 +448,6 @@
                 }
 
                 leaseButton.disabled = false;
-                statusDiv.textContent = "";
                 renderTable(localData.leases);
             }
 
