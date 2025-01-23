@@ -313,7 +313,7 @@
                     return;
                 }
 
-                console.log('[Render] Updating table with leases:', leases.length);
+                // console.log('[Render] Updating table with leases:', leases.length);
 
                 leaseTable.innerHTML = leases.length
                     ? leases.map(lease => {
@@ -330,7 +330,7 @@
             }
 
             async function removeExpiredLeases() {
-                console.log('[Remove] Checking for expired leases');
+                // console.log('[Remove] Checking for expired leases');
                 const now = Date.now();
                 if (!Array.isArray(localData.leases)) {
                     localData.leases = [];
