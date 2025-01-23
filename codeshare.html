@@ -228,10 +228,13 @@
                 const value = discordInput.value.trim();
                 // Discord IDs are numeric and typically 17-20 digits
                 const isValidFormat = /^\d{17,20}$/.test(value);
-                shareButton.disabled = !isValidFormat;
                 
                 if (value && !isValidFormat) {
                     showFloatingMessage("Invalid Discord ID format", 'error');
+                    shareButton.disabled = true;
+                } else {
+                    // Only enable if format is valid and not the same as last failed validation
+                    shareButton.disabled = !isValidFormat;
                 }
             });
 
@@ -585,15 +588,26 @@
                 const existingShare = localData.shares.find(share => share.discord_id === discordId);
                 if (existingShare) {
                     showFloatingMessage("This Discord user already has an active share", 'error');
-                    shareButton.disabled = false;
+                    shareButton.disabled = true;
+                    const enableOnChange = () => {
+                        shareButton.disabled = false;
+                        discordInput.removeEventListener('input', enableOnChange);
+                    };
+                    discordInput.addEventListener('input', enableOnChange);
                     return;
                 }
 
                 // Validate Discord ID
+                showFloatingMessage("Validating Discord ID...", 'info');
                 const discordValidation = await validateDiscordId(discordId);
                 if (!discordValidation.valid) {
                     showFloatingMessage(discordValidation.error, 'error');
-                    shareButton.disabled = false;
+                    shareButton.disabled = true;
+                    const enableOnChange = () => {
+                        shareButton.disabled = false;
+                        discordInput.removeEventListener('input', enableOnChange);
+                    };
+                    discordInput.addEventListener('input', enableOnChange);
                     return;
                 }
 
