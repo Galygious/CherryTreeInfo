@@ -32,11 +32,46 @@
             font-weight: bold;
             color: red;
         }
+        .queue-status-container {
+            height: 76px; /* Fixed height to prevent layout shifts */
+            margin: 10px 0;
+        }
+        #queueStatus {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #queueStatus.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .queue-info {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        .processing {
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .queue-length {
+            color: #28a745;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <h1>Lease Management</h1>
     <div id="status"></div>
+    <div class="queue-status-container">
+        <div id="queueStatus">
+            <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
+            <div class="queue-info">Processing: <span class="processing">None</span></div>
+        </div>
+    </div>
     <button id="createLease" disabled>Create 10-Minute Lease</button>
     <button id="refresh">Refresh Data</button>
     <table>
@@ -69,6 +104,9 @@
             const refreshButton = document.getElementById("refresh");
             const leaseTable = document.getElementById("leaseTable");
             const statusDiv = document.getElementById("status");
+            const queueStatus = document.getElementById("queueStatus");
+            const queueLengthSpan = document.querySelector(".queue-length");
+            const processingSpan = document.querySelector(".processing");
 
             // State
             let localData = { leases: [] };
@@ -79,6 +117,19 @@
                     this.processing = false;
                     this.currentBackoff = INITIAL_BACKOFF;
                     this.lastRequestTime = 0;
+                    this.currentAction = null;
+                }
+
+                updateQueueDisplay() {
+                    queueLengthSpan.textContent = this.queue.length;
+                    processingSpan.textContent = this.currentAction || 'None';
+
+                    // Show queue status if there are items in queue or processing
+                    if (this.queue.length > 0 || this.processing) {
+                        queueStatus.classList.add('visible');
+                    } else {
+                        queueStatus.classList.remove('visible');
+                    }
                 }
 
                 async enqueue(request) {
@@ -93,30 +144,40 @@
                             retryCount: 0
                         });
                         console.log('[Queue] Request added. New queue length:', this.queue.length);
+                        this.updateQueueDisplay();
                         this.processQueue();
                     });
                 }
 
                 async processQueue() {
                     if (this.processing || this.queue.length === 0) {
-                        // console.log('[Queue] Queue processing skipped:', 
-                        //     this.processing ? 'Already processing' : 'Queue empty');
+                        console.log('[Queue] Queue processing skipped:', 
+                            this.processing ? 'Already processing' : 'Queue empty');
+                        if (!this.processing) {
+                            this.currentAction = null;
+                            this.updateQueueDisplay();
+                        }
                         return;
                     }
                     
                     this.processing = true;
-                    // console.log('[Queue] Starting queue processing');
+                    console.log('[Queue] Starting queue processing');
 
                     const now = Date.now();
                     const timeSinceLastRequest = now - this.lastRequestTime;
                     
                     if (timeSinceLastRequest < API_COOLDOWN) {
                         const waitTime = API_COOLDOWN - timeSinceLastRequest;
-                        // console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
+                        console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
+                        this.currentAction = `Waiting ${waitTime}ms for cooldown`;
+                        this.updateQueueDisplay();
                         await this.delay(waitTime);
                     }
 
                     const item = this.queue[0];
+                    this.currentAction = `${item.request.options.method} ${new URL(item.request.url).pathname}`;
+                    this.updateQueueDisplay();
+                    
                     console.log('[Queue] Processing request:', item.request.options.method, item.request.url);
                     
                     try {
@@ -134,6 +195,8 @@
                         if (response.status === 429) {
                             console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
                             statusDiv.textContent = `Rate limited. Retrying in ${this.currentBackoff / 1000} seconds...`;
+                            this.currentAction = `Rate limited. Backing off for ${this.currentBackoff}ms`;
+                            this.updateQueueDisplay();
                             await this.delay(this.currentBackoff);
                             
                             // Increase backoff time
@@ -172,7 +235,9 @@
 
                     this.lastRequestTime = Date.now();
                     this.processing = false;
-                    // console.log('[Queue] Processing complete');
+                    this.currentAction = null;
+                    this.updateQueueDisplay();
+                    console.log('[Queue] Processing complete');
                     
                     // Process next item after cooldown
                     setTimeout(() => this.processQueue(), API_COOLDOWN);
@@ -313,7 +378,7 @@
                     return;
                 }
 
-                // console.log('[Render] Updating table with leases:', leases.length);
+                console.log('[Render] Updating table with leases:', leases.length);
 
                 leaseTable.innerHTML = leases.length
                     ? leases.map(lease => {
@@ -330,7 +395,7 @@
             }
 
             async function removeExpiredLeases() {
-                // console.log('[Remove] Checking for expired leases');
+                console.log('[Remove] Checking for expired leases');
                 const now = Date.now();
                 if (!Array.isArray(localData.leases)) {
                     localData.leases = [];
