@@ -120,6 +120,13 @@
                     this.currentAction = null;
                 }
 
+                hasRefreshInQueue() {
+                    return this.queue.some(item =>
+                        item.request.options.method === 'GET' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`)
+                    );
+                }
+
                 getActionMessage(request) {
                     const method = request.options.method;
                     const path = new URL(request.url).pathname;
@@ -302,6 +309,19 @@
 
             async function fetchBasket() {
                 console.log('[Fetch] Getting basket contents');
+                
+                // Check if there's already a refresh in queue
+                if (apiQueue.hasRefreshInQueue()) {
+                    console.log('[Fetch] Refresh already queued, skipping');
+                    statusDiv.textContent = "Refresh already in progress...";
+                    setTimeout(() => {
+                        if (statusDiv.textContent === "Refresh already in progress...") {
+                            statusDiv.textContent = "";
+                        }
+                    }, 2000);
+                    return;
+                }
+
                 try {
                     const data = await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
