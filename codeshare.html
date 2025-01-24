@@ -87,22 +87,41 @@
             background-color: #66ff8f;
             color: white;
         }
-        .input-container {
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls-section {
             background-color: #252d3b;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+        .input-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+        @media (max-width: 768px) {
+            .input-container {
+                grid-template-columns: 1fr;
+            }
+        }
         .input-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: flex-end;
+            flex-wrap: wrap;
         }
         .input-field {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
         }
         .input-label {
             color: #66a0ff;
@@ -110,7 +129,28 @@
             font-weight: 500;
         }
         .number-input {
-            width: 100px;
+            width: 120px;
+        }
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .group-size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #252d3b;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+        .refresh-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         input {
             flex: 1;
@@ -217,52 +257,61 @@
     </style>
 </head>
 <body>
-    <h1>Share Management</h1>
-    <div class="queue-status-container">
-        <div id="queueStatus">
-            <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
-            <div class="queue-info">Processing: <span class="processing">None</span></div>
+    <div class="page-container">
+        <h1>Share Management</h1>
+        
+        <div class="queue-status-container">
+            <div id="queueStatus">
+                <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
+                <div class="queue-info">Processing: <span class="processing">None</span></div>
+            </div>
         </div>
-    </div>
-    <div class="input-container">
-        <div class="input-group">
-            <div class="input-field">
-                <label for="discordId" class="input-label">Discord User ID</label>
-                <input type="text" id="discordId" placeholder="e.g., 120842877046751234" />
+
+        <div class="controls-section">
+            <div class="input-container">
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="discordId" class="input-label">Discord User ID</label>
+                        <input type="text" id="discordId" placeholder="e.g., 120842877046751234" />
+                    </div>
+                    <div class="input-field">
+                        <label for="codeCount" class="input-label">Number of Codes</label>
+                        <input type="number" id="codeCount" class="number-input" min="1" max="100" value="1" />
+                    </div>
+                </div>
+                <button id="createShare" disabled>Create 10-Minute Share</button>
             </div>
-            <div class="input-field">
-                <label for="codeCount" class="input-label">Number of Codes</label>
-                <input type="number" id="codeCount" class="number-input" min="1" max="100" value="1" />
+        </div>
+
+        <div class="table-controls">
+            <div class="refresh-controls">
+                <button id="refresh">Refresh Data</button>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="showConfirmed" style="cursor: pointer;">
+                    Show Confirmed Shares
+                </label>
             </div>
-            <div class="input-field">
-                <label for="groupSize" class="input-label">Group Size</label>
+            <div class="group-size-control">
+                <label for="groupSize" class="input-label">Group Size:</label>
                 <input type="number" id="groupSize" class="number-input" min="1" value="5" />
             </div>
-            <button id="createShare" disabled>Create 10-Minute Share</button>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Discord User</th>
+                    <th>Codes</th>
+                    <th>Expires In</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="shareTable">
+                <tr>
+                    <td colspan="4">No shares yet.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <button id="refresh">Refresh Data</button>
-        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-            <input type="checkbox" id="showConfirmed" style="cursor: pointer;">
-            Show Confirmed Shares
-        </label>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Discord User</th>
-                <th>Codes</th>
-                <th>Expires In</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="shareTable">
-            <tr>
-                <td colspan="3">No shares yet.</td>
-            </tr>
-        </tbody>
-    </table>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
