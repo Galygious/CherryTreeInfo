@@ -816,23 +816,73 @@ window.copyToClipboard = function(text) {
 
                 showFloatingMessage("Creating new share...", 'success');
 
-                // Get the next available range based on existing shares
-                let startRange = 0;
+                // Find all used ranges and sort them
+                const usedRanges = [];
                 localData.shares.forEach(share => {
                     const ranges = share.r || share.ranges;
                     if (ranges) {
                         ranges.split(',').forEach(range => {
-                            const [_, end] = range.split('-').map(Number);
-                            startRange = Math.max(startRange, end + 1);
+                            const [start, end] = range.split('-').map(Number);
+                            usedRanges.push([start, end]);
                         });
                     }
                 });
+                usedRanges.sort((a, b) => a[0] - b[0]);
 
-                const endRange = startRange + codeCount - 1;
+                // Find available ranges by looking at gaps
+                const availableRanges = [];
+                let lastEnd = -1;
+                
+                // Add gap from 0 to first range
+                if (usedRanges.length === 0 || usedRanges[0][0] > 0) {
+                    availableRanges.push([0, usedRanges.length ? usedRanges[0][0] - 1 : Number.MAX_SAFE_INTEGER]);
+                }
+
+                // Add gaps between ranges
+                for (let i = 0; i < usedRanges.length; i++) {
+                    if (usedRanges[i][0] > lastEnd + 1) {
+                        availableRanges.push([lastEnd + 1, usedRanges[i][0] - 1]);
+                    }
+                    lastEnd = Math.max(lastEnd, usedRanges[i][1]);
+                }
+
+                // Add gap after last range
+                if (lastEnd < Number.MAX_SAFE_INTEGER) {
+                    availableRanges.push([lastEnd + 1, Number.MAX_SAFE_INTEGER]);
+                }
+
+                // Allocate ranges for the requested codes
+                let remainingCodes = codeCount;
+                const allocatedRanges = [];
+
+                for (const [start, end] of availableRanges) {
+                    const rangeSize = end - start + 1;
+                    if (rangeSize >= remainingCodes) {
+                        // This range can fulfill the remaining requirement
+                        allocatedRanges.push([start, start + remainingCodes - 1]);
+                        break;
+                    } else {
+                        // Use this entire range and continue to the next
+                        allocatedRanges.push([start, end]);
+                        remainingCodes -= rangeSize;
+                    }
+                }
+
+                if (remainingCodes > 0) {
+                    showFloatingMessage("Not enough available codes", 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Format ranges into string
+                const rangeString = allocatedRanges
+                    .map(([start, end]) => `${start}-${end}`)
+                    .join(',');
+
                 const newShare = {
                     i: Date.now().toString(),
                     d: discordId,
-                    r: `${startRange}-${endRange}`,
+                    r: rangeString,
                     e: Date.now() + SHARE_DURATION,
                     c: false
                 };
