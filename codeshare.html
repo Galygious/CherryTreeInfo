@@ -571,6 +571,7 @@ window.copyToClipboard = function(text) {
             };
 
             function generateCodesFromRanges(ranges) {
+                if (!ranges) return [];
                 const codes = [];
                 ranges.split(',').forEach(range => {
                     const [start, end] = range.split('-').map(Number);
@@ -582,6 +583,7 @@ window.copyToClipboard = function(text) {
             }
 
             function getTotalCodesFromRanges(ranges) {
+                if (!ranges) return 0;
                 return ranges.split(',').reduce((total, range) => {
                     const [start, end] = range.split('-').map(Number);
                     return total + (end - start + 1);
@@ -817,10 +819,13 @@ window.copyToClipboard = function(text) {
                 // Get the next available range based on existing shares
                 let startRange = 0;
                 localData.shares.forEach(share => {
-                    share.ranges.split(',').forEach(range => {
-                        const [_, end] = range.split('-').map(Number);
-                        startRange = Math.max(startRange, end + 1);
-                    });
+                    const ranges = share.r || share.ranges;
+                    if (ranges) {
+                        ranges.split(',').forEach(range => {
+                            const [_, end] = range.split('-').map(Number);
+                            startRange = Math.max(startRange, end + 1);
+                        });
+                    }
                 });
 
                 const endRange = startRange + codeCount - 1;
