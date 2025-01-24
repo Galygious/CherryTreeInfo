@@ -274,7 +274,7 @@
             const MAX_BACKOFF = 30000; // 30 second maximum backoff
             const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
             const MAX_CODES = 100; // Maximum number of codes per share
-            const MAX_TOTAL_CODES = 200; // Maximum total codes allowed in the system
+            const MAX_TOTAL_CODES = 200000; // Maximum total codes allowed in the system
 
             // DOM Elements
             const shareButton = document.getElementById("createShare");
@@ -285,19 +285,33 @@
             const processingSpan = document.querySelector(".processing");
             const discordInput = document.getElementById("discordId");
 
-            // Input validation
+            // Input validation - only check format, not API
             discordInput.addEventListener('input', () => {
                 const value = discordInput.value.trim();
                 // Discord IDs are numeric and typically 17-20 digits
                 const isValidFormat = /^\d{17,20}$/.test(value);
                 
                 if (value && !isValidFormat) {
-                    showFloatingMessage("Invalid Discord ID format", 'error');
-                    shareButton.disabled = true;
-                } else {
-                    // Only enable if format is valid and not the same as last failed validation
-                    shareButton.disabled = !isValidFormat;
+                    // Just show format error, no API call
+                    let container = document.querySelector('.error-container');
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'error-container';
+                        document.body.appendChild(container);
+                    }
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'floating-message error';
+                    messageElement.textContent = "Invalid Discord ID format";
+                    container.appendChild(messageElement);
+                    messageElement.addEventListener('animationend', () => {
+                        messageElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
                 }
+                // Enable/disable button based on format only
+                shareButton.disabled = !isValidFormat;
             });
 
             // State
@@ -887,6 +901,41 @@ window.copyToClipboard = function(text) {
                     return;
                 }
 
+                // Validate Discord ID first
+                let container = document.querySelector('.error-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'error-container';
+                    document.body.appendChild(container);
+                }
+
+                const messageElement = document.createElement('div');
+                messageElement.className = 'floating-message info';
+                messageElement.textContent = "Validating Discord ID...";
+                container.appendChild(messageElement);
+
+                const discordValidation = await validateDiscordId(discordId);
+                messageElement.remove();
+                if (container.children.length === 0) {
+                    container.remove();
+                }
+
+                if (!discordValidation.valid) {
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'floating-message error';
+                    errorElement.textContent = discordValidation.error;
+                    container = document.querySelector('.error-container') || container;
+                    container.appendChild(errorElement);
+                    errorElement.addEventListener('animationend', () => {
+                        errorElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
+                    return;
+                }
+
                 // Check if user has an unconfirmed active share
                 const now = Date.now();
                 const existingUnconfirmedShare = localData.shares.find(share =>
@@ -896,28 +945,18 @@ window.copyToClipboard = function(text) {
                 );
                 
                 if (existingUnconfirmedShare) {
-                    const username = await validateDiscordId(discordId).then(result => result.username);
-                    showFloatingMessage(`${username} already has an active unconfirmed share`, 'error');
-                    shareButton.disabled = true;
-                    const enableOnChange = () => {
-                        shareButton.disabled = false;
-                        discordInput.removeEventListener('input', enableOnChange);
-                    };
-                    discordInput.addEventListener('input', enableOnChange);
-                    return;
-                }
-
-                // Validate Discord ID
-                showFloatingMessage("Validating Discord ID...", 'info');
-                const discordValidation = await validateDiscordId(discordId);
-                if (!discordValidation.valid) {
-                    showFloatingMessage(discordValidation.error, 'error');
-                    shareButton.disabled = true;
-                    const enableOnChange = () => {
-                        shareButton.disabled = false;
-                        discordInput.removeEventListener('input', enableOnChange);
-                    };
-                    discordInput.addEventListener('input', enableOnChange);
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'floating-message error';
+                    errorElement.textContent = `${discordValidation.username} already has an active unconfirmed share`;
+                    container = document.querySelector('.error-container') || container;
+                    container.appendChild(errorElement);
+                    errorElement.addEventListener('animationend', () => {
+                        errorElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
                     return;
                 }
 
