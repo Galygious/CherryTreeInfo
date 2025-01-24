@@ -529,9 +529,25 @@ async function unconfirmShare(shareId) {
     const share = localData.shares.find(s => s.i === shareId);
     if (!share) return;
 
-    // Mark the share as unconfirmed
+    // Check if user has any active unconfirmed shares
+    const discordId = share.d;
+    const now = Date.now();
+    const hasActiveShare = localData.shares.some(s =>
+        (s.d === discordId) &&
+        !(s.c || s.confirmed) &&
+        (s.e || s.expiration) > now
+    );
+
+    if (hasActiveShare) {
+        const username = await validateDiscordId(discordId).then(result => result.username);
+        showFloatingMessage(`${username} has an active share. Delete active share before unconfirming.`, 'error');
+        return;
+    }
+
+    // Mark the share as unconfirmed and reset expiration
     share.c = false;
-    renderTable(localData.shares);
+    share.e = Date.now() + SHARE_DURATION;
+    await renderTable(localData.shares);
 
     // Update the database
     await overwriteBasket(localData);
@@ -729,7 +745,10 @@ window.copyToClipboard = function(text) {
                     data.shares = [];
                 }
                 const originalShares = Array.isArray(data.shares) ? data.shares : [];
-                const validShares = originalShares.filter(share => (share.e || share.expiration) > now);
+                const validShares = originalShares.filter(share =>
+                    (share.c || share.confirmed) || // Keep confirmed shares
+                    (share.e || share.expiration) > now // Keep unexpired shares
+                );
                 
                 const expiredCount = originalShares.length - validShares.length;
                 if (expiredCount > 0) {
@@ -745,16 +764,33 @@ window.copyToClipboard = function(text) {
             async function overwriteBasket(newData) {
                 console.log('[Overwrite] Updating basket with:', newData);
                 try {
+                    // Clean and validate the data before sending
+                    const cleanedShares = newData.shares.map(share => {
+                        // Ensure all properties exist and are of correct type
+                        return {
+                            i: share.i || share.share_id || Date.now().toString(),
+                            d: share.d || share.discord_id,
+                            r: share.r || share.ranges,
+                            e: share.e || share.expiration || Date.now() + SHARE_DURATION,
+                            c: typeof share.c !== 'undefined' ? share.c : !!share.confirmed
+                        };
+                    });
+
+                    const payload = { shares: cleanedShares };
+                    console.log('[Overwrite] Sending payload:', payload);
+
                     await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
                         options: {
                             method: "POST",
-                            body: JSON.stringify(newData)
+                            body: JSON.stringify(payload)
                         }
                     });
+                    
                     console.log("[Overwrite] Basket updated successfully");
                 } catch (err) {
                     console.error("[Overwrite] Error:", err);
+                    showFloatingMessage("Failed to update shares. Please try again.", 'error');
                 }
             }
 
@@ -990,11 +1026,17 @@ window.copyToClipboard = function(text) {
                     return;
                 }
 
-                const expiredShares = localData.shares.filter(share => (share.e || share.expiration) <= now);
+                const expiredShares = localData.shares.filter(share =>
+                    !(share.c || share.confirmed) && // Don't count confirmed shares as expired
+                    (share.e || share.expiration) <= now
+                );
                 if (expiredShares.length === 0) return;
 
                 console.log('[Remove] Found expired shares:', expiredShares.length);
-                const validShares = localData.shares.filter(share => (share.e || share.expiration) > now);
+                const validShares = localData.shares.filter(share =>
+                    (share.c || share.confirmed) || // Keep confirmed shares
+                    (share.e || share.expiration) > now // Keep unexpired shares
+                );
                 localData.shares = validShares;
                 renderTable(localData.shares);
 
