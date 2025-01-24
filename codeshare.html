@@ -510,7 +510,7 @@ async function releaseShare(shareId) {
 
     // Update the database
     await overwriteBasket(localData);
-    showFloatingMessage("Share released", 'success');
+    showFloatingMessage("Code range released successfully", 'success');
 }
 
 async function confirmShare(shareId) {
@@ -523,7 +523,7 @@ async function confirmShare(shareId) {
 
     // Update the database
     await overwriteBasket(localData);
-    showFloatingMessage("Share confirmed", 'success');
+    showFloatingMessage("Code range confirmed successfully", 'success');
 }
 
 async function unconfirmShare(shareId) {
@@ -552,7 +552,7 @@ async function unconfirmShare(shareId) {
 
     // Update the database
     await overwriteBasket(localData);
-    showFloatingMessage("Share unconfirmed", 'success');
+    showFloatingMessage("Code range unconfirmed successfully", 'success');
 }
 
 // Make functions available globally
@@ -659,7 +659,30 @@ window.copyToClipboard = function(text) {
                 }
             }
 
+            // Track active messages and their counts
+            const activeMessages = new Map(); // message -> {element, count}
+            const messageQueue = [];
+            let isProcessingQueue = false;
+
             function showFloatingMessage(message, type = 'info') {
+                // Check if this message is already being displayed
+                if (activeMessages.has(message)) {
+                    const { element, count } = activeMessages.get(message);
+                    const newCount = count + 1;
+                    element.textContent = `${message} (×${newCount})`;
+                    activeMessages.set(message, { element, count: newCount });
+                    return;
+                }
+
+                // Queue the new message
+                messageQueue.push({ message, type });
+                processMessageQueue();
+            }
+
+            async function processMessageQueue() {
+                if (isProcessingQueue || messageQueue.length === 0) return;
+                isProcessingQueue = true;
+
                 let container = document.querySelector('.error-container');
                 if (!container) {
                     container = document.createElement('div');
@@ -667,19 +690,38 @@ window.copyToClipboard = function(text) {
                     document.body.appendChild(container);
                 }
 
-                const messageElement = document.createElement('div');
-                messageElement.className = `floating-message ${type}`;
-                messageElement.textContent = message;
-                container.appendChild(messageElement);
+                while (messageQueue.length > 0) {
+                    const { message, type } = messageQueue.shift();
+                    
+                    // Create and show the message
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `floating-message ${type}`;
+                    messageElement.textContent = message;
+                    container.appendChild(messageElement);
 
-                // Remove the message element after animation completes
-                messageElement.addEventListener('animationend', () => {
-                    messageElement.remove();
-                    // Remove container if it's empty
-                    if (container.children.length === 0) {
-                        container.remove();
+                    // Track the active message
+                    activeMessages.set(message, { element: messageElement, count: 1 });
+
+                    // Wait for animation to complete
+                    await new Promise(resolve => {
+                        messageElement.addEventListener('animationend', () => {
+                            activeMessages.delete(message);
+                            messageElement.remove();
+                            // Remove container if it's empty
+                            if (container.children.length === 0) {
+                                container.remove();
+                            }
+                            resolve();
+                        });
+                    });
+
+                    // Add a small delay between messages
+                    if (messageQueue.length > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
                     }
-                });
+                }
+
+                isProcessingQueue = false;
             }
 
             function formatTimeLeft(milliseconds) {
@@ -708,7 +750,7 @@ window.copyToClipboard = function(text) {
                 // Check if there's already a refresh in queue
                 if (apiQueue.hasRefreshInQueue()) {
                     console.log('[Fetch] Refresh already queued, skipping');
-                    showFloatingMessage("Refresh already in progress...", 'info');
+                    showFloatingMessage("Update already in progress...", 'info');
                     return;
                 }
 
@@ -780,7 +822,7 @@ window.copyToClipboard = function(text) {
                     const payload = { shares: cleanedShares };
                     console.log('[Overwrite] Sending payload:', payload);
 
-                    await apiQueue.enqueue({
+                    const response = await apiQueue.enqueue({
                         url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
                         options: {
                             method: "POST",
@@ -788,10 +830,11 @@ window.copyToClipboard = function(text) {
                         }
                     });
                     
-                    console.log("[Overwrite] Basket updated successfully");
+                    // Log internal details only in development
+                    console.log("[Overwrite] Success:", "Database updated successfully");
                 } catch (err) {
                     console.error("[Overwrite] Error:", err);
-                    showFloatingMessage("Failed to update shares. Please try again.", 'error');
+                    showFloatingMessage("Operation failed. Please try again.", 'error');
                 }
             }
 
@@ -851,7 +894,7 @@ window.copyToClipboard = function(text) {
                     return;
                 }
 
-                showFloatingMessage("Creating new share...", 'success');
+                showFloatingMessage("Allocating code range...", 'info');
 
                 // Calculate total codes currently in use
                 let totalCodesInUse = 0;
@@ -882,56 +925,83 @@ window.copyToClipboard = function(text) {
                     }
                 });
                 usedRanges.sort((a, b) => a[0] - b[0]);
+                console.log('[Range] Used ranges:', usedRanges);
+
+                // Merge overlapping or adjacent used ranges
+                const mergedUsedRanges = [];
+                for (const range of usedRanges) {
+                    if (mergedUsedRanges.length === 0) {
+                        mergedUsedRanges.push([...range]);
+                    } else {
+                        const lastRange = mergedUsedRanges[mergedUsedRanges.length - 1];
+                        if (range[0] <= lastRange[1] + 1) {
+                            lastRange[1] = Math.max(lastRange[1], range[1]);
+                        } else {
+                            mergedUsedRanges.push([...range]);
+                        }
+                    }
+                }
+                console.log('[Range] Merged used ranges:', mergedUsedRanges);
 
                 // Find available ranges by looking at gaps
                 const availableRanges = [];
                 let lastEnd = -1;
                 
                 // Add gap from 0 to first range
-                if (usedRanges.length === 0 || usedRanges[0][0] > 0) {
-                    availableRanges.push([0, usedRanges.length ? usedRanges[0][0] - 1 : Number.MAX_SAFE_INTEGER]);
+                if (mergedUsedRanges.length === 0 || mergedUsedRanges[0][0] > 0) {
+                    availableRanges.push([0, mergedUsedRanges.length ? mergedUsedRanges[0][0] - 1 : Number.MAX_SAFE_INTEGER]);
                 }
 
                 // Add gaps between ranges
-                for (let i = 0; i < usedRanges.length; i++) {
-                    if (usedRanges[i][0] > lastEnd + 1) {
-                        availableRanges.push([lastEnd + 1, usedRanges[i][0] - 1]);
+                for (let i = 0; i < mergedUsedRanges.length; i++) {
+                    if (mergedUsedRanges[i][0] > lastEnd + 1) {
+                        availableRanges.push([lastEnd + 1, mergedUsedRanges[i][0] - 1]);
                     }
-                    lastEnd = Math.max(lastEnd, usedRanges[i][1]);
+                    lastEnd = Math.max(lastEnd, mergedUsedRanges[i][1]);
                 }
 
                 // Add gap after last range
                 if (lastEnd < Number.MAX_SAFE_INTEGER) {
                     availableRanges.push([lastEnd + 1, Number.MAX_SAFE_INTEGER]);
                 }
+                console.log('[Range] Available ranges:', availableRanges);
 
+                console.log('[Range] Available ranges before allocation:', availableRanges);
+                
                 // Allocate ranges for the requested codes
                 let codesNeeded = codeCount;
                 const allocatedRanges = [];
-                let currentRangeIndex = 0;
-
-                while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
-                    const [start, end] = availableRanges[currentRangeIndex];
+                let nextRangeToTry = 0;
+                
+                while (codesNeeded > 0 && nextRangeToTry < availableRanges.length) {
+                    // Always use the next untried range
+                    const [start, end] = availableRanges[nextRangeToTry];
                     const rangeSize = end - start + 1;
+                    
+                    console.log(`[Range] Trying range ${start}-${end} for ${codesNeeded} needed codes`);
                     
                     if (rangeSize >= codesNeeded) {
                         // This range can fulfill the remaining requirement
                         allocatedRanges.push([start, start + codesNeeded - 1]);
+                        console.log(`[Range] Allocated ${start}-${start + codesNeeded - 1}`);
                         codesNeeded = 0;
                     } else {
                         // Use this entire range and continue to the next
                         allocatedRanges.push([start, end]);
+                        console.log(`[Range] Allocated entire range ${start}-${end}`);
                         codesNeeded -= rangeSize;
                     }
-                    currentRangeIndex++;
+                    nextRangeToTry++;
                 }
 
-                // If we still need codes after going through all ranges, show error
                 if (codesNeeded > 0) {
-                    showFloatingMessage(`Not enough codes available. Only found ${codeCount - codesNeeded} codes in available ranges.`, 'error');
+                    console.log('[Range] Failed to allocate all needed codes');
+                    showFloatingMessage(`Unable to allocate requested codes. Only ${codeCount - codesNeeded} codes available.`, 'error');
                     shareButton.disabled = false;
                     return;
                 }
+
+                console.log('[Range] Final allocated ranges:', allocatedRanges);
 
                 // Format ranges into string
                 const rangeString = allocatedRanges
