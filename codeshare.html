@@ -274,6 +274,7 @@
             const MAX_BACKOFF = 30000; // 30 second maximum backoff
             const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
             const MAX_CODES = 100; // Maximum number of codes per share
+            const MAX_TOTAL_CODES = 200; // Maximum total codes allowed in the system
 
             // DOM Elements
             const shareButton = document.getElementById("createShare");
@@ -851,6 +852,23 @@ window.copyToClipboard = function(text) {
                 }
 
                 showFloatingMessage("Creating new share...", 'success');
+
+                // Calculate total codes currently in use
+                let totalCodesInUse = 0;
+                localData.shares.forEach(share => {
+                    const ranges = share.r || share.ranges;
+                    if (ranges) {
+                        totalCodesInUse += getTotalCodesFromRanges(ranges);
+                    }
+                });
+
+                // Check if adding new codes would exceed the maximum
+                if (totalCodesInUse + codeCount > MAX_TOTAL_CODES) {
+                    const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
+                    showFloatingMessage(`Cannot create share. Only ${remainingCodes} codes remaining in the system.`, 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
 
                 // Find all used ranges and sort them
                 const usedRanges = [];
