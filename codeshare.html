@@ -461,18 +461,55 @@
                         }
 
                         if (!response.ok) {
-                            throw new Error(`HTTP Error: ${response.status}`);
+                            // Try to get error details from response
+                            let errorMessage;
+                            try {
+                                const errorText = await response.text();
+                                console.log('[API] Error response text:', errorText);
+                                
+                                try {
+                                    // Try to parse as JSON first
+                                    const errorJson = JSON.parse(errorText);
+                                    errorMessage = errorJson.message || errorText;
+                                } catch {
+                                    // Use text as is if not JSON
+                                    errorMessage = errorText;
+                                }
+                            } catch {
+                                errorMessage = `HTTP Error: ${response.status}`;
+                            }
+                            throw new Error(errorMessage);
                         }
 
                         // Success - reset backoff and process response
                         this.currentBackoff = INITIAL_BACKOFF;
-                        const data = await response.json();
-                        console.log('[API] Response:', data);
+                        
+                        let responseData;
+                        const contentType = response.headers.get('content-type');
+                        
+                        if (contentType && contentType.includes('application/json')) {
+                            // JSON response (e.g., from PUT request)
+                            responseData = await response.json();
+                            console.log('[API] JSON Response:', responseData);
+                        } else {
+                            // Text response (e.g., from POST request)
+                            const textResponse = await response.text();
+                            console.log('[API] Text Response:', textResponse);
+                            
+                            // Try to parse as JSON in case content-type header is missing
+                            try {
+                                responseData = JSON.parse(textResponse);
+                                console.log('[API] Parsed as JSON:', responseData);
+                            } catch {
+                                // Not JSON, use text response
+                                responseData = textResponse;
+                            }
+                        }
                         
                         this.queue.shift(); // Remove the processed item
                         console.log('[Queue] Request completed. Queue length:', this.queue.length);
                         
-                        item.resolve(data);
+                        item.resolve(responseData);
                     } catch (error) {
                         console.error("[API] Error:", error);
                         showFloatingMessage(`Error: ${error.message}`, 'error');
