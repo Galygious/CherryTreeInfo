@@ -908,18 +908,29 @@ window.copyToClipboard = function(text) {
                 // Allocate ranges for the requested codes
                 let codesNeeded = codeCount;
                 const allocatedRanges = [];
+                let currentRangeIndex = 0;
 
-                for (const [start, end] of availableRanges) {
+                while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
+                    const [start, end] = availableRanges[currentRangeIndex];
                     const rangeSize = end - start + 1;
+                    
                     if (rangeSize >= codesNeeded) {
                         // This range can fulfill the remaining requirement
                         allocatedRanges.push([start, start + codesNeeded - 1]);
-                        break;
+                        codesNeeded = 0;
                     } else {
                         // Use this entire range and continue to the next
                         allocatedRanges.push([start, end]);
                         codesNeeded -= rangeSize;
                     }
+                    currentRangeIndex++;
+                }
+
+                // If we still need codes after going through all ranges, show error
+                if (codesNeeded > 0) {
+                    showFloatingMessage(`Not enough codes available. Only found ${codeCount - codesNeeded} codes in available ranges.`, 'error');
+                    shareButton.disabled = false;
+                    return;
                 }
 
                 // Format ranges into string
