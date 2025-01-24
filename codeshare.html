@@ -353,7 +353,7 @@
                 // Discord IDs are numeric and typically 17-20 digits
                 const isValidFormat = /^\d{17,20}$/.test(cleanValue);
                 
-                if (value && !isValidFormat) {
+                if (cleanValue && !isValidFormat) {
                     // Just show format error, no API call
                     let container = document.querySelector('.error-container');
                     if (!container) {
