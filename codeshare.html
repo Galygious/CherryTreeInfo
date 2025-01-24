@@ -906,26 +906,20 @@ window.copyToClipboard = function(text) {
                 }
 
                 // Allocate ranges for the requested codes
-                let remainingCodes = codeCount;
+                let codesNeeded = codeCount;
                 const allocatedRanges = [];
 
                 for (const [start, end] of availableRanges) {
                     const rangeSize = end - start + 1;
-                    if (rangeSize >= remainingCodes) {
+                    if (rangeSize >= codesNeeded) {
                         // This range can fulfill the remaining requirement
-                        allocatedRanges.push([start, start + remainingCodes - 1]);
+                        allocatedRanges.push([start, start + codesNeeded - 1]);
                         break;
                     } else {
                         // Use this entire range and continue to the next
                         allocatedRanges.push([start, end]);
-                        remainingCodes -= rangeSize;
+                        codesNeeded -= rangeSize;
                     }
-                }
-
-                if (remainingCodes > 0) {
-                    showFloatingMessage("Not enough available codes", 'error');
-                    shareButton.disabled = false;
-                    return;
                 }
 
                 // Format ranges into string
