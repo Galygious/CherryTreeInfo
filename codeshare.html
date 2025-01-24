@@ -334,11 +334,24 @@
             const processingSpan = document.querySelector(".processing");
             const discordInput = document.getElementById("discordId");
 
+            // Clean Discord ID input
+            function cleanDiscordId(input) {
+                // Remove <@>, <@!, and any non-numeric characters
+                return input.replace(/[<@!>]/g, '').replace(/\D/g, '');
+            }
+
             // Input validation - only check format, not API
             discordInput.addEventListener('input', () => {
-                const value = discordInput.value.trim();
+                const rawValue = discordInput.value.trim();
+                const cleanValue = cleanDiscordId(rawValue);
+                
+                // Update input with cleaned value if it's different
+                if (cleanValue !== rawValue) {
+                    discordInput.value = cleanValue;
+                }
+
                 // Discord IDs are numeric and typically 17-20 digits
-                const isValidFormat = /^\d{17,20}$/.test(value);
+                const isValidFormat = /^\d{17,20}$/.test(cleanValue);
                 
                 if (value && !isValidFormat) {
                     // Just show format error, no API call
@@ -942,7 +955,8 @@ window.copyToClipboard = function(text) {
                 console.log('[Create] Creating new 10-minute share');
                 shareButton.disabled = true;
                 const discordInput = document.getElementById('discordId');
-                const discordId = discordInput.value.trim();
+                const discordId = cleanDiscordId(discordInput.value.trim());
+                console.log('[Discord] Cleaned ID:', discordId);
 
                 if (!discordId) {
                     showFloatingMessage("Please enter a Discord User ID", 'error');
