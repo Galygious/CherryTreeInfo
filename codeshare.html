@@ -241,7 +241,13 @@
             <button id="createShare" disabled>Create 10-Minute Share</button>
         </div>
     </div>
-    <button id="refresh">Refresh Data</button>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <button id="refresh">Refresh Data</button>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" id="showConfirmed" style="cursor: pointer;">
+            Show Confirmed Shares
+        </label>
+    </div>
     <table>
         <thead>
             <tr>
@@ -494,11 +500,11 @@
 
             // Share management functions
 async function releaseShare(shareId) {
-    const share = localData.shares.find(s => s.share_id === shareId);
+    const share = localData.shares.find(s => s.i === shareId);
     if (!share) return;
 
     // Remove the share from local data
-    localData.shares = localData.shares.filter(s => s.share_id !== shareId);
+    localData.shares = localData.shares.filter(s => s.i !== shareId);
     renderTable(localData.shares);
 
     // Update the database
@@ -507,11 +513,11 @@ async function releaseShare(shareId) {
 }
 
 async function confirmShare(shareId) {
-    const share = localData.shares.find(s => s.share_id === shareId);
+    const share = localData.shares.find(s => s.i === shareId);
     if (!share) return;
 
     // Mark the share as confirmed
-    share.confirmed = true;
+    share.c = true;
     renderTable(localData.shares);
 
     // Update the database
@@ -519,9 +525,23 @@ async function confirmShare(shareId) {
     showFloatingMessage("Share confirmed", 'success');
 }
 
+async function unconfirmShare(shareId) {
+    const share = localData.shares.find(s => s.i === shareId);
+    if (!share) return;
+
+    // Mark the share as unconfirmed
+    share.c = false;
+    renderTable(localData.shares);
+
+    // Update the database
+    await overwriteBasket(localData);
+    showFloatingMessage("Share unconfirmed", 'success');
+}
+
 // Make functions available globally
 window.releaseShare = releaseShare;
 window.confirmShare = confirmShare;
+window.unconfirmShare = unconfirmShare;
 window.copyToClipboard = function(text) {
             window.copyToClipboard = function(text) {
                 navigator.clipboard.writeText(text).then(() => {
@@ -540,14 +560,14 @@ window.copyToClipboard = function(text) {
             };
 
             window.copyCodes = function(shareId) {
-                const share = localData.shares.find(s => s.share_id === shareId);
+                const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
                 if (!share) return;
 
                 const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
-                let message = `<@${share.discord_id}>\n`;
+                let message = `<@${share.d || share.discord_id}>\n`;
                 
                 // Generate and group codes
-                const codes = generateCodesFromRanges(share.ranges);
+                const codes = generateCodesFromRanges(share.r || share.ranges);
                 for (let i = 0; i < codes.length; i++) {
                     if (i > 0 && i % groupSize === 0) {
                         message += '\n';
@@ -682,7 +702,7 @@ window.copyToClipboard = function(text) {
                     data.shares = [];
                 }
                 const originalShares = Array.isArray(data.shares) ? data.shares : [];
-                const validShares = originalShares.filter(share => share.expiration > now);
+                const validShares = originalShares.filter(share => (share.e || share.expiration) > now);
                 
                 const expiredCount = originalShares.length - validShares.length;
                 if (expiredCount > 0) {
@@ -724,7 +744,7 @@ window.copyToClipboard = function(text) {
                 }
 
                 // Check if user already has a share
-                const existingShare = localData.shares.find(share => share.discord_id === discordId);
+                const existingShare = localData.shares.find(share => share.d === discordId || share.discord_id === discordId);
                 if (existingShare) {
                     showFloatingMessage("This Discord user already has an active share", 'error');
                     shareButton.disabled = true;
@@ -774,12 +794,11 @@ window.copyToClipboard = function(text) {
 
                 const endRange = startRange + codeCount - 1;
                 const newShare = {
-                    share_id: `share_${Date.now()}`,
-                    discord_id: discordId,
-                    discord_username: discordValidation.username,
-                    ranges: `${startRange}-${endRange}`,
-                    expiration: Date.now() + SHARE_DURATION,
-                    confirmed: false,
+                    i: Date.now().toString(),
+                    d: discordId,
+                    r: `${startRange}-${endRange}`,
+                    e: Date.now() + SHARE_DURATION,
+                    c: false
                 };
 
                 console.log('[Create] New share:', newShare);
@@ -811,39 +830,51 @@ window.copyToClipboard = function(text) {
                     console.error("[Render] Error: shareTable element not found in the DOM.");
                     return;
                 }
-// Filter out confirmed shares
-shares = shares.filter(share => !share.confirmed);
 
-shareTable.innerHTML = shares.length
-    ? shares.map(share => {
-        const timeLeft = Math.max(0, share.expiration - Date.now());
-        return `
-            <tr>
-                <td>
-                    <a href="#" onclick="copyToClipboard('<@${share.discord_id}>'); return false;" style="color: #66a0ff; text-decoration: none;">
-                        ${share.discord_username || 'Unknown'}
-                    </a>
-                </td>
-                <td>
-                    <a href="#" onclick="copyCodes('${share.share_id}'); return false;" style="color: #66a0ff; text-decoration: none;">
-                        ${getTotalCodesFromRanges(share.ranges)} codes (${share.ranges})
-                    </a>
-                </td>
-                <td>${formatTimeLeft(timeLeft)}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="square-button release-button"
-                            onclick="releaseShare('${share.share_id}')"
-                            title="Release">✕</button>
-                        <button class="square-button confirm-button"
-                            onclick="confirmShare('${share.share_id}')"
-                            title="Confirm">✓</button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }).join("")
-    : `<tr><td colspan="4">No shares yet.</td></tr>`;
+                const showConfirmed = document.getElementById('showConfirmed').checked;
+                // Filter shares based on confirmation status
+                shares = shares.filter(share => showConfirmed ? (share.c || share.confirmed) : !(share.c || share.confirmed));
+
+                shareTable.innerHTML = shares.length
+                    ? shares.map(share => {
+                        const timeLeft = Math.max(0, (share.e || share.expiration) - Date.now());
+                        const discordId = share.d || share.discord_id;
+                        const shareId = share.i || share.share_id;
+                        const ranges = share.r || share.ranges;
+                        const isConfirmed = share.c || share.confirmed;
+                        
+                        return `
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="copyToClipboard('<@${discordId}>'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${discordId}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" onclick="copyCodes('${shareId}'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${getTotalCodesFromRanges(ranges)} codes (${ranges})
+                                    </a>
+                                </td>
+                                <td>${formatTimeLeft(timeLeft)}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="square-button release-button"
+                                            onclick="releaseShare('${shareId}')"
+                                            title="Release">✕</button>
+                                        ${isConfirmed
+                                            ? `<button class="square-button confirm-button"
+                                                onclick="unconfirmShare('${shareId}')"
+                                                title="Unconfirm">↺</button>`
+                                            : `<button class="square-button confirm-button"
+                                                onclick="confirmShare('${shareId}')"
+                                                title="Confirm">✓</button>`
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("")
+                    : `<tr><td colspan="4">No ${showConfirmed ? 'confirmed' : 'active'} shares.</td></tr>`;
             }
 
             async function removeExpiredShares() {
@@ -856,11 +887,11 @@ shareTable.innerHTML = shares.length
                     return;
                 }
 
-                const expiredShares = localData.shares.filter(share => share.expiration <= now);
+                const expiredShares = localData.shares.filter(share => (share.e || share.expiration) <= now);
                 if (expiredShares.length === 0) return;
 
                 console.log('[Remove] Found expired shares:', expiredShares.length);
-                const validShares = localData.shares.filter(share => share.expiration > now);
+                const validShares = localData.shares.filter(share => (share.e || share.expiration) > now);
                 localData.shares = validShares;
                 renderTable(localData.shares);
 
@@ -891,6 +922,9 @@ shareTable.innerHTML = shares.length
             // Event listeners
             shareButton.addEventListener("click", createShare);
             refreshButton.addEventListener("click", fetchBasket);
+            document.getElementById('showConfirmed').addEventListener('change', () => {
+                renderTable(localData.shares);
+            });
 
             // Initialize page
             console.log('[Init] Starting application');
