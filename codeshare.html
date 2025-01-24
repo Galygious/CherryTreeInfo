@@ -543,21 +543,13 @@ window.releaseShare = releaseShare;
 window.confirmShare = confirmShare;
 window.unconfirmShare = unconfirmShare;
 window.copyToClipboard = function(text) {
-            window.copyToClipboard = function(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showFloatingMessage("Copied to clipboard!", 'success');
-                }).catch(err => {
-                    console.error('Failed to copy:', err);
-                    showFloatingMessage("Failed to copy to clipboard", 'error');
-                });
-            };
-                navigator.clipboard.writeText(text).then(() => {
-                    showFloatingMessage("Copied to clipboard!", 'success');
-                }).catch(err => {
-                    console.error('Failed to copy:', err);
-                    showFloatingMessage("Failed to copy to clipboard", 'error');
-                });
-            };
+    navigator.clipboard.writeText(text).then(() => {
+        showFloatingMessage("Copied to clipboard!", 'success');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        showFloatingMessage("Failed to copy to clipboard", 'error');
+    });
+};
 
             window.copyCodes = function(shareId) {
                 const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
@@ -596,8 +588,37 @@ window.copyToClipboard = function(text) {
                 }, 0);
             }
 
+            // Username cache management
+            const USERNAME_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+            function getCachedUsername(discordId) {
+                const cache = localStorage.getItem(`username_${discordId}`);
+                if (cache) {
+                    const { username, timestamp } = JSON.parse(cache);
+                    if (Date.now() - timestamp < USERNAME_CACHE_DURATION) {
+                        return username;
+                    }
+                    // Cache expired, remove it
+                    localStorage.removeItem(`username_${discordId}`);
+                }
+                return null;
+            }
+
+            function cacheUsername(discordId, username) {
+                localStorage.setItem(`username_${discordId}`, JSON.stringify({
+                    username,
+                    timestamp: Date.now()
+                }));
+            }
+
             async function validateDiscordId(id) {
                 try {
+                    // Check cache first
+                    const cachedUsername = getCachedUsername(id);
+                    if (cachedUsername) {
+                        return { valid: true, username: cachedUsername };
+                    }
+
                     const response = await fetch(`https://discordlookup.mesalytic.moe/v1/user/${id}`);
                     const data = await response.json();
                     
@@ -605,9 +626,13 @@ window.copyToClipboard = function(text) {
                         return { valid: false, error: "Invalid Discord ID" };
                     }
                     
+                    const username = data.global_name || data.username;
+                    // Cache the username
+                    cacheUsername(id, username);
+                    
                     return {
                         valid: true,
-                        username: data.global_name || data.username
+                        username
                     };
                 } catch (error) {
                     console.error("[Discord] API Error:", error);
@@ -686,7 +711,7 @@ window.copyToClipboard = function(text) {
                     }
 
                     localData = cleanedData.data;
-                    renderTable(localData.shares);
+                    await renderTable(localData.shares);
                     shareButton.disabled = false;
                 } catch (err) {
                     console.error("[Fetch] Error:", err);
@@ -743,10 +768,16 @@ window.copyToClipboard = function(text) {
                     return;
                 }
 
-                // Check if user already has a share
-                const existingShare = localData.shares.find(share => share.d === discordId || share.discord_id === discordId);
+                // Check if user has an unconfirmed active share
+                const now = Date.now();
+                const existingShare = localData.shares.find(share =>
+                    (share.d === discordId || share.discord_id === discordId) &&
+                    (share.e || share.expiration) > now &&
+                    !(share.c || share.confirmed)
+                );
+                
                 if (existingShare) {
-                    showFloatingMessage("This Discord user already has an active share", 'error');
+                    showFloatingMessage("This Discord user already has an active unconfirmed share", 'error');
                     shareButton.disabled = true;
                     const enableOnChange = () => {
                         shareButton.disabled = false;
@@ -821,10 +852,10 @@ window.copyToClipboard = function(text) {
                 }
 
                 shareButton.disabled = false;
-                renderTable(localData.shares);
+                await renderTable(localData.shares);
             }
 
-            function renderTable(shares) {
+            async function renderTable(shares) {
                 shares = Array.isArray(shares) ? shares : [];
                 if (!shareTable) {
                     console.error("[Render] Error: shareTable element not found in the DOM.");
@@ -835,6 +866,22 @@ window.copyToClipboard = function(text) {
                 // Filter shares based on confirmation status
                 shares = shares.filter(share => showConfirmed ? (share.c || share.confirmed) : !(share.c || share.confirmed));
 
+                // First, get all unique Discord IDs that need usernames
+                const uniqueDiscordIds = [...new Set(shares.map(share => share.d || share.discord_id))];
+                
+                // Fetch usernames for all IDs
+                const usernamePromises = uniqueDiscordIds.map(async id => {
+                    let username = getCachedUsername(id);
+                    if (!username) {
+                        const validation = await validateDiscordId(id);
+                        username = validation.valid ? validation.username : id;
+                    }
+                    return [id, username];
+                });
+
+                // Wait for all username fetches to complete
+                const usernames = new Map(await Promise.all(usernamePromises));
+
                 shareTable.innerHTML = shares.length
                     ? shares.map(share => {
                         const timeLeft = Math.max(0, (share.e || share.expiration) - Date.now());
@@ -842,12 +889,13 @@ window.copyToClipboard = function(text) {
                         const shareId = share.i || share.share_id;
                         const ranges = share.r || share.ranges;
                         const isConfirmed = share.c || share.confirmed;
+                        const username = usernames.get(discordId) || discordId;
                         
                         return `
                             <tr>
                                 <td>
                                     <a href="#" onclick="copyToClipboard('<@${discordId}>'); return false;" style="color: #66a0ff; text-decoration: none;">
-                                        ${discordId}
+                                        ${username}
                                     </a>
                                 </td>
                                 <td>
@@ -922,8 +970,8 @@ window.copyToClipboard = function(text) {
             // Event listeners
             shareButton.addEventListener("click", createShare);
             refreshButton.addEventListener("click", fetchBasket);
-            document.getElementById('showConfirmed').addEventListener('change', () => {
-                renderTable(localData.shares);
+            document.getElementById('showConfirmed').addEventListener('change', async () => {
+                await renderTable(localData.shares);
             });
 
             // Initialize page
@@ -931,9 +979,9 @@ window.copyToClipboard = function(text) {
             fetchBasket();
 
             // Timer update loop
-            setInterval(() => {
-                renderTable(localData.shares);
-                removeExpiredShares();
+            setInterval(async () => {
+                await renderTable(localData.shares);
+                await removeExpiredShares();
             }, 1000);
         });
     </script>
