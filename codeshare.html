@@ -421,7 +421,7 @@
                         const nextItem = this.queue[0];
                         this.currentAction = this.getActionMessage(nextItem.request);
                         this.updateQueueDisplay();
-                        await this.delay(waitTime);
+                        await this.delay(0waitTime);
                     }
 
                     const item = this.queue[0];
@@ -925,8 +925,9 @@ window.copyToClipboard = function(text) {
                 const requestedCount = parseInt(document.getElementById('codeCount').value) || 1;
                 console.log('[Codes] Requested count:', requestedCount, 'MAX_CODES:', MAX_CODES);
 
+                // Check per-share limit first
                 if (requestedCount > MAX_CODES) {
-                    showFloatingMessage(`Cannot request more than ${MAX_CODES} codes at once`, 'error');
+                    showFloatingMessage(`Created share would exceed ${MAX_CODES} Code/Share limit!`, 'error');
                     shareButton.disabled = false;
                     return;
                 }
@@ -952,10 +953,10 @@ window.copyToClipboard = function(text) {
                 console.log('[Codes] System limit:', MAX_TOTAL_CODES);
                 console.log('[Codes] Would use after request:', totalCodesInUse + requestedCount);
 
-                // Check against system limit
+                // Check against total system limit
                 if (totalCodesInUse + requestedCount > MAX_TOTAL_CODES) {
                     const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
-                    showFloatingMessage(`Cannot create share. Only ${remainingCodes} codes remaining in the system.`, 'error');
+                    showFloatingMessage(`Not enough available codes, ${remainingCodes} codes left in pool`, 'error');
                     shareButton.disabled = false;
                     return;
                 }
