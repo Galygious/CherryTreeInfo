@@ -921,27 +921,48 @@ window.copyToClipboard = function(text) {
                     return;
                 }
 
-                const codeCount = Math.min(
-                    parseInt(document.getElementById('codeCount').value) || 1,
-                    MAX_CODES
-                );
+                // Validate requested code count
+                const requestedCount = parseInt(document.getElementById('codeCount').value) || 1;
+                console.log('[Codes] Requested count:', requestedCount, 'MAX_CODES:', MAX_CODES);
 
-                if (codeCount < 1) {
+                if (requestedCount > MAX_CODES) {
+                    showFloatingMessage(`Cannot request more than ${MAX_CODES} codes at once`, 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                if (requestedCount < 1) {
                     showFloatingMessage("Please enter a valid number of codes", 'error');
                     shareButton.disabled = false;
                     return;
                 }
 
-                showFloatingMessage("Allocating code range...", 'info');
-
-                // Calculate total codes currently in use
+                // Calculate total codes in use
                 let totalCodesInUse = 0;
                 localData.shares.forEach(share => {
                     const ranges = share.r || share.ranges;
                     if (ranges) {
-                        totalCodesInUse += getTotalCodesFromRanges(ranges);
+                        const count = getTotalCodesFromRanges(ranges);
+                        console.log(`[Codes] Share ${share.d} uses ${count} codes with ranges:`, ranges);
+                        totalCodesInUse += count;
                     }
                 });
+
+                console.log('[Codes] Current total in use:', totalCodesInUse);
+                console.log('[Codes] System limit:', MAX_TOTAL_CODES);
+                console.log('[Codes] Would use after request:', totalCodesInUse + requestedCount);
+
+                // Check against system limit
+                if (totalCodesInUse + requestedCount > MAX_TOTAL_CODES) {
+                    const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
+                    showFloatingMessage(`Cannot create share. Only ${remainingCodes} codes remaining in the system.`, 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                const codeCount = requestedCount;
+                showFloatingMessage("Allocating code range...", 'info');
+
 
                 // Check if adding new codes would exceed the maximum
                 if (totalCodesInUse + codeCount > MAX_TOTAL_CODES) {
