@@ -852,14 +852,15 @@ window.copyToClipboard = function(text) {
 
                 // Check if user has an unconfirmed active share
                 const now = Date.now();
-                const existingShare = localData.shares.find(share =>
-                    (share.d === discordId || share.discord_id === discordId) &&
-                    (share.e || share.expiration) > now &&
-                    !(share.c || share.confirmed)
+                const existingUnconfirmedShare = localData.shares.find(share =>
+                    (share.d === discordId) && // Only check new format
+                    (share.e > now) && // Only check new format
+                    !share.c // Only check new format
                 );
                 
-                if (existingShare) {
-                    showFloatingMessage("This Discord user already has an active unconfirmed share", 'error');
+                if (existingUnconfirmedShare) {
+                    const username = await validateDiscordId(discordId).then(result => result.username);
+                    showFloatingMessage(`${username} already has an active unconfirmed share`, 'error');
                     shareButton.disabled = true;
                     const enableOnChange = () => {
                         shareButton.disabled = false;
@@ -983,54 +984,34 @@ window.copyToClipboard = function(text) {
 
                 console.log('[Range] Available ranges before allocation:', availableRanges);
                 
-                // Initialize allocation variables
-                let allocatedRanges = [];
+                // Initialize variables for allocation
+                const allocatedRanges = [];
+                let codesNeeded = codeCount;
+
                 console.log('[Range] Starting allocation for', codeCount, 'codes');
                 console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
 
-                // Sort available ranges by start index to ensure we use lowest numbers first
+                // Sort available ranges by start index
                 availableRanges.sort((a, b) => a[0] - b[0]);
-                
-                // First try to find a single range that can fulfill the entire request
-                let bestRange = null;
-                for (const range of availableRanges) {
-                    const [start, end] = range;
+
+                // Allocate from available ranges
+                for (const [start, end] of availableRanges) {
+                    if (codesNeeded <= 0) break;
+
                     const rangeSize = end - start + 1;
-                    if (rangeSize >= codeCount) {
-                        bestRange = range;
-                        break;
-                    }
-                }
+                    console.log(`[Range] Examining range ${start}-${end} (size: ${rangeSize})`);
 
-                // If we found a single range that can fulfill the request, use it
-                if (bestRange) {
-                    const [start] = bestRange;
-                    allocatedRanges.push([start, start + codeCount - 1]);
-                    console.log(`[Range] Using single range ${start}-${start + codeCount - 1}`);
-                } else {
-                    // Otherwise, we need to use multiple ranges
-                    let codesNeeded = codeCount;
-                    let currentRangeIndex = 0;
-
-                    while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
-                        const [start, end] = availableRanges[currentRangeIndex];
-                        const rangeSize = end - start + 1;
-                        
-                        console.log(`[Range] Examining range ${start}-${end} for ${codesNeeded} needed codes`);
-                        
-                        if (rangeSize >= codesNeeded) {
-                            // This range can fulfill the remaining requirement
-                            allocatedRanges.push([start, start + codesNeeded - 1]);
-                            console.log(`[Range] Allocated partial range ${start}-${start + codesNeeded - 1}`);
-                            codesNeeded = 0;
-                        } else {
-                            // Use this entire range and continue to the next
-                            allocatedRanges.push([start, end]);
-                            console.log(`[Range] Allocated entire range ${start}-${end}, need ${codesNeeded - rangeSize} more codes`);
-                            codesNeeded -= rangeSize;
-                        }
-                        
-                        currentRangeIndex++;
+                    if (rangeSize >= codesNeeded) {
+                        // This range can fulfill the remaining requirement
+                        allocatedRanges.push([start, start + codesNeeded - 1]);
+                        console.log(`[Range] Allocated ${start}-${start + codesNeeded - 1} (${codesNeeded} codes)`);
+                        codesNeeded = 0;
+                    } else {
+                        // Use entire range and continue
+                        allocatedRanges.push([start, end]);
+                        console.log(`[Range] Allocated ${start}-${end} (${rangeSize} codes)`);
+                        codesNeeded -= rangeSize;
+                        console.log(`[Range] Still need ${codesNeeded} codes`);
                     }
                 }
 
