@@ -968,30 +968,34 @@ window.copyToClipboard = function(text) {
 
                 console.log('[Range] Available ranges before allocation:', availableRanges);
                 
+                // Sort available ranges by start index to ensure we use lowest numbers first
+                availableRanges.sort((a, b) => a[0] - b[0]);
+                
                 // Allocate ranges for the requested codes
                 let codesNeeded = codeCount;
                 const allocatedRanges = [];
-                let nextRangeToTry = 0;
+                let currentRangeIndex = 0;
                 
-                while (codesNeeded > 0 && nextRangeToTry < availableRanges.length) {
-                    // Always use the next untried range
-                    const [start, end] = availableRanges[nextRangeToTry];
+                while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
+                    const [start, end] = availableRanges[currentRangeIndex];
                     const rangeSize = end - start + 1;
                     
-                    console.log(`[Range] Trying range ${start}-${end} for ${codesNeeded} needed codes`);
+                    console.log(`[Range] Examining range ${start}-${end} for ${codesNeeded} needed codes`);
                     
                     if (rangeSize >= codesNeeded) {
                         // This range can fulfill the remaining requirement
                         allocatedRanges.push([start, start + codesNeeded - 1]);
-                        console.log(`[Range] Allocated ${start}-${start + codesNeeded - 1}`);
+                        console.log(`[Range] Allocated partial range ${start}-${start + codesNeeded - 1}`);
                         codesNeeded = 0;
                     } else {
                         // Use this entire range and continue to the next
                         allocatedRanges.push([start, end]);
-                        console.log(`[Range] Allocated entire range ${start}-${end}`);
+                        console.log(`[Range] Allocated entire range ${start}-${end}, need ${codesNeeded - rangeSize} more codes`);
                         codesNeeded -= rangeSize;
                     }
-                    nextRangeToTry++;
+                    
+                    // Move to next range
+                    currentRangeIndex++;
                 }
 
                 if (codesNeeded > 0) {
