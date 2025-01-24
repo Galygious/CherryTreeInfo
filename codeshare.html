@@ -922,11 +922,14 @@ window.copyToClipboard = function(text) {
                 }
 
                 // Validate requested code count
+                showFloatingMessage("Validating code count...", 'info');
                 const requestedCount = parseInt(document.getElementById('codeCount').value) || 1;
                 console.log('[Codes] Requested count:', requestedCount, 'MAX_CODES:', MAX_CODES);
 
                 // Check per-share limit first
+                console.log('[Validation] Checking per-share limit:', requestedCount, '>', MAX_CODES);
                 if (requestedCount > MAX_CODES) {
+                    console.log('[Validation] Exceeded per-share limit, showing error');
                     showFloatingMessage(`Created share would exceed ${MAX_CODES} Code/Share limit!`, 'error');
                     shareButton.disabled = false;
                     return;
@@ -954,8 +957,10 @@ window.copyToClipboard = function(text) {
                 console.log('[Codes] Would use after request:', totalCodesInUse + requestedCount);
 
                 // Check against total system limit
+                console.log('[Validation] Checking total limit:', totalCodesInUse + requestedCount, '>', MAX_TOTAL_CODES);
                 if (totalCodesInUse + requestedCount > MAX_TOTAL_CODES) {
                     const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
+                    console.log('[Validation] Exceeded total limit, showing error. Remaining:', remainingCodes);
                     showFloatingMessage(`Not enough available codes, ${remainingCodes} codes left in pool`, 'error');
                     shareButton.disabled = false;
                     return;
