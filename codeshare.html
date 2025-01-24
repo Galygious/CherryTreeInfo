@@ -983,6 +983,8 @@ window.copyToClipboard = function(text) {
 
                 console.log('[Range] Available ranges before allocation:', availableRanges);
                 
+                // Initialize allocation variables
+                let allocatedRanges = [];
                 console.log('[Range] Starting allocation for', codeCount, 'codes');
                 console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
 
