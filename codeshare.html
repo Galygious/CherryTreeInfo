@@ -944,59 +944,95 @@ window.copyToClipboard = function(text) {
                 console.log('[Range] Merged used ranges:', mergedUsedRanges);
 
                 // Find available ranges by looking at gaps
-                const availableRanges = [];
-                let lastEnd = -1;
+                let availableRanges = [];
                 
-                // Add gap from 0 to first range
-                if (mergedUsedRanges.length === 0 || mergedUsedRanges[0][0] > 0) {
-                    availableRanges.push([0, mergedUsedRanges.length ? mergedUsedRanges[0][0] - 1 : Number.MAX_SAFE_INTEGER]);
-                }
-
-                // Add gaps between ranges
-                for (let i = 0; i < mergedUsedRanges.length; i++) {
-                    if (mergedUsedRanges[i][0] > lastEnd + 1) {
-                        availableRanges.push([lastEnd + 1, mergedUsedRanges[i][0] - 1]);
+                // Find gaps between used ranges
+                availableRanges = [];
+                if (mergedUsedRanges.length === 0) {
+                    // No ranges used yet, everything is available up to MAX_TOTAL_CODES
+                    availableRanges.push([0, MAX_TOTAL_CODES - 1]);
+                    console.log('[Range] No used ranges, all codes available');
+                } else {
+                    // Check gaps between ranges
+                    for (let i = 0; i < mergedUsedRanges.length - 1; i++) {
+                        const [_, currentEnd] = mergedUsedRanges[i];
+                        const [nextStart] = mergedUsedRanges[i + 1];
+                        if (nextStart > currentEnd + 1) {
+                            availableRanges.push([currentEnd + 1, nextStart - 1]);
+                            console.log(`[Range] Found gap: ${currentEnd + 1}-${nextStart - 1}`);
+                        }
                     }
-                    lastEnd = Math.max(lastEnd, mergedUsedRanges[i][1]);
+
+                    // Check if there's space before the first range
+                    const firstStart = mergedUsedRanges[0][0];
+                    if (firstStart > 0) {
+                        availableRanges.unshift([0, firstStart - 1]);
+                        console.log(`[Range] Found initial gap: 0-${firstStart - 1}`);
+                    }
+
+                    // Check if there's space after the last range
+                    const lastEnd = mergedUsedRanges[mergedUsedRanges.length - 1][1];
+                    if (lastEnd < MAX_TOTAL_CODES - 1) {
+                        availableRanges.push([lastEnd + 1, MAX_TOTAL_CODES - 1]);
+                        console.log(`[Range] Found final gap: ${lastEnd + 1}-${MAX_TOTAL_CODES - 1}`);
+                    }
                 }
 
-                // Add gap after last range
-                if (lastEnd < Number.MAX_SAFE_INTEGER) {
-                    availableRanges.push([lastEnd + 1, Number.MAX_SAFE_INTEGER]);
-                }
+                console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
                 console.log('[Range] Available ranges:', availableRanges);
 
                 console.log('[Range] Available ranges before allocation:', availableRanges);
                 
+                console.log('[Range] Starting allocation for', codeCount, 'codes');
+                console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
+
                 // Sort available ranges by start index to ensure we use lowest numbers first
                 availableRanges.sort((a, b) => a[0] - b[0]);
                 
-                // Allocate ranges for the requested codes
-                let codesNeeded = codeCount;
-                const allocatedRanges = [];
-                let currentRangeIndex = 0;
-                
-                while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
-                    const [start, end] = availableRanges[currentRangeIndex];
+                // First try to find a single range that can fulfill the entire request
+                let bestRange = null;
+                for (const range of availableRanges) {
+                    const [start, end] = range;
                     const rangeSize = end - start + 1;
-                    
-                    console.log(`[Range] Examining range ${start}-${end} for ${codesNeeded} needed codes`);
-                    
-                    if (rangeSize >= codesNeeded) {
-                        // This range can fulfill the remaining requirement
-                        allocatedRanges.push([start, start + codesNeeded - 1]);
-                        console.log(`[Range] Allocated partial range ${start}-${start + codesNeeded - 1}`);
-                        codesNeeded = 0;
-                    } else {
-                        // Use this entire range and continue to the next
-                        allocatedRanges.push([start, end]);
-                        console.log(`[Range] Allocated entire range ${start}-${end}, need ${codesNeeded - rangeSize} more codes`);
-                        codesNeeded -= rangeSize;
+                    if (rangeSize >= codeCount) {
+                        bestRange = range;
+                        break;
                     }
-                    
-                    // Move to next range
-                    currentRangeIndex++;
                 }
+
+                // If we found a single range that can fulfill the request, use it
+                if (bestRange) {
+                    const [start] = bestRange;
+                    allocatedRanges.push([start, start + codeCount - 1]);
+                    console.log(`[Range] Using single range ${start}-${start + codeCount - 1}`);
+                } else {
+                    // Otherwise, we need to use multiple ranges
+                    let codesNeeded = codeCount;
+                    let currentRangeIndex = 0;
+
+                    while (codesNeeded > 0 && currentRangeIndex < availableRanges.length) {
+                        const [start, end] = availableRanges[currentRangeIndex];
+                        const rangeSize = end - start + 1;
+                        
+                        console.log(`[Range] Examining range ${start}-${end} for ${codesNeeded} needed codes`);
+                        
+                        if (rangeSize >= codesNeeded) {
+                            // This range can fulfill the remaining requirement
+                            allocatedRanges.push([start, start + codesNeeded - 1]);
+                            console.log(`[Range] Allocated partial range ${start}-${start + codesNeeded - 1}`);
+                            codesNeeded = 0;
+                        } else {
+                            // Use this entire range and continue to the next
+                            allocatedRanges.push([start, end]);
+                            console.log(`[Range] Allocated entire range ${start}-${end}, need ${codesNeeded - rangeSize} more codes`);
+                            codesNeeded -= rangeSize;
+                        }
+                        
+                        currentRangeIndex++;
+                    }
+                }
+
+                console.log('[Range] Final allocated ranges:', allocatedRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
 
                 if (codesNeeded > 0) {
                     console.log('[Range] Failed to allocate all needed codes');
