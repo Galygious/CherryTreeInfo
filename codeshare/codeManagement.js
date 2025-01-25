@@ -478,6 +478,9 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
         
+        // Initialize ranges array
+        const currentRanges = [];
+        
         // Parse existing ranges if any
         const existingRanges = (previewShare.r || previewShare.ranges || '').split(',').filter(r => r);
         if (existingRanges.length > 0) {
