@@ -321,10 +321,99 @@
             margin: 20px 0;
         }
 
-        .manual-code-entry textarea {
+        .code-entry textarea {
             width: 100%;
             height: 100px;
             margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .code-mode-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .mode-button {
+            padding: 8px 16px;
+            background: #1e2530;
+            border: 1px solid #3a4456;
+            color: #b8c7dc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .mode-button.active {
+            background: #3a4456;
+            border-color: #66a0ff;
+            color: #fff;
+        }
+
+        .validation-summary {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background: #1e2530;
+            display: none;
+        }
+
+        .validation-summary.visible {
+            display: block;
+        }
+
+        .code-item {
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .code-item .validation-status {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+
+        .code-item.valid .validation-status {
+            color: #66ff8f;
+        }
+
+        .code-item.invalid .validation-status {
+            color: #ff6666;
+        }
+
+        .code-item.invalid {
+            border-color: #ff6666;
+        }
+
+        .code-item.valid {
+            border-color: #66ff8f;
+        }
+
+        .share-preview {
+            background: #1e2530;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .share-preview-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #66a0ff;
+        }
+
+        .share-preview-ranges {
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -758,31 +847,79 @@ window.copyToClipboard = function(text) {
 
             // Code Management Functions
             let currentShareId = null;
+            let currentMode = 'add';
             const codeModal = document.getElementById('codeModal');
+            const codeInput = document.getElementById('codeInput');
+            const validationSummary = document.getElementById('validationSummary');
+            const shareRanges = document.getElementById('shareRanges');
+            const shareCodeCount = document.getElementById('shareCodeCount');
 
             // Close modal when clicking outside
             window.onclick = function(event) {
                 if (event.target === codeModal) {
-                    codeModal.style.display = "none";
+                    closeModal();
                 }
             };
 
             // Close modal when clicking X
-            document.querySelector('.close-modal').onclick = function() {
+            document.querySelector('.close-modal').onclick = closeModal;
+
+            function closeModal() {
                 codeModal.style.display = "none";
-            };
+                currentShareId = null;
+                codeInput.value = '';
+                validationSummary.innerHTML = '';
+                validationSummary.classList.remove('visible');
+            }
 
             window.copyCodes = function(shareId) {
                 showCodeManagement(shareId);
             };
+
+            function switchMode(mode) {
+                currentMode = mode;
+                document.getElementById('addMode').classList.toggle('active', mode === 'add');
+                document.getElementById('removeMode').classList.toggle('active', mode === 'remove');
+                
+                // Update modal title and button text
+                document.getElementById('modalTitle').textContent = mode === 'add' ? 'Add Codes' : 'Remove Codes';
+                document.getElementById('confirmAction').textContent = mode === 'add' ? 'Add Codes' : 'Remove Selected';
+                
+                // Clear input and validation
+                codeInput.value = '';
+                validationSummary.innerHTML = '';
+                validationSummary.classList.remove('visible');
+                
+                // Update placeholder text
+                codeInput.placeholder = mode === 'add'
+                    ? "Enter codes to add (one per line)..."
+                    : "Enter codes to remove (one per line)...";
+                
+                validateCodes();
+            }
 
             function showCodeManagement(shareId) {
                 currentShareId = shareId;
                 const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
                 if (!share) return;
 
-                // Generate codes and populate list
+                // Reset to add mode
+                currentMode = 'add';
+                document.getElementById('addMode').classList.add('active');
+                document.getElementById('removeMode').classList.remove('active');
+
+                // Update share preview
+                updateSharePreview(share);
+
+                codeModal.style.display = "block";
+            }
+
+            function updateSharePreview(share) {
                 const codes = generateCodesFromRanges(share.r || share.ranges);
+                shareCodeCount.textContent = `${codes.length} codes`;
+                shareRanges.textContent = share.r || share.ranges;
+
+                // Generate codes and populate list
                 const codeList = document.getElementById('codeList');
                 codeList.innerHTML = codes.map(code => `
                     <div class="code-item" onclick="toggleCodeSelection(this)">
@@ -790,17 +927,77 @@ window.copyToClipboard = function(text) {
                         <span>${code}</span>
                     </div>
                 `).join('');
+            }
 
-                codeModal.style.display = "block";
+            function validateCodes() {
+                const inputText = codeInput.value.trim();
+                if (!inputText) {
+                    validationSummary.classList.remove('visible');
+                    return;
+                }
+
+                const codes = inputText.split('\n').map(code => code.trim()).filter(code => code);
+                const validationResults = codes.map(code => {
+                    // Check length and required digits
+                    const isValidLength = code.length === DIGIT_LENGTH;
+                    const digits = code.split('').map(Number);
+                    const hasRequiredDigits = REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                    
+                    // Check if code would be generated by our generator
+                    let isGeneratable = false;
+                    if (isValidLength && hasRequiredDigits) {
+                        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                        let result;
+                        do {
+                            result = generator.next();
+                            if (!result.done && result.value === code) {
+                                isGeneratable = true;
+                                break;
+                            }
+                        } while (!result.done);
+                    }
+
+                    return {
+                        code,
+                        isValid: isValidLength && hasRequiredDigits && isGeneratable,
+                        errors: [
+                            !isValidLength && `Must be ${DIGIT_LENGTH} digits`,
+                            !hasRequiredDigits && `Must contain ${REQUIRED_DIGITS.join(', ')}`,
+                            (isValidLength && hasRequiredDigits && !isGeneratable) && 'Not a valid code'
+                        ].filter(Boolean)
+                    };
+                });
+
+                // Update validation summary
+                const validCount = validationResults.filter(r => r.isValid).length;
+                const invalidCount = validationResults.length - validCount;
+
+                validationSummary.innerHTML = `
+                    <div>Valid codes: ${validCount}</div>
+                    ${invalidCount > 0 ? `<div>Invalid codes: ${invalidCount}</div>` : ''}
+                `;
+                validationSummary.classList.add('visible');
+
+                // Update code list with validation status
+                const codeList = document.getElementById('codeList');
+                codeList.innerHTML = validationResults.map(result => `
+                    <div class="code-item ${result.isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
+                        <input type="checkbox" ${result.isValid ? '' : 'disabled'}>
+                        <span>${result.code}</span>
+                        <span class="validation-status">${result.isValid ? '✓' : '✕'}</span>
+                        ${!result.isValid ? `<div class="validation-errors">${result.errors.join(', ')}</div>` : ''}
+                    </div>
+                `).join('');
             }
 
             function toggleCodeSelection(element) {
+                if (element.classList.contains('invalid')) return;
                 element.classList.toggle('selected');
                 element.querySelector('input').checked = element.classList.contains('selected');
             }
 
             function selectAllCodes() {
-                document.querySelectorAll('.code-item').forEach(item => {
+                document.querySelectorAll('.code-item:not(.invalid)').forEach(item => {
                     item.classList.add('selected');
                     item.querySelector('input').checked = true;
                 });
@@ -811,6 +1008,152 @@ window.copyToClipboard = function(text) {
                     item.classList.remove('selected');
                     item.querySelector('input').checked = false;
                 });
+            }
+
+            async function confirmCodeAction() {
+                if (!currentShareId) return;
+
+                const share = localData.shares.find(s => s.i === currentShareId || s.share_id === currentShareId);
+                if (!share) return;
+
+                if (currentMode === 'add') {
+                    await addCodesToShare(share);
+                } else {
+                    await removeCodesFromShare(share);
+                }
+            }
+
+            async function addCodesToShare(share) {
+                const inputText = codeInput.value.trim();
+                if (!inputText) return;
+
+                const newCodes = inputText.split('\n')
+                    .map(code => code.trim())
+                    .filter(code => {
+                        const digits = code.split('').map(Number);
+                        return code.length === DIGIT_LENGTH &&
+                               REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                    });
+
+                if (newCodes.length === 0) {
+                    showFloatingMessage("No valid codes to add", 'error');
+                    return;
+                }
+
+                // Find positions of new codes in generator sequence
+                const positions = [];
+                for (const code of newCodes) {
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                    let position = 0;
+                    let found = false;
+                    
+                    while (!found) {
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        if (value === code) {
+                            positions.push(position);
+                            found = true;
+                        }
+                        position++;
+                    }
+                }
+
+                // Create new ranges including new codes
+                const currentRanges = (share.r || share.ranges).split(',')
+                    .map(range => range.split('-').map(Number));
+                
+                const allPositions = [...positions];
+                currentRanges.forEach(([start, end]) => {
+                    for (let i = start; i <= end; i++) {
+                        allPositions.push(i);
+                    }
+                });
+
+                // Sort and merge positions into ranges
+                allPositions.sort((a, b) => a - b);
+                const newRanges = [];
+                let rangeStart = allPositions[0];
+                let rangeEnd = allPositions[0];
+
+                for (let i = 1; i < allPositions.length; i++) {
+                    if (allPositions[i] === rangeEnd + 1) {
+                        rangeEnd = allPositions[i];
+                    } else {
+                        newRanges.push(`${rangeStart}-${rangeEnd}`);
+                        rangeStart = allPositions[i];
+                        rangeEnd = allPositions[i];
+                    }
+                }
+                newRanges.push(`${rangeStart}-${rangeEnd}`);
+
+                // Update share
+                share.r = newRanges.join(',');
+                await overwriteBasket(localData);
+                await renderTable(localData.shares);
+                showFloatingMessage("Codes added successfully", 'success');
+                closeModal();
+            }
+
+            async function removeCodesFromShare(share) {
+                const selectedElements = document.querySelectorAll('.code-item.selected');
+                if (selectedElements.length === 0) {
+                    showFloatingMessage("No codes selected to remove", 'error');
+                    return;
+                }
+
+                const selectedCodes = Array.from(selectedElements)
+                    .map(element => element.querySelector('span').textContent);
+
+                // Get all codes and filter out selected ones
+                const allCodes = generateCodesFromRanges(share.r || share.ranges);
+                const remainingCodes = allCodes.filter(code => !selectedCodes.includes(code));
+
+                if (remainingCodes.length === 0) {
+                    showFloatingMessage("Cannot remove all codes from a share", 'error');
+                    return;
+                }
+
+                // Find positions of remaining codes
+                const positions = [];
+                for (const code of remainingCodes) {
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                    let position = 0;
+                    let found = false;
+                    
+                    while (!found) {
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        if (value === code) {
+                            positions.push(position);
+                            found = true;
+                        }
+                        position++;
+                    }
+                }
+
+                // Create new ranges from remaining positions
+                positions.sort((a, b) => a - b);
+                const newRanges = [];
+                let rangeStart = positions[0];
+                let rangeEnd = positions[0];
+
+                for (let i = 1; i < positions.length; i++) {
+                    if (positions[i] === rangeEnd + 1) {
+                        rangeEnd = positions[i];
+                    } else {
+                        newRanges.push(`${rangeStart}-${rangeEnd}`);
+                        rangeStart = positions[i];
+                        rangeEnd = positions[i];
+                    }
+                }
+                newRanges.push(`${rangeStart}-${rangeEnd}`);
+
+                // Update share
+                share.r = newRanges.join(',');
+                await overwriteBasket(localData);
+                await renderTable(localData.shares);
+                showFloatingMessage("Codes removed successfully", 'success');
+                closeModal();
             }
 
             async function removeSelectedCodes() {
@@ -1693,6 +2036,24 @@ window.copyToClipboard = function(text) {
                 }
             }
 
+            // Code management event listeners
+            codeInput.addEventListener('input', () => {
+                validateCodes();
+            });
+
+            codeInput.addEventListener('paste', (e) => {
+                // Allow paste event to complete, then validate
+                setTimeout(validateCodes, 0);
+            });
+
+            // Make code management functions globally available
+            window.switchMode = switchMode;
+            window.closeModal = closeModal;
+            window.toggleCodeSelection = toggleCodeSelection;
+            window.selectAllCodes = selectAllCodes;
+            window.deselectAllCodes = deselectAllCodes;
+            window.confirmCodeAction = confirmCodeAction;
+
             // Event listeners
             shareButton.addEventListener("click", createShare);
             refreshButton.addEventListener("click", fetchBasket);
@@ -1716,24 +2077,40 @@ window.copyToClipboard = function(text) {
     <div id="codeModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>Code Management</h2>
+            <h2 id="modalTitle">Code Management</h2>
             
-            <div class="manual-code-entry">
-                <h3>Manual Code Entry</h3>
-                <p>Enter completed codes (one per line):</p>
-                <textarea id="manualCodes" placeholder="Enter codes here..."></textarea>
-                <button onclick="submitManualCodes()">Submit Completed Codes</button>
+            <div class="code-entry">
+                <div class="code-entry-header">
+                    <h3>Code Entry</h3>
+                    <div class="code-mode-toggle">
+                        <button id="addMode" class="mode-button active" onclick="switchMode('add')">Add Codes</button>
+                        <button id="removeMode" class="mode-button" onclick="switchMode('remove')">Remove Codes</button>
+                    </div>
+                </div>
+
+                <textarea id="codeInput" placeholder="Enter codes (one per line)..."></textarea>
+                <div id="validationSummary" class="validation-summary">
+                    <!-- Validation results will be shown here -->
+                </div>
+
+                <div id="codeList" class="code-list">
+                    <!-- Codes will be inserted here with validation status -->
+                </div>
             </div>
 
-            <h3>Share Codes</h3>
-            <div id="codeList" class="code-list">
-                <!-- Codes will be inserted here -->
+            <div class="share-preview">
+                <div class="share-preview-header">
+                    <span>Share Preview</span>
+                    <span id="shareCodeCount">0 codes</span>
+                </div>
+                <div id="shareRanges" class="share-preview-ranges">
+                    <!-- Share ranges will be shown here -->
+                </div>
             </div>
 
             <div class="code-actions">
-                <button onclick="removeSelectedCodes()">Remove Selected Codes</button>
-                <button onclick="selectAllCodes()">Select All</button>
-                <button onclick="deselectAllCodes()">Deselect All</button>
+                <button id="confirmAction" onclick="confirmCodeAction()">Confirm Changes</button>
+                <button onclick="closeModal()">Cancel</button>
             </div>
         </div>
     </div>
