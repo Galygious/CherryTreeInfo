@@ -73,15 +73,14 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
 
     // Code input event listeners
     codeInput.addEventListener('input', () => {
-        validateCodes();
-        const currentCodes = codeInput.value.trim().split('\n').filter(code => code);
-        const hasChanges = currentCodes.length > 0;
-        
-        // Track changes for both custom and existing shares
-        if (originalShare) {
-            pendingChanges = hasChanges;
-            document.querySelector('.share-preview').classList.toggle('changes-pending', hasChanges);
+        const inputText = codeInput.value.trim();
+        if (!inputText) {
+            // When input is cleared, show original codes
+            updateSharePreview(originalShare);
+            validationSummary.classList.remove('visible');
+            return;
         }
+        validateCodes();
     });
 
     codeInput.addEventListener('paste', (e) => {
@@ -348,143 +347,151 @@ function deselectAllCodes() {
 }
 
 async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTable) {
-    if (currentMode === 'add') {
-        await addCodesToShare();
-    } else {
-        await removeCodesFromShare();
-    }
-}
-
-async function addCodesToShare() {
     const inputText = codeInput.value.trim();
-    if (!inputText) return;
+    if (!inputText) {
+        updateSharePreview(originalShare);
+        return;
+    }
 
-    const newCodes = inputText.split('\n')
-        .map(code => code.trim())
-        .filter(code => {
-            const digits = code.split('').map(Number);
-            return code.length === DIGIT_LENGTH &&
-                   REQUIRED_DIGITS.every(digit => digits.includes(digit));
+    // Create a temporary share for preview
+    const previewShare = { ...originalShare };
+    
+    if (currentMode === 'add') {
+        // Preview adding codes
+        const newCodes = inputText.split('\n')
+            .map(code => code.trim())
+            .filter(code => {
+                const digits = code.split('').map(Number);
+                return code.length === DIGIT_LENGTH &&
+                       REQUIRED_DIGITS.every(digit => digits.includes(digit));
+            });
+
+        if (newCodes.length === 0) {
+            showFloatingMessage("No valid codes to add", 'error');
+            return;
+        }
+
+        // Find positions of new codes
+        const positions = [];
+        for (const code of newCodes) {
+            const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+            let position = 0;
+            let found = false;
+            
+            while (!found) {
+                const {value, done} = generator.next();
+                if (done) break;
+                if (value === code) {
+                    positions.push(position);
+                    found = true;
+                }
+                position++;
+            }
+        }
+
+        // Add new codes to existing ranges
+        const currentRanges = (previewShare.r || previewShare.ranges || '').split(',')
+            .filter(r => r)
+            .map(range => range.split('-').map(Number));
+        
+        const allPositions = [...positions];
+        currentRanges.forEach(([start, end]) => {
+            for (let i = start; i <= end; i++) {
+                allPositions.push(i);
+            }
         });
 
-    if (newCodes.length === 0) {
-        showFloatingMessage("No valid codes to add", 'error');
-        return;
-    }
+        // Create new ranges
+        if (allPositions.length > 0) {
+            allPositions.sort((a, b) => a - b);
+            const newRanges = [];
+            let rangeStart = allPositions[0];
+            let rangeEnd = allPositions[0];
 
-    // Find positions of new codes in generator sequence
-    const positions = [];
-    for (const code of newCodes) {
-        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
-        let position = 0;
-        let found = false;
-        
-        while (!found) {
-            const {value, done} = generator.next();
-            if (done) break;
-            if (value === code) {
-                positions.push(position);
-                found = true;
+            for (let i = 1; i < allPositions.length; i++) {
+                if (allPositions[i] === rangeEnd + 1) {
+                    rangeEnd = allPositions[i];
+                } else {
+                    newRanges.push(`${rangeStart}-${rangeEnd}`);
+                    rangeStart = allPositions[i];
+                    rangeEnd = allPositions[i];
+                }
             }
-            position++;
-        }
-    }
-
-    // Create new ranges including new codes
-    const currentRanges = (originalShare.r || originalShare.ranges).split(',')
-        .map(range => range.split('-').map(Number));
-    
-    const allPositions = [...positions];
-    currentRanges.forEach(([start, end]) => {
-        for (let i = start; i <= end; i++) {
-            allPositions.push(i);
-        }
-    });
-
-    // Sort and merge positions into ranges
-    allPositions.sort((a, b) => a - b);
-    const newRanges = [];
-    let rangeStart = allPositions[0];
-    let rangeEnd = allPositions[0];
-
-    for (let i = 1; i < allPositions.length; i++) {
-        if (allPositions[i] === rangeEnd + 1) {
-            rangeEnd = allPositions[i];
-        } else {
             newRanges.push(`${rangeStart}-${rangeEnd}`);
-            rangeStart = allPositions[i];
-            rangeEnd = allPositions[i];
+            previewShare.r = newRanges.join(',');
         }
-    }
-    newRanges.push(`${rangeStart}-${rangeEnd}`);
+    } else {
+        // Preview removing codes
+        const selectedElements = document.querySelectorAll('.code-item.selected');
+        if (selectedElements.length === 0) {
+            showFloatingMessage("No codes selected to remove", 'error');
+            return;
+        }
 
-    // Update original share
-    originalShare.r = newRanges.join(',');
-    updateSharePreview(originalShare);
-    pendingChanges = true;
+        const selectedCodes = Array.from(selectedElements)
+            .map(element => element.querySelector('span').textContent);
+
+        // Get all codes and filter out selected ones
+        const allCodes = generateCodesFromRanges(previewShare.r || previewShare.ranges);
+        const remainingCodes = allCodes.filter(code => !selectedCodes.includes(code));
+
+        if (remainingCodes.length === 0) {
+            showFloatingMessage("Cannot remove all codes from a share", 'error');
+            return;
+        }
+
+        // Find positions of remaining codes
+        const positions = [];
+        for (const code of remainingCodes) {
+            const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+            let position = 0;
+            let found = false;
+            
+            while (!found) {
+                const {value, done} = generator.next();
+                if (done) break;
+                if (value === code) {
+                    positions.push(position);
+                    found = true;
+                }
+                position++;
+            }
+        }
+
+        // Create new ranges
+        positions.sort((a, b) => a - b);
+        const newRanges = [];
+        let rangeStart = positions[0];
+        let rangeEnd = positions[0];
+
+        for (let i = 1; i < positions.length; i++) {
+            if (positions[i] === rangeEnd + 1) {
+                rangeEnd = positions[i];
+            } else {
+                newRanges.push(`${rangeStart}-${rangeEnd}`);
+                rangeStart = positions[i];
+                rangeEnd = positions[i];
+            }
+        }
+        newRanges.push(`${rangeStart}-${rangeEnd}`);
+        previewShare.r = newRanges.join(',');
+    }
+
+    // Update preview without saving changes
+    updateSharePreview(previewShare);
+    pendingChanges = previewShare.r !== originalShare.r;
+    document.querySelector('.share-preview').classList.toggle('changes-pending', pendingChanges);
 }
 
-async function removeCodesFromShare() {
-    const selectedElements = document.querySelectorAll('.code-item.selected');
-    if (selectedElements.length === 0) {
-        showFloatingMessage("No codes selected to remove", 'error');
-        return;
-    }
-
-    const selectedCodes = Array.from(selectedElements)
-        .map(element => element.querySelector('span').textContent);
-
-    // Get all codes and filter out selected ones
-    const allCodes = generateCodesFromRanges(originalShare.r || originalShare.ranges);
-    const remainingCodes = allCodes.filter(code => !selectedCodes.includes(code));
-
-    if (remainingCodes.length === 0) {
-        showFloatingMessage("Cannot remove all codes from a share", 'error');
-        return;
-    }
-
-    // Find positions of remaining codes
-    const positions = [];
-    for (const code of remainingCodes) {
-        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
-        let position = 0;
-        let found = false;
-        
-        while (!found) {
-            const {value, done} = generator.next();
-            if (done) break;
-            if (value === code) {
-                positions.push(position);
-                found = true;
-            }
-            position++;
-        }
-    }
-
-    // Create new ranges from remaining positions
-    positions.sort((a, b) => a - b);
-    const newRanges = [];
-    let rangeStart = positions[0];
-    let rangeEnd = positions[0];
-
-    for (let i = 1; i < positions.length; i++) {
-        if (positions[i] === rangeEnd + 1) {
-            rangeEnd = positions[i];
-        } else {
-            newRanges.push(`${rangeStart}-${rangeEnd}`);
-            rangeStart = positions[i];
-            rangeEnd = positions[i];
-        }
-    }
-    newRanges.push(`${rangeStart}-${rangeEnd}`);
-
-    // Update original share
-    originalShare.r = newRanges.join(',');
-    updateSharePreview(originalShare);
-    pendingChanges = true;
-}
 
 async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
+    // Get current preview state
+    const currentRanges = shareRanges.textContent;
+    if (!currentRanges && !isCustomShare) {
+        showFloatingMessage("No changes to save", 'error');
+        return;
+    }
+
     if (isCustomShare) {
         const discordId = cleanDiscordId(modalDiscordId.value.trim());
         if (!discordId) {
@@ -512,10 +519,11 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
             return;
         }
 
-        // Create new share
+        // Create new share with current preview state
         const newShare = {
             ...originalShare,
-            d: discordId
+            d: discordId,
+            r: currentRanges
         };
 
         try {
@@ -539,8 +547,8 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
         const share = localData.shares.find(s => s.i === currentShareId || s.share_id === currentShareId);
         if (!share) return;
 
-        // Apply changes from originalShare
-        share.r = originalShare.r;
+        // Apply changes from preview
+        share.r = currentRanges;
 
         // Update database
         try {
