@@ -322,8 +322,11 @@
             const INITIAL_BACKOFF = 10000; // 10 second initial backoff
             const MAX_BACKOFF = 30000; // 30 second maximum backoff
             const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
-            const MAX_CODES = 100; // Maximum number of codes per share
-            const MAX_TOTAL_CODES = 200000; // Maximum total codes allowed in the system
+            const MAX_CODES = 50; // Maximum number of codes per share (reduced for better manageability)
+            // Code generation constants
+            const DIGIT_LENGTH = 8;
+            const REQUIRED_DIGITS = [8,1,0,2,5,3];
+            const MAX_TOTAL_CODES = calculateCombinationsWithAllDigits(DIGIT_LENGTH, REQUIRED_DIGITS); // Maximum possible combinations
 
             // DOM Elements
             const shareButton = document.getElementById("createShare");
@@ -700,13 +703,77 @@ window.copyToClipboard = function(text) {
                 copyToClipboard(message.trim());
             };
 
+            // Calculate combinations that must include all required digits
+            function calculateCombinationsWithAllDigits(length, digits) {
+                if (length < digits.length) return 0;
+
+                // Calculate using dynamic programming
+                // dp[i][mask] represents number of ways to fill i positions using digits from mask
+                const dp = Array(length + 1).fill().map(() => Array(1 << digits.length).fill(0));
+                dp[0][0] = 1;
+
+                // For each position
+                for (let i = 0; i < length; i++) {
+                    // For each current state of used digits
+                    for (let mask = 0; mask < (1 << digits.length); mask++) {
+                        if (dp[i][mask] === 0) continue;
+                        
+                        // Try using each available digit
+                        for (let digit of digits) {
+                            const digitIndex = digits.indexOf(digit);
+                            const newMask = mask | (1 << digitIndex);
+                            dp[i + 1][newMask] += dp[i][mask];
+                        }
+                    }
+                }
+
+                // Sum all states where all digits are used (mask has all bits set)
+                const fullMask = (1 << digits.length) - 1;
+                return dp[length][fullMask];
+            }
+
+            // Generate codes ensuring all required digits are used
+            function* generateValidCodes(length, digits, startIndex) {
+                const code = new Array(length).fill(digits[0]);
+                let count = 0;
+                
+                while (true) {
+                    // Check if current code is valid (contains all digits)
+                    const usedDigits = new Set(code);
+                    if (digits.every(digit => usedDigits.has(digit))) {
+                        if (count >= startIndex) {
+                            yield code.join("");
+                        }
+                        count++;
+                    }
+                    
+                    // Generate next code
+                    let pos = length - 1;
+                    while (pos >= 0) {
+                        const currentIndex = digits.indexOf(code[pos]);
+                        if (currentIndex < digits.length - 1) {
+                            code[pos] = digits[currentIndex + 1];
+                            break;
+                        }
+                        code[pos] = digits[0];
+                        pos--;
+                    }
+                    if (pos < 0) break;
+                }
+            }
+
             function generateCodesFromRanges(ranges) {
                 if (!ranges) return [];
                 const codes = [];
                 ranges.split(',').forEach(range => {
                     const [start, end] = range.split('-').map(Number);
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, start);
+                    
+                    // Generate codes for this range
                     for (let i = start; i <= end; i++) {
-                        codes.push(`code${i}`); // This will be replaced with the actual generator
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        codes.push(value);
                     }
                 });
                 return codes;
