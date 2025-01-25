@@ -95,7 +95,15 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     window.selectAllCodes = selectAllCodes;
     window.deselectAllCodes = deselectAllCodes;
     window.confirmCodeAction = () => confirmCodeAction(localData, apiQueue, overwriteBasket, renderTable);
-    window.copyCodes = (shareId) => showCodeManagement(shareId, localData, false);
+    window.copyCodes = (shareId) => {
+        // Get existing share
+        const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
+        if (!share) return;
+        
+        // Set isCustomShare to false since we're editing an existing share
+        isCustomShare = false;
+        showCodeManagement(shareId, localData, false);
+    };
     window.saveChanges = () => saveChanges(localData, apiQueue, overwriteBasket, renderTable);
     window.discardChanges = discardChanges;
 }
@@ -115,6 +123,7 @@ function closeModal() {
     
     // Clear inputs
     codeInput.value = '';
+    codeInput.disabled = false;
     modalDiscordId.value = '';
     validationSummary.innerHTML = '';
     validationSummary.classList.remove('visible');
@@ -208,6 +217,10 @@ export function showCodeManagement(shareId = null, localData, customShare = fals
     // Update share preview
     updateSharePreview(originalShare);
 
+    // Reset code input
+    codeInput.value = '';
+    codeInput.disabled = false;
+    
     // Show modal
     codeModal.style.display = "block";
     
