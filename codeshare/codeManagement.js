@@ -197,11 +197,24 @@ export function showCodeManagement(shareId = null, localData, customShare = fals
     currentMode = 'add';
     document.getElementById('addMode').classList.add('active');
     document.getElementById('removeMode').classList.remove('active');
+    
+    // Update button text
+    const confirmButton = document.getElementById('confirmAction');
+    if (confirmButton) {
+        confirmButton.textContent = 'Add Codes';
+        confirmButton.disabled = false;
+    }
 
     // Update share preview
     updateSharePreview(originalShare);
 
+    // Show modal
     codeModal.style.display = "block";
+    
+    // For custom shares, show message about adding codes
+    if (customShare) {
+        showFloatingMessage("Please add codes using the Add Codes button before saving", 'info');
+    }
 }
 
 function updateSharePreview(share) {
@@ -398,8 +411,18 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
 
-        // Parse existing ranges
+        // Handle range creation/modification
         const currentRanges = [];
+        
+        if (isCustomShare && !previewShare.r) {
+            // For custom shares with no existing range, create a direct range
+            const start = Math.min(...positions);
+            const end = Math.max(...positions);
+            previewShare.r = `${start}-${end}`;
+            return;
+        }
+        
+        // Parse existing ranges if any
         const existingRanges = (previewShare.r || previewShare.ranges || '').split(',').filter(r => r);
         if (existingRanges.length > 0) {
             existingRanges.forEach(range => {
@@ -527,6 +550,12 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
 
 
 async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
+    // For custom shares, require codes to be added first
+    if (isCustomShare && !pendingChanges) {
+        showFloatingMessage("Please add codes using the Add Codes button first", 'error');
+        return;
+    }
+
     // Check if there are any pending changes in the input
     const inputText = codeInput.value.trim();
     if (inputText) {
