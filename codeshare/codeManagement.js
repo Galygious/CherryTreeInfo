@@ -1,5 +1,17 @@
-import { DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes, generateCodesFromRanges, showFloatingMessage, SHARE_DURATION } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
+import {
+    DIGIT_LENGTH,
+    REQUIRED_DIGITS,
+    generateValidCodes,
+    generateCodesFromRanges,
+    showFloatingMessage,
+    SHARE_DURATION,
+    MAX_TOTAL_CODES,
+    cleanDiscordId
+} from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 import { validateDiscordId, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
+
+// Initialize constants
+const SHARE_DURATION_VALUE = SHARE_DURATION;
 
 let currentShareId = null;
 let currentMode = 'add';
@@ -84,7 +96,7 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     window.selectAllCodes = selectAllCodes;
     window.deselectAllCodes = deselectAllCodes;
     window.confirmCodeAction = () => confirmCodeAction(localData, apiQueue, overwriteBasket, renderTable);
-    window.copyCodes = (shareId) => showCodeManagement(shareId, localData);
+    window.copyCodes = (shareId) => showCodeManagement(shareId, localData, false);
     window.saveChanges = () => saveChanges(localData, apiQueue, overwriteBasket, renderTable);
     window.discardChanges = discardChanges;
 }
@@ -168,7 +180,7 @@ export function showCodeManagement(shareId = null, localData, customShare = fals
         originalShare = {
             i: Date.now().toString(),
             r: '',
-            e: Date.now() + SHARE_DURATION,
+            e: Date.now() + SHARE_DURATION_VALUE,
             c: false
         };
     } else {
