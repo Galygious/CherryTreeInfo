@@ -303,8 +303,10 @@ async function fetchBasket(localData, apiQueue, renderTable, shareButton) {
             await overwriteBasket(cleanedData.data, apiQueue);
         }
 
-        localData = cleanedData.data;
+        // Update localData properties instead of reassigning
+        localData.shares = cleanedData.data.shares;
         await renderTable(localData.shares);
+        console.log('[Fetch] Updated local data:', localData);
         shareButton.disabled = false;
     } catch (err) {
         console.error("[Fetch] Error:", err);
@@ -332,8 +334,13 @@ async function removeExpiredShares(localData, apiQueue, renderTable) {
         (share.c || share.confirmed) || // Keep confirmed shares
         (share.e || share.expiration) > now // Keep unexpired shares
     );
-    localData.shares = validShares;
-    renderTable(localData.shares);
+    
+    // Only update if shares have changed
+    if (validShares.length !== localData.shares.length) {
+        localData.shares = validShares;
+        await renderTable(localData.shares);
+        console.log('[Remove] Updated local data:', localData);
+    }
 
     // If there's already a request to remove expired shares, remove it as this one will handle those changes
     if (apiQueue.hasExpiredShareRemovalInQueue()) {
