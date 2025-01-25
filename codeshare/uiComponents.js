@@ -137,7 +137,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
             }
             
             // Format message with Discord mention and grouped codes
-            const message = `<@${share.d}>\n${groups.map(group => group.join(', ')).join('\n')}`;
+            const message = `<@${share.d}>\n${groups.map(group => group.join('\n')).join('\n')}`;
             console.log('[Copy] Formatted message:', message);
             
             await navigator.clipboard.writeText(message);
