@@ -125,8 +125,28 @@ export async function renderTable(shares) {
     }
 
     const showConfirmed = document.getElementById('showConfirmed').checked;
-    // Filter shares based on confirmation status
-    shares = shares.filter(share => showConfirmed ? (share.c || share.confirmed) : !(share.c || share.confirmed));
+    console.log('[Render] Filtering shares:', {
+        total: shares.length,
+        showConfirmed
+    });
+    
+    // Filter shares based on confirmation status and expiration
+    const now = Date.now();
+    shares = shares.filter(share => {
+        const isConfirmed = share.c || share.confirmed;
+        const isExpired = (share.e || share.expiration) <= now;
+        
+        console.log('[Render] Share status:', {
+            id: share.i,
+            isConfirmed,
+            isExpired,
+            expiration: new Date(share.e || share.expiration).toISOString()
+        });
+        
+        return showConfirmed ? isConfirmed : (!isConfirmed && !isExpired);
+    });
+    
+    console.log('[Render] Filtered shares:', shares.length);
 
     // First, get all unique Discord IDs that need usernames
     const uniqueDiscordIds = [...new Set(shares.map(share => share.d || share.discord_id))];
@@ -323,17 +343,35 @@ async function removeExpiredShares(localData, apiQueue, renderTable) {
         return;
     }
 
-    const expiredShares = localData.shares.filter(share =>
-        !(share.c || share.confirmed) && // Don't count confirmed shares as expired
-        (share.e || share.expiration) <= now
-    );
-    if (expiredShares.length === 0) return;
+    console.log('[Remove] Checking for expired shares at:', new Date(now).toISOString());
+    
+    const expiredShares = localData.shares.filter(share => {
+        const isConfirmed = share.c || share.confirmed;
+        const expiration = share.e || share.expiration;
+        const isExpired = expiration <= now;
+        
+        console.log('[Remove] Share status:', {
+            id: share.i,
+            isConfirmed,
+            expiration: new Date(expiration).toISOString(),
+            isExpired,
+            timeLeft: expiration - now
+        });
+        
+        return !isConfirmed && isExpired;
+    });
+    
+    if (expiredShares.length === 0) {
+        console.log('[Remove] No expired shares found');
+        return;
+    }
 
-    console.log('[Remove] Found expired shares:', expiredShares.length);
-    const validShares = localData.shares.filter(share =>
-        (share.c || share.confirmed) || // Keep confirmed shares
-        (share.e || share.expiration) > now // Keep unexpired shares
-    );
+    console.log('[Remove] Found expired shares:', expiredShares);
+    const validShares = localData.shares.filter(share => {
+        const isConfirmed = share.c || share.confirmed;
+        const expiration = share.e || share.expiration;
+        return isConfirmed || expiration > now;
+    });
     
     // Only update if shares have changed
     if (validShares.length !== localData.shares.length) {

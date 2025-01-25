@@ -298,22 +298,42 @@ export async function overwriteBasket(newData, apiQueue) {
 
 export function cleanExpiredShares(data) {
     const now = Date.now();
+    console.log('[Clean] Starting share cleanup at:', new Date(now).toISOString());
+    
     if (data === null || typeof data !== 'object') {
+        console.log('[Clean] Invalid data, initializing empty shares');
         data = { shares: [] };
     }
     if (!('shares' in data)) {
+        console.log('[Clean] No shares property, initializing empty array');
         data.shares = [];
     }
+    
     const originalShares = Array.isArray(data.shares) ? data.shares : [];
-    const validShares = originalShares.filter(share =>
-        (share.c || share.confirmed) || // Keep confirmed shares
-        (share.e || share.expiration) > now // Keep unexpired shares
-    );
+    console.log('[Clean] Processing shares:', originalShares.length);
+    
+    const validShares = originalShares.filter(share => {
+        const isConfirmed = share.c || share.confirmed;
+        const expiration = share.e || share.expiration;
+        const isExpired = expiration <= now;
+        
+        console.log('[Clean] Share status:', {
+            id: share.i,
+            isConfirmed,
+            expiration: new Date(expiration).toISOString(),
+            isExpired,
+            timeLeft: expiration - now
+        });
+        
+        return isConfirmed || !isExpired;
+    });
     
     const expiredCount = originalShares.length - validShares.length;
-    if (expiredCount > 0) {
-        console.log('[Clean] Found expired shares:', expiredCount);
-    }
+    console.log('[Clean] Results:', {
+        original: originalShares.length,
+        valid: validShares.length,
+        expired: expiredCount
+    });
 
     return {
         updated: expiredCount > 0,
