@@ -1,8 +1,7 @@
-import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername } from './utils.js';
-import { validateDiscordId } from './api.js';
+import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION } from './utils.js';
+import { validateDiscordId, cleanExpiredShares } from './api.js';
 import { showCodeManagement } from './codeManagement.js';
 
-const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
 const BASKET_NAME = "LeaseBasket";
 
