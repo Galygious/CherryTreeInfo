@@ -360,11 +360,7 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         // Preview adding codes
         const newCodes = inputText.split('\n')
             .map(code => code.trim())
-            .filter(code => {
-                const digits = code.split('').map(Number);
-                return code.length === DIGIT_LENGTH &&
-                       REQUIRED_DIGITS.every(digit => digits.includes(digit));
-            });
+            .filter(code => code.length === DIGIT_LENGTH);
 
         if (newCodes.length === 0) {
             showFloatingMessage("No valid codes to add", 'error');
@@ -373,20 +369,29 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
 
         // Find positions of new codes
         const positions = [];
+        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+        const allGeneratedCodes = [];
+        let position = 0;
+        
+        // Generate all possible codes first
+        while (true) {
+            const {value, done} = generator.next();
+            if (done) break;
+            allGeneratedCodes.push({ code: value, position });
+            position++;
+        }
+
+        // Find positions of input codes
         for (const code of newCodes) {
-            const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
-            let position = 0;
-            let found = false;
-            
-            while (!found) {
-                const {value, done} = generator.next();
-                if (done) break;
-                if (value === code) {
-                    positions.push(position);
-                    found = true;
-                }
-                position++;
+            const match = allGeneratedCodes.find(gc => gc.code === code);
+            if (match) {
+                positions.push(match.position);
             }
+        }
+
+        if (positions.length === 0) {
+            showFloatingMessage("No valid vault codes found", 'error');
+            return;
         }
 
         // Add new codes to existing ranges
@@ -485,9 +490,8 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
 
 
 async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
-    // Get current preview state
-    const currentRanges = shareRanges.textContent;
-    if (!currentRanges && !isCustomShare) {
+    // Get current preview state from originalShare since it's been updated by confirmCodeAction
+    if (!originalShare.r && !isCustomShare) {
         showFloatingMessage("No changes to save", 'error');
         return;
     }
@@ -523,7 +527,7 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
         const newShare = {
             ...originalShare,
             d: discordId,
-            r: currentRanges
+            r: originalShare.r
         };
 
         try {
@@ -547,8 +551,8 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
         const share = localData.shares.find(s => s.i === currentShareId || s.share_id === currentShareId);
         if (!share) return;
 
-        // Apply changes from preview
-        share.r = currentRanges;
+        // Apply changes from originalShare
+        share.r = originalShare.r;
 
         // Update database
         try {
