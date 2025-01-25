@@ -72,6 +72,8 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     document.querySelector('.close-modal').onclick = closeModal;
 
     // Code input event listeners
+    let validationTimeout;
+    
     codeInput.addEventListener('input', () => {
         const inputText = codeInput.value.trim();
         if (!inputText) {
@@ -80,12 +82,26 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
             validationSummary.classList.remove('visible');
             return;
         }
-        validateCodes();
+        
+        // Clear any pending validation
+        if (validationTimeout) {
+            clearTimeout(validationTimeout);
+        }
+        
+        // Schedule validation after typing stops
+        validationTimeout = setTimeout(() => {
+            validateCodes();
+        }, 300);
     });
 
     codeInput.addEventListener('paste', (e) => {
         // Allow paste event to complete, then validate
-        setTimeout(validateCodes, 0);
+        if (validationTimeout) {
+            clearTimeout(validationTimeout);
+        }
+        validationTimeout = setTimeout(() => {
+            validateCodes();
+        }, 100);
     });
 
     // Make functions globally available
@@ -150,10 +166,23 @@ function switchMode(mode, localData) {
     document.getElementById('modalTitle').textContent = mode === 'add' ? 'Add Codes' : 'Remove Codes';
     document.getElementById('confirmAction').textContent = mode === 'add' ? 'Add Codes' : 'Remove Selected';
     
+    // Store textarea state
+    const wasFocused = document.activeElement === codeInput;
+    const cursorPosition = codeInput.selectionStart;
+    
     // Clear input and validation
     codeInput.value = '';
+    codeInput.disabled = false;
     validationSummary.innerHTML = '';
     validationSummary.classList.remove('visible');
+    
+    // Restore focus if needed
+    if (wasFocused) {
+        requestAnimationFrame(() => {
+            codeInput.focus();
+            codeInput.setSelectionRange(cursorPosition, cursorPosition);
+        });
+    }
     
     // Update placeholder text
     codeInput.placeholder = mode === 'add'
@@ -231,6 +260,13 @@ export function showCodeManagement(shareId = null, localData, customShare = fals
 }
 
 function updateSharePreview(share) {
+    // Store textarea state
+    const wasFocused = document.activeElement === codeInput;
+    const cursorPosition = codeInput.selectionStart;
+    
+    // Ensure textarea stays enabled
+    codeInput.disabled = false;
+    
     const codes = generateCodesFromRanges(share.r || share.ranges);
     shareCodeCount.textContent = `${codes.length} codes`;
     shareRanges.textContent = share.r || share.ranges;
@@ -259,9 +295,23 @@ function updateSharePreview(share) {
         pendingChanges = hasChanges || (isCustomShare && share.r); // For custom shares, having any ranges means changes
         document.querySelector('.share-preview').classList.toggle('changes-pending', pendingChanges);
     }
+
+    // Restore textarea focus and cursor position if it was focused
+    if (wasFocused) {
+        requestAnimationFrame(() => {
+            codeInput.focus();
+            codeInput.setSelectionRange(cursorPosition, cursorPosition);
+        });
+    }
 }
 
 function validateCodes() {
+    // Store current cursor position
+    const cursorPosition = codeInput.selectionStart;
+    
+    // Ensure textarea stays enabled
+    codeInput.disabled = false;
+    
     const inputText = codeInput.value.trim();
     if (!inputText) {
         validationSummary.classList.remove('visible');
@@ -273,6 +323,22 @@ function validateCodes() {
         .filter(code => code);
 
     console.log('[Validate] Checking codes:', codes);
+    
+    // Check for duplicate codes in existing shares
+    const existingCodes = new Set();
+    if (isCustomShare) {
+        const now = Date.now();
+        const activeShares = localData.shares.filter(share =>
+            !share.c && // Only check unconfirmed shares
+            share.e > now // Only check active shares
+        );
+        
+        for (const share of activeShares) {
+            const shareCodes = generateCodesFromRanges(share.r);
+            shareCodes.forEach(code => existingCodes.add(code));
+        }
+    }
+    
     const validationResults = codes.map(code => {
         // Check length
         const isValidLength = code.length === DIGIT_LENGTH;
@@ -308,13 +374,17 @@ function validateCodes() {
             }
         }
 
+        // Check for duplicates
+        const isDuplicate = existingCodes.has(code);
+        
         return {
             code,
-            isValid: isValidLength && hasRequiredDigits && isGeneratable,
+            isValid: isValidLength && hasRequiredDigits && isGeneratable && !isDuplicate,
             errors: [
                 !isValidLength && `Must be ${DIGIT_LENGTH} digits`,
                 !hasRequiredDigits && `Must contain all required digits: ${REQUIRED_DIGITS.join(', ')}`,
-                (isValidLength && hasRequiredDigits && !isGeneratable) && 'Not a valid vault code'
+                (isValidLength && hasRequiredDigits && !isGeneratable) && 'Not a valid vault code',
+                isDuplicate && 'Code already exists in another active share'
             ].filter(Boolean)
         };
     });
@@ -642,6 +712,30 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
     }
 
     if (isCustomShare) {
+        // Get current time once
+        const now = Date.now();
+        
+        // Check for duplicate codes first
+        const activeShares = localData.shares.filter(share =>
+            !share.c && // Only check unconfirmed shares
+            share.e > now // Only check active shares
+        );
+        
+        const existingCodes = new Set();
+        for (const share of activeShares) {
+            const shareCodes = generateCodesFromRanges(share.r);
+            shareCodes.forEach(code => existingCodes.add(code));
+        }
+        
+        const newCodes = generateCodesFromRanges(originalShare.r);
+        const duplicates = newCodes.filter(code => existingCodes.has(code));
+        
+        if (duplicates.length > 0) {
+            console.error('[Save] Found duplicate codes:', duplicates);
+            showFloatingMessage(`Code ${duplicates[0]} already exists in another active share`, 'error');
+            return;
+        }
+        
         const discordId = cleanDiscordId(modalDiscordId.value.trim());
         if (!discordId) {
             showFloatingMessage("Please enter a Discord User ID", 'error');
@@ -656,7 +750,6 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
         }
 
         // Check if user has an active unconfirmed share
-        const now = Date.now();
         const hasActiveShare = localData.shares.some(share =>
             share.d === discordId &&
             !share.c &&

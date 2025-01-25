@@ -94,6 +94,11 @@ button:disabled {
     color: white;
 }
 
+.edit-button {
+    background-color: #ffd966;
+    color: white;
+}
+
 .page-container {
     max-width: 1200px;
     margin: 0 auto;

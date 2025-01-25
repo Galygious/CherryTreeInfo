@@ -98,6 +98,30 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         });
     };
 
+    window.copyShareToClipboard = function(shareId) {
+        const share = localData.shares.find(s => s.i === shareId);
+        if (!share) return;
+
+        const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
+        const codes = generateCodesFromRanges(share.r);
+        const groups = [];
+        
+        // Split codes into groups
+        for (let i = 0; i < codes.length; i += groupSize) {
+            groups.push(codes.slice(i, i + groupSize));
+        }
+        
+        // Format message with Discord mention and grouped codes
+        const message = `<@${share.d}>\n${groups.map(group => group.join(', ')).join('\n')}`;
+        
+        navigator.clipboard.writeText(message).then(() => {
+            showFloatingMessage("Share copied to clipboard!", 'success');
+        }).catch(err => {
+            console.error('Failed to copy share:', err);
+            showFloatingMessage("Failed to copy share to clipboard", 'error');
+        });
+    };
+
     // Event listeners
     shareButton.addEventListener("click", () => createShare(localData, apiQueue, renderTable, shareButton, discordInput));
     refreshButton.addEventListener("click", () => fetchBasket(localData, apiQueue, renderTable, shareButton));
@@ -181,13 +205,16 @@ export async function renderTable(shares) {
                         </a>
                     </td>
                     <td>
-                        <a href="#" onclick="copyCodes('${shareId}'); return false;" style="color: #66a0ff; text-decoration: none;">
-                            ${getTotalCodesFromRanges(ranges)} codes (${ranges})
+                        <a href="#" onclick="copyShareToClipboard('${shareId}'); return false;" style="color: #66a0ff; text-decoration: none;">
+                            ${getTotalCodesFromRanges(ranges)} codes
                         </a>
                     </td>
                     <td>${formatTimeLeft(timeLeft)}</td>
                     <td>
                         <div class="action-buttons">
+                            <button class="square-button edit-button"
+                                onclick="copyCodes('${shareId}')"
+                                title="Edit">📝</button>
                             <button class="square-button release-button"
                                 onclick="releaseShare('${shareId}')"
                                 title="Release">✕</button>
