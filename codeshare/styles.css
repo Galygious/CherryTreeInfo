@@ -384,6 +384,24 @@ input:disabled {
     height: 100px;
     margin: 10px 0;
     font-family: 'Courier New', monospace;
+    background-color: #1e2530;
+    border: 1px solid #3a4456;
+    color: #b8c7dc;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+}
+
+.code-entry textarea:focus {
+    border-color: #66a0ff;
+}
+
+.code-entry textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .code-entry .code-actions {
