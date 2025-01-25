@@ -1,4 +1,4 @@
-import { showFloatingMessage } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
+import { showFloatingMessage, SHARE_DURATION } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 
 // API Constants
 export const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
