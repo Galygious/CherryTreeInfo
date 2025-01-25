@@ -128,16 +128,43 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
                 return;
             }
 
-            console.log('[Copy] Generated codes:', codes.length);
+            // Calculate Hamming distance between two codes
+            function hammingDistance(code1, code2) {
+                let distance = 0;
+                for (let i = 0; i < code1.length; i++) {
+                    if (code1[i] !== code2[i]) {
+                        distance++;
+                    }
+                }
+                return distance;
+            }
+
+            // Sort codes by Hamming distance
+            // We'll compare each code with its predecessor to minimize total Hamming distance
+            const sortedCodes = [...codes];
+            sortedCodes.sort((a, b) => {
+                // For the first element, keep original order
+                if (!sortedCodes[0] || a === sortedCodes[0]) return -1;
+                
+                // Get the last element in our sorted sequence
+                const lastCode = sortedCodes[sortedCodes.indexOf(a) - 1];
+                
+                // Compare Hamming distances
+                const distA = hammingDistance(lastCode, a);
+                const distB = hammingDistance(lastCode, b);
+                return distA - distB;
+            });
+
+            console.log('[Copy] Sorted codes by Hamming distance:', sortedCodes.length);
             const groups = [];
             
-            // Split codes into groups
-            for (let i = 0; i < codes.length; i += groupSize) {
-                groups.push(codes.slice(i, i + groupSize));
+            // Split sorted codes into groups
+            for (let i = 0; i < sortedCodes.length; i += groupSize) {
+                groups.push(sortedCodes.slice(i, i + groupSize));
             }
             
             // Format message with Discord mention and grouped codes
-            const message = `<@${share.d}>\n${groups.map(group => group.join('\n')).join('\n')}`;
+            const message = `<@${share.d}>\n${groups.map(group => group.join('\n')).join('\n\n')}`;
             console.log('[Copy] Formatted message:', message);
             
             await navigator.clipboard.writeText(message);
