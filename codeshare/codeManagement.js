@@ -1,5 +1,5 @@
-import { DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes, generateCodesFromRanges, showFloatingMessage } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
-import { validateDiscordId } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
+import { DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes, generateCodesFromRanges, showFloatingMessage, SHARE_DURATION } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
+import { validateDiscordId, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 
 let currentShareId = null;
 let currentMode = 'add';

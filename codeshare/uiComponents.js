@@ -1,4 +1,4 @@
-import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
+import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION, DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 import { validateDiscordId, cleanExpiredShares, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 import { showCodeManagement } from 'https://galygious.github.io/CherryTreeInfo/codeshare/codeManagement.js';
 
@@ -233,10 +233,24 @@ async function createShare(localData, apiQueue, renderTable, shareButton, discor
         return;
     }
 
+    // Generate codes
+    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+    let count = 0;
+    let codes = [];
+    while (count < requestedCount) {
+        const { value, done } = generator.next();
+        if (done) break;
+        codes.push(value);
+        count++;
+    }
+
+    // Create range from generated codes
+    const range = `0-${requestedCount - 1}`;
+
     const newShare = {
         i: Date.now().toString(),
         d: discordId,
-        r: '', // Will be set by code management
+        r: range,
         e: Date.now() + SHARE_DURATION,
         c: false
     };
