@@ -82,9 +82,12 @@
                 <div class="code-entry-header">
                     <h3>Code Entry</h3>
                     <div class="code-mode-toggle">
-                        <button id="addMode" class="mode-button active" onclick="switchMode('add')">Add Codes</button>
-                        <button id="removeMode" class="mode-button" onclick="switchMode('remove')">Remove Codes</button>
+                        <button id="addMode" class="mode-button active" onclick="switchMode('add')">Add Mode</button>
+                        <button id="removeMode" class="mode-button" onclick="switchMode('remove')">Remove Mode</button>
                     </div>
+                </div>
+                <div class="code-actions">
+                    <button id="confirmAction" onclick="confirmCodeAction()">Add Codes</button>
                 </div>
 
                 <textarea id="codeInput" placeholder="Enter codes (one per line)..."></textarea>
@@ -108,7 +111,6 @@
             </div>
 
             <div class="code-actions">
-                <button id="confirmAction" onclick="confirmCodeAction()">Add Codes</button>
                 <button id="saveChanges" onclick="saveChanges()">Save Changes</button>
                 <button onclick="discardChanges()">Discard Changes</button>
             </div>

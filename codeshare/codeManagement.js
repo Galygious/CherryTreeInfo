@@ -394,37 +394,56 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
 
-        // Add new codes to existing ranges
+        // Parse existing ranges
         const currentRanges = (previewShare.r || previewShare.ranges || '').split(',')
             .filter(r => r)
-            .map(range => range.split('-').map(Number));
-        
-        const allPositions = [...positions];
-        currentRanges.forEach(([start, end]) => {
-            for (let i = start; i <= end; i++) {
-                allPositions.push(i);
+            .map(range => {
+                const [start, end] = range.split('-').map(Number);
+                return { start, end };
+            });
+
+        // Add new positions
+        positions.forEach(pos => {
+            let merged = false;
+            
+            // Try to merge with existing ranges
+            for (let i = 0; i < currentRanges.length; i++) {
+                const range = currentRanges[i];
+                
+                // Position is within or adjacent to range
+                if (pos >= range.start - 1 && pos <= range.end + 1) {
+                    range.start = Math.min(range.start, pos);
+                    range.end = Math.max(range.end, pos);
+                    merged = true;
+                    break;
+                }
+            }
+            
+            // If position couldn't be merged, create new range
+            if (!merged) {
+                currentRanges.push({ start: pos, end: pos });
             }
         });
 
-        // Create new ranges
-        if (allPositions.length > 0) {
-            allPositions.sort((a, b) => a - b);
-            const newRanges = [];
-            let rangeStart = allPositions[0];
-            let rangeEnd = allPositions[0];
+        // Sort ranges and merge overlapping ones
+        currentRanges.sort((a, b) => a.start - b.start);
+        const mergedRanges = [];
+        let currentRange = currentRanges[0];
 
-            for (let i = 1; i < allPositions.length; i++) {
-                if (allPositions[i] === rangeEnd + 1) {
-                    rangeEnd = allPositions[i];
-                } else {
-                    newRanges.push(`${rangeStart}-${rangeEnd}`);
-                    rangeStart = allPositions[i];
-                    rangeEnd = allPositions[i];
-                }
+        for (let i = 1; i < currentRanges.length; i++) {
+            if (currentRanges[i].start <= currentRange.end + 1) {
+                // Ranges overlap or are adjacent, merge them
+                currentRange.end = Math.max(currentRange.end, currentRanges[i].end);
+            } else {
+                // Ranges don't overlap, start new range
+                mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
+                currentRange = currentRanges[i];
             }
-            newRanges.push(`${rangeStart}-${rangeEnd}`);
-            previewShare.r = newRanges.join(',');
         }
+        mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
+
+        // Update share with merged ranges
+        previewShare.r = mergedRanges.join(',');
     } else {
         // Preview removing codes
         const selectedElements = document.querySelectorAll('.code-item.selected');
@@ -482,10 +501,15 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         previewShare.r = newRanges.join(',');
     }
 
-    // Update preview without saving changes
-    updateSharePreview(previewShare);
-    pendingChanges = previewShare.r !== originalShare.r;
-    document.querySelector('.share-preview').classList.toggle('changes-pending', pendingChanges);
+    // Update originalShare with the preview changes
+    originalShare.r = previewShare.r;
+    updateSharePreview(originalShare);
+    pendingChanges = true;
+    document.querySelector('.share-preview').classList.toggle('changes-pending', true);
+    
+    // Clear input after successful action
+    codeInput.value = '';
+    validationSummary.classList.remove('visible');
 }
 
 

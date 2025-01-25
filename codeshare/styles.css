@@ -386,6 +386,31 @@ input:disabled {
     font-family: 'Courier New', monospace;
 }
 
+.code-entry .code-actions {
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.code-entry .code-actions button {
+    padding: 8px 16px;
+    background-color: #66a0ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.code-entry .code-actions button:hover {
+    background-color: #5590e6;
+}
+
+.code-entry .code-actions button:disabled {
+    background-color: #3a4456;
+    cursor: not-allowed;
+}
+
 .code-entry-header {
     display: flex;
     justify-content: space-between;
