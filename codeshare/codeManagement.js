@@ -360,7 +360,11 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         // Preview adding codes
         const newCodes = inputText.split('\n')
             .map(code => code.trim())
-            .filter(code => code.length === DIGIT_LENGTH);
+            .filter(code => {
+                const digits = code.split('').map(Number);
+                return code.length === DIGIT_LENGTH &&
+                       REQUIRED_DIGITS.every(digit => digits.includes(digit));
+            });
 
         if (newCodes.length === 0) {
             showFloatingMessage("No valid codes to add", 'error');
@@ -395,12 +399,14 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         }
 
         // Parse existing ranges
-        const currentRanges = (previewShare.r || previewShare.ranges || '').split(',')
-            .filter(r => r)
-            .map(range => {
+        const currentRanges = [];
+        const existingRanges = (previewShare.r || previewShare.ranges || '').split(',').filter(r => r);
+        if (existingRanges.length > 0) {
+            existingRanges.forEach(range => {
                 const [start, end] = range.split('-').map(Number);
-                return { start, end };
+                currentRanges.push({ start, end });
             });
+        }
 
         // Add new positions
         positions.forEach(pos => {
@@ -428,19 +434,26 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         // Sort ranges and merge overlapping ones
         currentRanges.sort((a, b) => a.start - b.start);
         const mergedRanges = [];
-        let currentRange = currentRanges[0];
-
-        for (let i = 1; i < currentRanges.length; i++) {
-            if (currentRanges[i].start <= currentRange.end + 1) {
-                // Ranges overlap or are adjacent, merge them
-                currentRange.end = Math.max(currentRange.end, currentRanges[i].end);
-            } else {
-                // Ranges don't overlap, start new range
-                mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
-                currentRange = currentRanges[i];
+        
+        if (currentRanges.length > 0) {
+            let currentRange = currentRanges[0];
+            for (let i = 1; i < currentRanges.length; i++) {
+                if (currentRanges[i].start <= currentRange.end + 1) {
+                    // Ranges overlap or are adjacent, merge them
+                    currentRange.end = Math.max(currentRange.end, currentRanges[i].end);
+                } else {
+                    // Ranges don't overlap, start new range
+                    mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
+                    currentRange = currentRanges[i];
+                }
             }
+            mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
+        } else {
+            // If no existing ranges, create a new range from positions
+            const start = Math.min(...positions);
+            const end = Math.max(...positions);
+            mergedRanges.push(`${start}-${end}`);
         }
-        mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
 
         // Update share with merged ranges
         previewShare.r = mergedRanges.join(',');
@@ -514,9 +527,16 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
 
 
 async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
-    // Get current preview state from originalShare since it's been updated by confirmCodeAction
-    if (!originalShare.r && !isCustomShare) {
-        showFloatingMessage("No changes to save", 'error');
+    // Check if there are any pending changes in the input
+    const inputText = codeInput.value.trim();
+    if (inputText) {
+        // If there's input, confirm the changes first
+        await confirmCodeAction(localData, apiQueue, overwriteBasket, renderTable);
+    }
+
+    // Verify we have a valid range to save
+    if (!originalShare.r) {
+        showFloatingMessage("No codes to save", 'error');
         return;
     }
 
