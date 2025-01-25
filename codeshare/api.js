@@ -262,6 +262,40 @@ export async function validateDiscordId(id) {
     }
 }
 
+export async function overwriteBasket(newData, apiQueue) {
+    console.log('[Overwrite] Updating basket with:', newData);
+    try {
+        // Clean and validate the data before sending
+        const cleanedShares = newData.shares.map(share => {
+            // Ensure all properties exist and are of correct type
+            return {
+                i: share.i || share.share_id || Date.now().toString(),
+                d: share.d || share.discord_id,
+                r: share.r || share.ranges,
+                e: share.e || share.expiration || Date.now() + SHARE_DURATION,
+                c: typeof share.c !== 'undefined' ? share.c : !!share.confirmed
+            };
+        });
+
+        const payload = { shares: cleanedShares };
+        console.log('[Overwrite] Sending payload:', payload);
+
+        await apiQueue.enqueue({
+            url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+            options: {
+                method: "POST",
+                body: JSON.stringify(payload)
+            }
+        });
+        
+        console.log("[Overwrite] Success:", "Database updated successfully");
+    } catch (err) {
+        console.error("[Overwrite] Error:", err);
+        showFloatingMessage("Operation failed. Please try again.", 'error');
+        throw err;
+    }
+}
+
 export function cleanExpiredShares(data) {
     const now = Date.now();
     if (data === null || typeof data !== 'object') {

@@ -43,7 +43,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         renderTable(localData.shares);
 
         // Update the database
-        await overwriteBasket(localData);
+        await overwriteBasket(localData, apiQueue);
         showFloatingMessage("Code range released successfully", 'success');
     };
 
@@ -56,7 +56,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         renderTable(localData.shares);
 
         // Update the database
-        await overwriteBasket(localData);
+        await overwriteBasket(localData, apiQueue);
         showFloatingMessage("Code range confirmed successfully", 'success');
     };
 
@@ -85,7 +85,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         await renderTable(localData.shares);
 
         // Update the database
-        await overwriteBasket(localData);
+        await overwriteBasket(localData, apiQueue);
         showFloatingMessage("Code range unconfirmed successfully", 'success');
     };
 
@@ -300,7 +300,7 @@ async function fetchBasket(localData, apiQueue, renderTable, shareButton) {
         
         if (cleanedData.updated) {
             console.log('[Fetch] Expired shares found, updating basket');
-            await overwriteBasket(cleanedData.data);
+            await overwriteBasket(cleanedData.data, apiQueue);
         }
 
         localData = cleanedData.data;

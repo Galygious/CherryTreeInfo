@@ -552,7 +552,7 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
 
         // Update database
         try {
-            await overwriteBasket(localData);
+            await overwriteBasket(localData, apiQueue);
             await renderTable(localData.shares);
             showFloatingMessage("Share updated successfully", 'success');
             closeModal();

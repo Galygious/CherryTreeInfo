@@ -108,6 +108,7 @@
             </div>
 
             <div class="code-actions">
+                <button id="confirmAction" onclick="confirmCodeAction()">Add Codes</button>
                 <button id="saveChanges" onclick="saveChanges()">Save Changes</button>
                 <button onclick="discardChanges()">Discard Changes</button>
             </div>
@@ -115,10 +116,9 @@
     </div>
 
     <script type="module">
-        import { APIQueue, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
+        import { APIQueue, PANTRY_URL, BASKET_NAME, overwriteBasket, cleanExpiredShares } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
         import { initializeCodeManagement } from 'https://galygious.github.io/CherryTreeInfo/codeshare/codeManagement.js';
         import { initializeUI, renderTable } from 'https://galygious.github.io/CherryTreeInfo/codeshare/uiComponents.js';
-        import { cleanExpiredShares } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
         import { SHARE_DURATION, showFloatingMessage } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 
         // Initialize state
@@ -131,39 +131,6 @@
             initializeUI(localData, apiQueue, overwriteBasket, renderTable);
         });
 
-        // Shared functions
-        async function overwriteBasket(newData) {
-            console.log('[Overwrite] Updating basket with:', newData);
-            try {
-                // Clean and validate the data before sending
-                const cleanedShares = newData.shares.map(share => {
-                    // Ensure all properties exist and are of correct type
-                    return {
-                        i: share.i || share.share_id || Date.now().toString(),
-                        d: share.d || share.discord_id,
-                        r: share.r || share.ranges,
-                        e: share.e || share.expiration || Date.now() + SHARE_DURATION,
-                        c: typeof share.c !== 'undefined' ? share.c : !!share.confirmed
-                    };
-                });
-
-                const payload = { shares: cleanedShares };
-                console.log('[Overwrite] Sending payload:', payload);
-
-                const response = await apiQueue.enqueue({
-                    url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
-                    options: {
-                        method: "POST",
-                        body: JSON.stringify(payload)
-                    }
-                });
-                
-                console.log("[Overwrite] Success:", "Database updated successfully");
-            } catch (err) {
-                console.error("[Overwrite] Error:", err);
-                showFloatingMessage("Operation failed. Please try again.", 'error');
-            }
-        }
     </script>
 </body>
 </html>
