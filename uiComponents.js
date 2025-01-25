@@ -1,9 +1,6 @@
 import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION } from './utils.js';
-import { validateDiscordId, cleanExpiredShares } from './api.js';
+import { validateDiscordId, cleanExpiredShares, PANTRY_URL, BASKET_NAME } from './api.js';
 import { showCodeManagement } from './codeManagement.js';
-
-const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
-const BASKET_NAME = "LeaseBasket";
 
 export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) {
     const shareButton = document.getElementById("createShare");

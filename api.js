@@ -1,8 +1,8 @@
 import { showFloatingMessage } from './utils.js';
 
 // API Constants
-const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
-const BASKET_NAME = "LeaseBasket";
+export const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
+export const BASKET_NAME = "LeaseBasket";
 const API_COOLDOWN = 2000; // 2 second cooldown between API requests
 const INITIAL_BACKOFF = 10000; // 10 second initial backoff
 const MAX_BACKOFF = 30000; // 30 second maximum backoff
