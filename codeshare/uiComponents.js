@@ -89,6 +89,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         showFloatingMessage("Code range unconfirmed successfully", 'success');
     };
 
+    // Initialize clipboard functions
     window.copyToClipboard = function(text) {
         navigator.clipboard.writeText(text).then(() => {
             showFloatingMessage("Copied to clipboard!", 'success');
@@ -98,28 +99,42 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         });
     };
 
-    window.copyShareToClipboard = function(shareId) {
-        const share = localData.shares.find(s => s.i === shareId);
-        if (!share) return;
+    // Initialize share clipboard function with access to localData
+    window.copyShareToClipboard = async function(shareId) {
+        try {
+            const share = localData.shares.find(s => s.i === shareId);
+            if (!share) {
+                showFloatingMessage("Share not found", 'error');
+                return;
+            }
 
-        const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
-        const codes = generateCodesFromRanges(share.r);
-        const groups = [];
-        
-        // Split codes into groups
-        for (let i = 0; i < codes.length; i += groupSize) {
-            groups.push(codes.slice(i, i + groupSize));
-        }
-        
-        // Format message with Discord mention and grouped codes
-        const message = `<@${share.d}>\n${groups.map(group => group.join(', ')).join('\n')}`;
-        
-        navigator.clipboard.writeText(message).then(() => {
+            console.log('[Copy] Generating codes for share:', share);
+            const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
+            const codes = generateCodesFromRanges(share.r || share.ranges);
+            
+            if (!codes || codes.length === 0) {
+                showFloatingMessage("No codes found in share", 'error');
+                return;
+            }
+
+            console.log('[Copy] Generated codes:', codes.length);
+            const groups = [];
+            
+            // Split codes into groups
+            for (let i = 0; i < codes.length; i += groupSize) {
+                groups.push(codes.slice(i, i + groupSize));
+            }
+            
+            // Format message with Discord mention and grouped codes
+            const message = `<@${share.d}>\n${groups.map(group => group.join(', ')).join('\n')}`;
+            console.log('[Copy] Formatted message:', message);
+            
+            await navigator.clipboard.writeText(message);
             showFloatingMessage("Share copied to clipboard!", 'success');
-        }).catch(err => {
-            console.error('Failed to copy share:', err);
+        } catch (err) {
+            console.error('[Copy] Error:', err);
             showFloatingMessage("Failed to copy share to clipboard", 'error');
-        });
+        }
     };
 
     // Event listeners
