@@ -8,7 +8,7 @@ import {
     DIGIT_LENGTH,
     REQUIRED_DIGITS,
     generateValidCodes,
-    generateCodesFromRanges as generateCodes
+    generateCodesFromRanges
 } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 import { APIQueue, PANTRY_URL, BASKET_NAME, validateDiscordId, cleanExpiredShares, overwriteBasket } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 import { showCodeManagement } from 'https://galygious.github.io/CherryTreeInfo/codeshare/codeManagement.js';
@@ -120,7 +120,7 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
 
             console.log('[Copy] Generating codes for share:', share);
             const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
-            const codes = generateCodes(share.r || share.ranges || '');
+            const codes = generateCodesFromRanges(share.r || share.ranges || '');
             console.log('[Copy] Generated codes:', codes);
             
             if (!codes || codes.length === 0) {
