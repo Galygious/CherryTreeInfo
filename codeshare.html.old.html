@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Test Page</title>
+    <style>
+        body {
+            background-color: #1e2530;
+            color: #b8c7dc;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #e6edf7;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #252d3b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #1e2530;
+        }
+        th {
+            background-color: #2a3444;
+            color: #e6edf7;
+            font-weight: normal;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        button {
+            margin: 10px 0;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2a3444;
+            color: #b8c7dc;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #3a4456;
+        }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        .square-button {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+        .square-button:hover {
+            opacity: 0.8;
+        }
+        .release-button {
+            background-color: #ff6666;
+            color: white;
+        }
+        .confirm-button {
+            background-color: #66ff8f;
+            color: white;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls-section {
+            background-color: #252d3b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .input-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+        @media (max-width: 768px) {
+            .input-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+        .input-label {
+            color: #66a0ff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .number-input {
+            width: 120px;
+        }
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .group-size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #252d3b;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+        .refresh-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        input {
+            flex: 1;
+            background-color: #1e2530;
+            border: 1px solid #3a4456;
+            color: #b8c7dc;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #66a0ff;
+        }
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .floating-message {
+            position: absolute;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            animation: floatDown 3s ease-in forwards;
+            white-space: nowrap;
+            pointer-events: none;
+            background-color: #252d3b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .floating-message.error {
+            color: #ff6666;
+            border-left: 3px solid #ff6666;
+        }
+        .floating-message.success {
+            color: #66ff8f;
+            border-left: 3px solid #66ff8f;
+        }
+        .floating-message.info {
+            color: #66a0ff;
+            border-left: 3px solid #66a0ff;
+        }
+        @keyframes floatDown {
+            0% {
+                top: 10%;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                top: 90%;
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+        .queue-status-container {
+            height: 76px;
+            margin: 15px 0;
+        }
+        #queueStatus {
+            padding: 15px;
+            background-color: #252d3b;
+            border-radius: 8px;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #queueStatus.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .queue-info {
+            margin: 8px 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+        }
+        .processing {
+            color: #66a0ff;
+            font-weight: 500;
+        }
+        .queue-length {
+            color: #ff9666;
+            font-weight: 500;
+        }
+
+        /* Code Management Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #252d3b;
+            margin: 5% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #b8c7dc;
+        }
+
+        .code-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .code-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background-color: #1e2530;
+            border-radius: 4px;
+            border: 1px solid #3a4456;
+        }
+
+        .code-item.selected {
+            border-color: #66a0ff;
+            background-color: #2a3444;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .manual-code-entry {
+            margin: 20px 0;
+        }
+
+        .code-entry textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .code-mode-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .mode-button {
+            padding: 8px 16px;
+            background: #1e2530;
+            border: 1px solid #3a4456;
+            color: #b8c7dc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .mode-button.active {
+            background: #3a4456;
+            border-color: #66a0ff;
+            color: #fff;
+        }
+
+        .validation-summary {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background: #1e2530;
+            display: none;
+        }
+
+        .validation-summary.visible {
+            display: block;
+        }
+
+        .code-item {
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .code-item .validation-status {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+
+        .code-item.valid .validation-status {
+            color: #66ff8f;
+        }
+
+        .code-item.invalid .validation-status {
+            color: #ff6666;
+        }
+
+        .code-item.invalid {
+            border-color: #ff6666;
+        }
+
+        .code-item.valid {
+            border-color: #66ff8f;
+        }
+
+        .share-preview {
+            background: #1e2530;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .share-preview-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #66a0ff;
+        }
+
+        .share-preview-ranges {
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .custom-share-fields {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #1e2530;
+            border-radius: 4px;
+        }
+
+        .custom-share-fields .input-field {
+            margin-bottom: 10px;
+        }
+
+        .validation-message {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .validation-message.error {
+            color: #ff6666;
+        }
+
+        .validation-message.success {
+            color: #66ff8f;
+        }
+
+        /* Track changes in the modal */
+        .changes-pending .share-preview {
+            border: 1px solid #66a0ff;
+            position: relative;
+        }
+
+        .changes-pending .share-preview::before {
+            content: 'Unsaved Changes';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #252d3b;
+            color: #66a0ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <h1>Share Management</h1>
+        
+        <div class="queue-status-container">
+            <div id="queueStatus">
+                <div class="queue-info">Queue Length: <span class="queue-length">0</span></div>
+                <div class="queue-info">Processing: <span class="processing">None</span></div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="input-container">
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="discordId" class="input-label">Discord User ID</label>
+                        <input type="text" id="discordId" placeholder="e.g., 120842877046751234" />
+                    </div>
+                    <div class="input-field">
+                        <label for="codeCount" class="input-label">Number of Codes</label>
+                        <input type="number" id="codeCount" class="number-input" min="1" max="100" value="1" />
+                    </div>
+                </div>
+                <button id="createShare" disabled>Create 10-Minute Share</button>
+            </div>
+        </div>
+
+        <div class="table-controls">
+            <div class="refresh-controls">
+                <button id="refresh">Refresh Data</button>
+                <button id="createCustomShare">Create Custom Share</button>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="showConfirmed" style="cursor: pointer;">
+                    Show Confirmed Shares
+                </label>
+            </div>
+            <div class="group-size-control">
+                <label for="groupSize" class="input-label">Group Size:</label>
+                <input type="number" id="groupSize" class="number-input" min="1" value="5" />
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Discord User</th>
+                    <th>Codes</th>
+                    <th>Expires In</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="shareTable">
+                <tr>
+                    <td colspan="4">No shares yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // API Constants
+            const PANTRY_URL = "https://getpantry.cloud/apiv1/pantry/be94921b-0a73-4c27-852f-903779cb6787";
+            const BASKET_NAME = "LeaseBasket";
+            const API_COOLDOWN = 2000; // 3 second cooldown between API requests
+            const INITIAL_BACKOFF = 10000; // 10 second initial backoff
+            const MAX_BACKOFF = 30000; // 30 second maximum backoff
+
+            // Code Generation Constants
+            const DIGIT_LENGTH = 8; // Fixed length for all codes
+            const REQUIRED_DIGITS = [8,1,0,2,5,3]; // Required digits that must be present in each code
+            const MAX_TOTAL_CODES = calculateCombinationsWithAllDigits(DIGIT_LENGTH, REQUIRED_DIGITS); // Maximum possible valid combinations
+
+            // Share Constants
+            const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+            const MAX_CODES = Math.min(50, MAX_TOTAL_CODES); // Maximum codes per share (reduced for better manageability)
+
+            // DOM Elements
+            const shareButton = document.getElementById("createShare");
+            const refreshButton = document.getElementById("refresh");
+            const shareTable = document.getElementById("shareTable");
+            const queueStatus = document.getElementById("queueStatus");
+            const queueLengthSpan = document.querySelector(".queue-length");
+            const processingSpan = document.querySelector(".processing");
+            const discordInput = document.getElementById("discordId");
+
+            // Clean Discord ID input
+            function cleanDiscordId(input) {
+                // Remove <@>, <@!, and any non-numeric characters
+                return input.replace(/[<@!>]/g, '').replace(/\D/g, '');
+            }
+
+            // Input validation - only check format, not API
+            discordInput.addEventListener('input', () => {
+                const rawValue = discordInput.value.trim();
+                const cleanValue = cleanDiscordId(rawValue);
+                
+                // Update input with cleaned value if it's different
+                if (cleanValue !== rawValue) {
+                    discordInput.value = cleanValue;
+                }
+
+                // Discord IDs are numeric and typically 17-20 digits
+                const isValidFormat = /^\d{17,20}$/.test(cleanValue);
+                
+                if (cleanValue && !isValidFormat) {
+                    // Just show format error, no API call
+                    let container = document.querySelector('.error-container');
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'error-container';
+                        document.body.appendChild(container);
+                    }
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'floating-message error';
+                    messageElement.textContent = "Invalid Discord ID format";
+                    container.appendChild(messageElement);
+                    messageElement.addEventListener('animationend', () => {
+                        messageElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                }
+                // Enable/disable button based on format only
+                shareButton.disabled = !isValidFormat;
+            });
+
+            // State
+            let localData = { shares: [] };
+
+            class APIQueue {
+                constructor() {
+                    this.queue = [];
+                    this.processing = false;
+                    this.currentBackoff = INITIAL_BACKOFF;
+                    this.lastRequestTime = 0;
+                    this.currentAction = null;
+                    this.removingExpiredShares = false;
+                }
+
+                hasExpiredShareRemovalInQueue() {
+                    return this.queue.some(item =>
+                        item.request.options.method === 'POST' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
+                        item.request.options.body
+                    );
+                }
+
+                removeExpiredShareRequest() {
+                    const index = this.queue.findIndex(item =>
+                        item.request.options.method === 'POST' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`) &&
+                        item.request.options.body
+                    );
+                    if (index !== -1) {
+                        const [removed] = this.queue.splice(index, 1);
+                        removed.resolve(); // Resolve the promise since we're handling it with a newer request
+                        this.updateQueueDisplay();
+                    }
+                }
+
+                hasRefreshInQueue() {
+                    return this.queue.some(item =>
+                        item.request.options.method === 'GET' &&
+                        new URL(item.request.url).pathname.includes(`/basket/${BASKET_NAME}`)
+                    );
+                }
+
+                getActionMessage(request) {
+                    const method = request.options.method;
+                    const path = new URL(request.url).pathname;
+                    
+                    // Convert API requests to user-friendly messages
+                    if (method === 'GET') {
+                        return 'Fetching shares from the database';
+                    } else if (method === 'POST') {
+                        return 'Updating share database';
+                    } else if (method === 'PUT') {
+                        return 'Creating new share';
+                    }
+                    return 'Processing request...';
+                }
+
+                updateQueueDisplay() {
+                    queueLengthSpan.textContent = this.queue.length;
+                    
+                    // If there's a current action, show it
+                    if (this.currentAction) {
+                        processingSpan.textContent = this.currentAction;
+                    }
+                    // If no current action but items in queue, show next action
+                    else if (this.queue.length > 0) {
+                        processingSpan.textContent = this.getActionMessage(this.queue[0].request);
+                    }
+                    // If nothing in queue and not processing, show ready state
+                    else {
+                        processingSpan.textContent = 'Ready for next operation';
+                    }
+
+                    // Show queue status if there are items in queue or processing
+                    if (this.queue.length > 0 || this.processing) {
+                        queueStatus.classList.add('visible');
+                    } else {
+                        queueStatus.classList.remove('visible');
+                    }
+                }
+
+                async enqueue(request) {
+                    console.log(`[Queue] Enqueueing ${request.options.method} request to ${request.url}`);
+                    console.log('[Queue] Current queue length:', this.queue.length);
+                    
+                    return new Promise((resolve, reject) => {
+                        this.queue.push({
+                            request,
+                            resolve,
+                            reject,
+                            retryCount: 0
+                        });
+                        console.log('[Queue] Request added. New queue length:', this.queue.length);
+                        this.updateQueueDisplay();
+                        this.processQueue();
+                    });
+                }
+
+                async processQueue() {
+                    if (this.processing || this.queue.length === 0) {
+                        console.log('[Queue] Queue processing skipped:', 
+                            this.processing ? 'Already processing' : 'Queue empty');
+                        if (!this.processing) {
+                            this.currentAction = null;
+                            this.updateQueueDisplay();
+                        }
+                        return;
+                    }
+                    
+                    this.processing = true;
+                    console.log('[Queue] Starting queue processing');
+
+                    const now = Date.now();
+                    const timeSinceLastRequest = now - this.lastRequestTime;
+                    
+                    if (timeSinceLastRequest < API_COOLDOWN) {
+                        const waitTime = API_COOLDOWN - timeSinceLastRequest;
+                        console.log(`[Queue] Cooldown in effect. Waiting ${waitTime}ms`);
+                        // Keep showing the next action even during cooldown
+                        const nextItem = this.queue[0];
+                        this.currentAction = this.getActionMessage(nextItem.request);
+                        this.updateQueueDisplay();
+                        await this.delay(waitTime);
+                    }
+
+                    const item = this.queue[0];
+                    this.currentAction = this.getActionMessage(item.request);
+                    this.updateQueueDisplay();
+                    
+                    console.log('[Queue] Processing request:', item.request.options.method, item.request.url);
+                    
+                    try {
+                        console.log('[API] Making request:', {
+                            url: item.request.url,
+                            method: item.request.options.method,
+                            body: item.request.options.body
+                        });
+
+                        const response = await fetch(item.request.url, {
+                            ...item.request.options,
+                            headers: { "Content-Type": "application/json" }
+                        });
+                        
+                        if (response.status === 429) {
+                            console.warn(`[API] Rate limited. Backing off for ${this.currentBackoff}ms`);
+                            show1Message(`Server is busy. Retrying in ${this.currentBackoff / 1000} seconds...`, 'error');
+                            this.currentAction = `Waiting for server availability (${this.currentBackoff / 1000}s)`;
+                            this.updateQueueDisplay();
+                            await this.delay(this.currentBackoff);
+                            
+                            // Increase backoff time
+                            this.currentBackoff = Math.min(this.currentBackoff + 10000, MAX_BACKOFF);
+                            item.retryCount++;
+                            console.log(`[Queue] Retry ${item.retryCount}. New backoff: ${this.currentBackoff}ms`);
+                            
+                            // Keep the item in queue for retry
+                            this.processing = false;
+                            this.processQueue();
+                            return;
+                        }
+
+                        if (!response.ok) {
+                            // Try to get error details from response
+                            let errorMessage;
+                            try {
+                                const errorText = await response.text();
+                                console.log('[API] Error response text:', errorText);
+                                
+                                try {
+                                    // Try to parse as JSON first
+                                    const errorJson = JSON.parse(errorText);
+                                    errorMessage = errorJson.message || errorText;
+                                } catch {
+                                    // Use text as is if not JSON
+                                    errorMessage = errorText;
+                                }
+                            } catch {
+                                errorMessage = `HTTP Error: ${response.status}`;
+                            }
+                            throw new Error(errorMessage);
+                        }
+
+                        // Success - reset backoff and process response
+                        this.currentBackoff = INITIAL_BACKOFF;
+                        
+                        let responseData;
+                        const contentType = response.headers.get('content-type');
+                        
+                        if (contentType && contentType.includes('application/json')) {
+                            // JSON response (e.g., from PUT request)
+                            responseData = await response.json();
+                            console.log('[API] JSON Response:', responseData);
+                        } else {
+                            // Text response (e.g., from POST request)
+                            const textResponse = await response.text();
+                            console.log('[API] Text Response:', textResponse);
+                            
+                            // Try to parse as JSON in case content-type header is missing
+                            try {
+                                responseData = JSON.parse(textResponse);
+                                console.log('[API] Parsed as JSON:', responseData);
+                            } catch {
+                                // Not JSON, use text response
+                                responseData = textResponse;
+                            }
+                        }
+                        
+                        this.queue.shift(); // Remove the processed item
+                        console.log('[Queue] Request completed. Queue length:', this.queue.length);
+                        
+                        item.resolve(responseData);
+                    } catch (error) {
+                        console.error("[API] Error:", error);
+                        showFloatingMessage(`Error: ${error.message}`, 'error');
+                        item.reject(error);
+                        this.queue.shift(); // Remove failed item
+                        console.log('[Queue] Request failed. Queue length:', this.queue.length);
+                    }
+
+                    this.lastRequestTime = Date.now();
+                    this.processing = false;
+                    this.currentAction = null;
+                    this.updateQueueDisplay();
+                    console.log('[Queue] Processing complete');
+                    
+                    // Process next item after cooldown
+                    setTimeout(() => this.processQueue(), API_COOLDOWN);
+                }
+
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            }
+
+            // Initialize API Queue
+            const apiQueue = new APIQueue();
+
+            // Share management functions
+async function releaseShare(shareId) {
+    const share = localData.shares.find(s => s.i === shareId);
+    if (!share) return;
+
+    // Remove the share from local data
+    localData.shares = localData.shares.filter(s => s.i !== shareId);
+    renderTable(localData.shares);
+
+    // Update the database
+    await overwriteBasket(localData);
+    showFloatingMessage("Code range released successfully", 'success');
+}
+
+async function confirmShare(shareId) {
+    const share = localData.shares.find(s => s.i === shareId);
+    if (!share) return;
+
+    // Mark the share as confirmed
+    share.c = true;
+    renderTable(localData.shares);
+
+    // Update the database
+    await overwriteBasket(localData);
+    showFloatingMessage("Code range confirmed successfully", 'success');
+}
+
+async function unconfirmShare(shareId) {
+    const share = localData.shares.find(s => s.i === shareId);
+    if (!share) return;
+
+    // Check if user has any active unconfirmed shares
+    const discordId = share.d;
+    const now = Date.now();
+    const hasActiveShare = localData.shares.some(s =>
+        (s.d === discordId) &&
+        !(s.c || s.confirmed) &&
+        (s.e || s.expiration) > now
+    );
+
+    if (hasActiveShare) {
+        const username = await validateDiscordId(discordId).then(result => result.username);
+        showFloatingMessage(`${username} has an active share. Delete active share before unconfirming.`, 'error');
+        return;
+    }
+
+    // Mark the share as unconfirmed and reset expiration
+    share.c = false;
+    share.e = Date.now() + SHARE_DURATION;
+    await renderTable(localData.shares);
+
+    // Update the database
+    await overwriteBasket(localData);
+    showFloatingMessage("Code range unconfirmed successfully", 'success');
+}
+
+// Make functions available globally
+window.releaseShare = releaseShare;
+window.confirmShare = confirmShare;
+window.unconfirmShare = unconfirmShare;
+window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showFloatingMessage("Copied to clipboard!", 'success');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        showFloatingMessage("Failed to copy to clipboard", 'error');
+    });
+};
+
+            // Code Management Functions
+            let currentShareId = null;
+            let currentMode = 'add';
+            let isCustomShare = false;
+            let pendingChanges = false;
+            let originalShare = null;
+
+            const codeModal = document.getElementById('codeModal');
+            const codeInput = document.getElementById('codeInput');
+            const validationSummary = document.getElementById('validationSummary');
+            const shareRanges = document.getElementById('shareRanges');
+            const shareCodeCount = document.getElementById('shareCodeCount');
+            const modalDiscordId = document.getElementById('modalDiscordId');
+            const modalDiscordValidation = document.getElementById('modalDiscordValidation');
+            const customShareFields = document.getElementById('customShareFields');
+            const createCustomShareButton = document.getElementById('createCustomShare');
+
+            // Add event listener for custom share creation
+            createCustomShareButton.addEventListener('click', () => {
+                isCustomShare = true;
+                currentShareId = null;
+                originalShare = null;
+                showCodeManagement();
+            });
+
+            // Add event listener for modal Discord ID validation
+            modalDiscordId.addEventListener('input', async () => {
+                const rawValue = modalDiscordId.value.trim();
+                const cleanValue = cleanDiscordId(rawValue);
+                
+                if (cleanValue !== rawValue) {
+                    modalDiscordId.value = cleanValue;
+                }
+
+                const isValidFormat = /^\d{17,20}$/.test(cleanValue);
+                if (!cleanValue) {
+                    modalDiscordValidation.textContent = '';
+                    modalDiscordValidation.className = 'validation-message';
+                } else if (!isValidFormat) {
+                    modalDiscordValidation.textContent = 'Invalid Discord ID format';
+                    modalDiscordValidation.className = 'validation-message error';
+                } else {
+                    modalDiscordValidation.textContent = 'Validating...';
+                    modalDiscordValidation.className = 'validation-message';
+                    
+                    const validation = await validateDiscordId(cleanValue);
+                    if (validation.valid) {
+                        modalDiscordValidation.textContent = validation.username;
+                        modalDiscordValidation.className = 'validation-message success';
+                    } else {
+                        modalDiscordValidation.textContent = validation.error;
+                        modalDiscordValidation.className = 'validation-message error';
+                    }
+                }
+            });
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target === codeModal) {
+                    closeModal();
+                }
+            };
+
+            // Close modal when clicking X
+            document.querySelector('.close-modal').onclick = closeModal;
+
+            function closeModal() {
+                if (pendingChanges) {
+                    if (!confirm("You have unsaved changes. Are you sure you want to discard them?")) {
+                        return;
+                    }
+                }
+
+                codeModal.style.display = "none";
+                currentShareId = null;
+                isCustomShare = false;
+                pendingChanges = false;
+                originalShare = null;
+                
+                // Clear inputs
+                codeInput.value = '';
+                modalDiscordId.value = '';
+                validationSummary.innerHTML = '';
+                validationSummary.classList.remove('visible');
+                modalDiscordValidation.textContent = '';
+                modalDiscordValidation.className = 'validation-message';
+                
+                // Reset UI
+                customShareFields.style.display = 'none';
+                document.querySelector('.share-preview').classList.remove('changes-pending');
+            }
+
+            window.copyCodes = function(shareId) {
+                showCodeManagement(shareId);
+            };
+
+            function switchMode(mode) {
+                if (pendingChanges) {
+                    if (!confirm("You have unsaved changes. Are you sure you want to switch modes?")) {
+                        return;
+                    }
+                }
+
+                currentMode = mode;
+                document.getElementById('addMode').classList.toggle('active', mode === 'add');
+                document.getElementById('removeMode').classList.toggle('active', mode === 'remove');
+                
+                // Update modal title and button text
+                document.getElementById('modalTitle').textContent = mode === 'add' ? 'Add Codes' : 'Remove Codes';
+                document.getElementById('confirmAction').textContent = mode === 'add' ? 'Add Codes' : 'Remove Selected';
+                
+                // Clear input and validation
+                codeInput.value = '';
+                validationSummary.innerHTML = '';
+                validationSummary.classList.remove('visible');
+                
+                // Update placeholder text
+                codeInput.placeholder = mode === 'add'
+                    ? "Enter codes to add (one per line)..."
+                    : "Enter codes to remove (one per line)...";
+                
+                // Reset selection state
+                deselectAllCodes();
+                
+                // Reset changes tracking
+                pendingChanges = false;
+                document.querySelector('.share-preview').classList.remove('changes-pending');
+                
+                // Update share preview to original state
+                if (!isCustomShare && originalShare) {
+                    updateSharePreview(originalShare);
+                }
+                
+                validateCodes();
+            }
+
+            function showCodeManagement(shareId = null) {
+                currentShareId = shareId;
+                pendingChanges = false;
+                
+                if (isCustomShare) {
+                    // Show custom share fields
+                    customShareFields.style.display = 'block';
+                    document.getElementById('modalTitle').textContent = 'Create Custom Share';
+                    // Initialize empty share
+                    originalShare = {
+                        i: Date.now().toString(),
+                        r: '',
+                        e: Date.now() + SHARE_DURATION,
+                        c: false
+                    };
+                } else {
+                    // Hide custom share fields
+                    customShareFields.style.display = 'none';
+                    document.getElementById('modalTitle').textContent = 'Edit Share';
+                    // Get existing share
+                    const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
+                    if (!share) return;
+                    // Store original share state
+                    originalShare = { ...share };
+                }
+
+                // Reset to add mode
+                currentMode = 'add';
+                document.getElementById('addMode').classList.add('active');
+                document.getElementById('removeMode').classList.remove('active');
+
+                // Update share preview
+                updateSharePreview(originalShare);
+
+                codeModal.style.display = "block";
+            }
+
+            async function saveChanges() {
+                if (isCustomShare) {
+                    const discordId = cleanDiscordId(modalDiscordId.value.trim());
+                    if (!discordId) {
+                        showFloatingMessage("Please enter a Discord User ID", 'error');
+                        return;
+                    }
+
+                    // Validate Discord ID
+                    const validation = await validateDiscordId(discordId);
+                    if (!validation.valid) {
+                        showFloatingMessage(validation.error, 'error');
+                        return;
+                    }
+
+                    // Check if user has an active unconfirmed share
+                    const now = Date.now();
+                    const hasActiveShare = localData.shares.some(share =>
+                        share.d === discordId &&
+                        !share.c &&
+                        share.e > now
+                    );
+
+                    if (hasActiveShare) {
+                        showFloatingMessage(`${validation.username} already has an active unconfirmed share`, 'error');
+                        return;
+                    }
+
+                    // Create new share
+                    const newShare = {
+                        ...originalShare,
+                        d: discordId
+                    };
+
+                    try {
+                        await apiQueue.enqueue({
+                            url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                            options: {
+                                method: "PUT",
+                                body: JSON.stringify({ shares: [newShare] })
+                            }
+                        });
+                        localData.shares.push(newShare);
+                        await renderTable(localData.shares);
+                        showFloatingMessage("Custom share created successfully", 'success');
+                        closeModal();
+                    } catch (err) {
+                        console.error("[Create] Error:", err);
+                        showFloatingMessage("Failed to create custom share", 'error');
+                    }
+                } else {
+                    // Update existing share
+                    const share = localData.shares.find(s => s.i === currentShareId || s.share_id === currentShareId);
+                    if (!share) return;
+
+                    // Apply changes from originalShare
+                    share.r = originalShare.r;
+
+                    // Update database
+                    try {
+                        await overwriteBasket(localData);
+                        await renderTable(localData.shares);
+                        showFloatingMessage("Share updated successfully", 'success');
+                        closeModal();
+                    } catch (err) {
+                        console.error("[Update] Error:", err);
+                        showFloatingMessage("Failed to update share", 'error');
+                    }
+                }
+            }
+
+            function discardChanges() {
+                if (pendingChanges) {
+                    if (!confirm("You have unsaved changes. Are you sure you want to discard them?")) {
+                        return;
+                    }
+                }
+                closeModal();
+            }
+
+            function updateSharePreview(share) {
+                const codes = generateCodesFromRanges(share.r || share.ranges);
+                shareCodeCount.textContent = `${codes.length} codes`;
+                shareRanges.textContent = share.r || share.ranges;
+
+                // Generate codes and populate list with validation status
+                const codeList = document.getElementById('codeList');
+                codeList.innerHTML = codes.map(code => {
+                    // Validate code
+                    const digits = code.split('').map(Number);
+                    const hasRequiredDigits = REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                    const isValid = code.length === DIGIT_LENGTH && hasRequiredDigits;
+                    
+                    return `
+                        <div class="code-item ${isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
+                            <input type="checkbox" ${isValid ? '' : 'disabled'}>
+                            <span>${code}</span>
+                            <span class="validation-status">${isValid ? '✓' : '✕'}</span>
+                            ${!isValid ? `<div class="validation-errors">Invalid vault code</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // Track changes
+                if (!isCustomShare && originalShare) {
+                    const hasChanges = share.r !== originalShare.r;
+                    pendingChanges = hasChanges;
+                    document.querySelector('.share-preview').classList.toggle('changes-pending', hasChanges);
+                }
+            }
+
+            // Update code input to track changes
+            codeInput.addEventListener('input', () => {
+                validateCodes();
+                if (!isCustomShare && originalShare) {
+                    const currentCodes = codeInput.value.trim().split('\n').filter(code => code);
+                    const hasChanges = currentCodes.length > 0;
+                    pendingChanges = hasChanges;
+                    document.querySelector('.share-preview').classList.toggle('changes-pending', hasChanges);
+                }
+            });
+
+            // Make save/discard functions globally available
+            window.saveChanges = saveChanges;
+            window.discardChanges = discardChanges;
+
+            function validateCodes() {
+                const inputText = codeInput.value.trim();
+                if (!inputText) {
+                    validationSummary.classList.remove('visible');
+                    return;
+                }
+
+                const codes = inputText.split('\n').map(code => code.trim()).filter(code => code);
+                const validationResults = codes.map(code => {
+                    // Check length
+                    const isValidLength = code.length === DIGIT_LENGTH;
+                    
+                    // Check required digits
+                    const digits = code.split('').map(Number);
+                    const hasRequiredDigits = REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                    
+                    // Check if code would be generated by our generator
+                    let isGeneratable = false;
+                    if (isValidLength && hasRequiredDigits) {
+                        // Create a generator starting from 0 to check if this code would be generated
+                        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                        let result;
+                        let position = 0;
+                        
+                        // Keep generating codes until we find a match or run out of codes
+                        while (!isGeneratable) {
+                            result = generator.next();
+                            if (result.done) break;
+                            if (result.value === code) {
+                                isGeneratable = true;
+                                break;
+                            }
+                            position++;
+                            // Break if we've checked more codes than theoretically possible
+                            if (position >= MAX_TOTAL_CODES) break;
+                        }
+                    }
+
+                    return {
+                        code,
+                        isValid: isValidLength && hasRequiredDigits && isGeneratable,
+                        errors: [
+                            !isValidLength && `Must be ${DIGIT_LENGTH} digits`,
+                            !hasRequiredDigits && `Must contain all required digits: ${REQUIRED_DIGITS.join(', ')}`,
+                            (isValidLength && hasRequiredDigits && !isGeneratable) && 'Not a valid vault code'
+                        ].filter(Boolean)
+                    };
+                });
+
+                // Update validation summary
+                const validCount = validationResults.filter(r => r.isValid).length;
+                const invalidCount = validationResults.length - validCount;
+
+                validationSummary.innerHTML = `
+                    <div>Valid codes: ${validCount}</div>
+                    ${invalidCount > 0 ? `<div>Invalid codes: ${invalidCount}</div>` : ''}
+                `;
+                validationSummary.classList.add('visible');
+
+                // Update code list with validation status
+                const codeList = document.getElementById('codeList');
+                codeList.innerHTML = validationResults.map(result => `
+                    <div class="code-item ${result.isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
+                        <input type="checkbox" ${result.isValid ? '' : 'disabled'}>
+                        <span>${result.code}</span>
+                        <span class="validation-status">${result.isValid ? '✓' : '✕'}</span>
+                        ${!result.isValid ? `<div class="validation-errors">${result.errors.join(', ')}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            function toggleCodeSelection(element) {
+                if (element.classList.contains('invalid')) return;
+                element.classList.toggle('selected');
+                element.querySelector('input').checked = element.classList.contains('selected');
+                
+                // Track changes when in remove mode
+                if (currentMode === 'remove' && !isCustomShare) {
+                    const hasSelectedCodes = document.querySelectorAll('.code-item.selected').length > 0;
+                    pendingChanges = hasSelectedCodes;
+                    document.querySelector('.share-preview').classList.toggle('changes-pending', hasSelectedCodes);
+                }
+            }
+
+            function selectAllCodes() {
+                document.querySelectorAll('.code-item:not(.invalid)').forEach(item => {
+                    item.classList.add('selected');
+                    item.querySelector('input').checked = true;
+                });
+                
+                // Track changes when in remove mode
+                if (currentMode === 'remove' && !isCustomShare) {
+                    const hasSelectedCodes = document.querySelectorAll('.code-item.selected').length > 0;
+                    pendingChanges = hasSelectedCodes;
+                    document.querySelector('.share-preview').classList.toggle('changes-pending', hasSelectedCodes);
+                }
+            }
+
+            function deselectAllCodes() {
+                document.querySelectorAll('.code-item').forEach(item => {
+                    item.classList.remove('selected');
+                    item.querySelector('input').checked = false;
+                });
+                
+                // Track changes when in remove mode
+                if (currentMode === 'remove' && !isCustomShare) {
+                    pendingChanges = false;
+                    document.querySelector('.share-preview').classList.remove('changes-pending');
+                }
+            }
+
+            async function confirmCodeAction() {
+                if (currentMode === 'add') {
+                    await addCodesToShare();
+                } else {
+                    await removeCodesFromShare();
+                }
+            }
+
+            // Make confirmCodeAction globally available
+            window.confirmCodeAction = confirmCodeAction;
+
+            async function addCodesToShare() {
+                const inputText = codeInput.value.trim();
+                if (!inputText) return;
+
+                const newCodes = inputText.split('\n')
+                    .map(code => code.trim())
+                    .filter(code => {
+                        const digits = code.split('').map(Number);
+                        return code.length === DIGIT_LENGTH &&
+                               REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                    });
+
+                if (newCodes.length === 0) {
+                    showFloatingMessage("No valid codes to add", 'error');
+                    return;
+                }
+
+                // Find positions of new codes in generator sequence
+                const positions = [];
+                for (const code of newCodes) {
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                    let position = 0;
+                    let found = false;
+                    
+                    while (!found) {
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        if (value === code) {
+                            positions.push(position);
+                            found = true;
+                        }
+                        position++;
+                    }
+                }
+
+                // Create new ranges including new codes
+                const currentRanges = (originalShare.r || originalShare.ranges).split(',')
+                    .map(range => range.split('-').map(Number));
+                
+                const allPositions = [...positions];
+                currentRanges.forEach(([start, end]) => {
+                    for (let i = start; i <= end; i++) {
+                        allPositions.push(i);
+                    }
+                });
+
+                // Sort and merge positions into ranges
+                allPositions.sort((a, b) => a - b);
+                const newRanges = [];
+                let rangeStart = allPositions[0];
+                let rangeEnd = allPositions[0];
+
+                for (let i = 1; i < allPositions.length; i++) {
+                    if (allPositions[i] === rangeEnd + 1) {
+                        rangeEnd = allPositions[i];
+                    } else {
+                        newRanges.push(`${rangeStart}-${rangeEnd}`);
+                        rangeStart = allPositions[i];
+                        rangeEnd = allPositions[i];
+                    }
+                }
+                newRanges.push(`${rangeStart}-${rangeEnd}`);
+
+                // Update original share
+                originalShare.r = newRanges.join(',');
+                updateSharePreview(originalShare);
+                pendingChanges = true;
+            }
+
+            async function removeCodesFromShare() {
+                const selectedElements = document.querySelectorAll('.code-item.selected');
+                if (selectedElements.length === 0) {
+                    showFloatingMessage("No codes selected to remove", 'error');
+                    return;
+                }
+
+                const selectedCodes = Array.from(selectedElements)
+                    .map(element => element.querySelector('span').textContent);
+
+                // Get all codes and filter out selected ones
+                const allCodes = generateCodesFromRanges(originalShare.r || originalShare.ranges);
+                const remainingCodes = allCodes.filter(code => !selectedCodes.includes(code));
+
+                if (remainingCodes.length === 0) {
+                    showFloatingMessage("Cannot remove all codes from a share", 'error');
+                    return;
+                }
+
+                // Find positions of remaining codes
+                const positions = [];
+                for (const code of remainingCodes) {
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+                    let position = 0;
+                    let found = false;
+                    
+                    while (!found) {
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        if (value === code) {
+                            positions.push(position);
+                            found = true;
+                        }
+                        position++;
+                    }
+                }
+
+                // Create new ranges from remaining positions
+                positions.sort((a, b) => a - b);
+                const newRanges = [];
+                let rangeStart = positions[0];
+                let rangeEnd = positions[0];
+
+                for (let i = 1; i < positions.length; i++) {
+                    if (positions[i] === rangeEnd + 1) {
+                        rangeEnd = positions[i];
+                    } else {
+                        newRanges.push(`${rangeStart}-${rangeEnd}`);
+                        rangeStart = positions[i];
+                        rangeEnd = positions[i];
+                    }
+                }
+                newRanges.push(`${rangeStart}-${rangeEnd}`);
+
+                // Update original share
+                originalShare.r = newRanges.join(',');
+                updateSharePreview(originalShare);
+                pendingChanges = true;
+            }
+
+            async function removeSelectedCodes() {
+                if (!currentShareId) return;
+
+                const share = localData.shares.find(s => s.i === currentShareId || s.share_id === currentShareId);
+                if (!share) return;
+
+                // Get all codes and selected codes
+                const allCodes = generateCodesFromRanges(share.r || share.ranges);
+                const selectedCodes = Array.from(document.querySelectorAll('.code-item.selected'))
+                    .map(item => item.querySelector('span').textContent);
+
+                // Filter out selected codes
+                const remainingCodes = allCodes.filter(code => !selectedCodes.includes(code));
+
+                // Find indices of remaining codes
+                const remainingIndices = remainingCodes.map(code => {
+                    return allCodes.indexOf(code);
+                });
+
+                // Create new ranges from remaining indices
+                const ranges = [];
+                let rangeStart = remainingIndices[0];
+                let rangeEnd = remainingIndices[0];
+
+                for (let i = 1; i < remainingIndices.length; i++) {
+                    if (remainingIndices[i] === rangeEnd + 1) {
+                        rangeEnd = remainingIndices[i];
+                    } else {
+                        ranges.push(`${rangeStart}-${rangeEnd}`);
+                        rangeStart = remainingIndices[i];
+                        rangeEnd = remainingIndices[i];
+                    }
+                }
+
+                if (rangeStart !== undefined) {
+                    ranges.push(`${rangeStart}-${rangeEnd}`);
+                }
+
+                // Update share with new ranges
+                share.r = ranges.join(',');
+                await overwriteBasket(localData);
+                await renderTable(localData.shares);
+
+                // Close modal
+                codeModal.style.display = "none";
+                showFloatingMessage("Share updated successfully", 'success');
+            }
+
+            async function submitManualCodes() {
+                const manualCodesText = document.getElementById('manualCodes').value.trim();
+                if (!manualCodesText) return;
+
+                const manualCodes = manualCodesText.split('\n')
+                    .map(code => code.trim())
+                    .filter(code => code);
+
+                // Validate codes
+                const validCodes = manualCodes.filter(code => {
+                    const digits = code.split('').map(Number);
+                    return code.length === DIGIT_LENGTH &&
+                           REQUIRED_DIGITS.every(digit => digits.includes(digit));
+                });
+
+                if (validCodes.length === 0) {
+                    showFloatingMessage("No valid codes found", 'error');
+                    return;
+                }
+
+                if (validCodes.length !== manualCodes.length) {
+                    showFloatingMessage(`Warning: ${manualCodes.length - validCodes.length} invalid codes were ignored`, 'info');
+                }
+
+                // Find shares containing these codes
+                const affectedShares = [];
+                localData.shares.forEach(share => {
+                    const shareCodes = generateCodesFromRanges(share.r || share.ranges);
+                    const completedCodes = validCodes.filter(code => shareCodes.includes(code));
+                    if (completedCodes.length > 0) {
+                        affectedShares.push({
+                            share,
+                            completedCodes
+                        });
+                    }
+                });
+
+                // Update affected shares
+                for (const {share, completedCodes} of affectedShares) {
+                    const allCodes = generateCodesFromRanges(share.r || share.ranges);
+                    const remainingCodes = allCodes.filter(code => !completedCodes.includes(code));
+
+                    // Find indices of remaining codes
+                    const remainingIndices = remainingCodes.map(code => {
+                        return allCodes.indexOf(code);
+                    });
+
+                    // Create new ranges from remaining indices
+                    const ranges = [];
+                    let rangeStart = remainingIndices[0];
+                    let rangeEnd = remainingIndices[0];
+
+                    for (let i = 1; i < remainingIndices.length; i++) {
+                        if (remainingIndices[i] === rangeEnd + 1) {
+                            rangeEnd = remainingIndices[i];
+                        } else {
+                            ranges.push(`${rangeStart}-${rangeEnd}`);
+                            rangeStart = remainingIndices[i];
+                            rangeEnd = remainingIndices[i];
+                        }
+                    }
+
+                    if (rangeStart !== undefined) {
+                        ranges.push(`${rangeStart}-${rangeEnd}`);
+                    }
+
+                    // Update share with new ranges
+                    share.r = ranges.join(',');
+                }
+
+                if (affectedShares.length > 0) {
+                    await overwriteBasket(localData);
+                    await renderTable(localData.shares);
+                    showFloatingMessage(`Updated ${affectedShares.length} shares with completed codes`, 'success');
+                } else {
+                    showFloatingMessage("No shares found containing these codes", 'info');
+                }
+
+                // Clear input
+                document.getElementById('manualCodes').value = '';
+            }
+
+            // Make code management functions globally available
+            window.toggleCodeSelection = toggleCodeSelection;
+            window.selectAllCodes = selectAllCodes;
+            window.deselectAllCodes = deselectAllCodes;
+            window.removeSelectedCodes = removeSelectedCodes;
+            window.submitManualCodes = submitManualCodes;
+
+            // Calculate combinations that must include all required digits
+            function calculateCombinationsWithAllDigits(length, digits) {
+                if (length < digits.length) return 0;
+
+                // Calculate using dynamic programming
+                // dp[i][mask] represents number of ways to fill i positions using digits from mask
+                const dp = Array(length + 1).fill().map(() => Array(1 << digits.length).fill(0));
+                dp[0][0] = 1;
+
+                // For each position
+                for (let i = 0; i < length; i++) {
+                    // For each current state of used digits
+                    for (let mask = 0; mask < (1 << digits.length); mask++) {
+                        if (dp[i][mask] === 0) continue;
+                        
+                        // Try using each available digit
+                        for (let digit of digits) {
+                            const digitIndex = digits.indexOf(digit);
+                            const newMask = mask | (1 << digitIndex);
+                            dp[i + 1][newMask] += dp[i][mask];
+                        }
+                    }
+                }
+
+                // Sum all states where all digits are used (mask has all bits set)
+                const fullMask = (1 << digits.length) - 1;
+                return dp[length][fullMask];
+            }
+
+            // Generate codes ensuring all required digits are used
+            function* generateValidCodes(length, digits, startIndex) {
+                // Sort digits to ensure consistent ordering
+                const sortedDigits = [...digits].sort((a, b) => a - b);
+                const code = new Array(length).fill(sortedDigits[0]);
+                let count = 0;
+                
+                while (true) {
+                    // Check if current code is valid (contains all digits)
+                    const usedDigits = new Set(code);
+                    if (sortedDigits.every(digit => usedDigits.has(digit))) {
+                        if (count >= startIndex) {
+                            yield code.join("");
+                        }
+                        count++;
+                    }
+                    
+                    // Generate next code
+                    let pos = length - 1;
+                    while (pos >= 0) {
+                        const currentIndex = sortedDigits.indexOf(code[pos]);
+                        if (currentIndex < sortedDigits.length - 1) {
+                            code[pos] = sortedDigits[currentIndex + 1];
+                            break;
+                        }
+                        code[pos] = sortedDigits[0];
+                        pos--;
+                    }
+                    if (pos < 0) break;
+                }
+            }
+
+            function generateCodesFromRanges(ranges) {
+                if (!ranges) return [];
+                const codes = [];
+                ranges.split(',').forEach(range => {
+                    const [start, end] = range.split('-').map(Number);
+                    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, start);
+                    
+                    // Generate codes for this range
+                    for (let i = start; i <= end; i++) {
+                        const {value, done} = generator.next();
+                        if (done) break;
+                        codes.push(value);
+                    }
+                });
+                return codes;
+            }
+
+            function getTotalCodesFromRanges(ranges) {
+                if (!ranges) return 0;
+                return ranges.split(',').reduce((total, range) => {
+                    const [start, end] = range.split('-').map(Number);
+                    return total + (end - start + 1);
+                }, 0);
+            }
+
+            // Username cache management
+            const USERNAME_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+            function getCachedUsername(discordId) {
+                const cache = localStorage.getItem(`username_${discordId}`);
+                if (cache) {
+                    const { username, timestamp } = JSON.parse(cache);
+                    if (Date.now() - timestamp < USERNAME_CACHE_DURATION) {
+                        return username;
+                    }
+                    // Cache expired, remove it
+                    localStorage.removeItem(`username_${discordId}`);
+                }
+                return null;
+            }
+
+            function cacheUsername(discordId, username) {
+                localStorage.setItem(`username_${discordId}`, JSON.stringify({
+                    username,
+                    timestamp: Date.now()
+                }));
+            }
+
+            async function validateDiscordId(id) {
+                try {
+                    // Check cache first
+                    const cachedUsername = getCachedUsername(id);
+                    if (cachedUsername) {
+                        return { valid: true, username: cachedUsername };
+                    }
+
+                    const response = await fetch(`https://discordlookup.mesalytic.moe/v1/user/${id}`);
+                    const data = await response.json();
+                    
+                    if (data.message === "Unknown User" || data.message === "Value is not a valid Discord snowflake") {
+                        return { valid: false, error: "Invalid Discord ID" };
+                    }
+                    
+                    const username = data.global_name || data.username;
+                    // Cache the username
+                    cacheUsername(id, username);
+                    
+                    return {
+                        valid: true,
+                        username
+                    };
+                } catch (error) {
+                    console.error("[Discord] API Error:", error);
+                    return { valid: false, error: "Discord API error" };
+                }
+            }
+
+            // Track active messages and their counts
+            const activeMessages = new Map(); // message -> {element, count}
+            const messageQueue = [];
+            let isProcessingQueue = false;
+
+            function showFloatingMessage(message, type = 'info') {
+                // Check if this message is already being displayed
+                if (activeMessages.has(message)) {
+                    const { element, count } = activeMessages.get(message);
+                    const newCount = count + 1;
+                    element.textContent = `${message} (×${newCount})`;
+                    activeMessages.set(message, { element, count: newCount });
+                    return;
+                }
+
+                // Queue the new message
+                messageQueue.push({ message, type });
+                processMessageQueue();
+            }
+
+            async function processMessageQueue() {
+                if (isProcessingQueue || messageQueue.length === 0) return;
+                isProcessingQueue = true;
+
+                let container = document.querySelector('.error-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'error-container';
+                    document.body.appendChild(container);
+                }
+
+                while (messageQueue.length > 0) {
+                    const { message, type } = messageQueue.shift();
+                    
+                    // Create and show the message
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `floating-message ${type}`;
+                    messageElement.textContent = message;
+                    container.appendChild(messageElement);
+
+                    // Track the active message
+                    activeMessages.set(message, { element: messageElement, count: 1 });
+
+                    // Wait for animation to complete
+                    await new Promise(resolve => {
+                        messageElement.addEventListener('animationend', () => {
+                            activeMessages.delete(message);
+                            messageElement.remove();
+                            // Remove container if it's empty
+                            if (container.children.length === 0) {
+                                container.remove();
+                            }
+                            resolve();
+                        });
+                    });
+
+                    // Add a small delay between messages
+                    if (messageQueue.length > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                }
+
+                isProcessingQueue = false;
+            }
+
+            function formatTimeLeft(milliseconds) {
+                const seconds = Math.ceil(milliseconds / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+
+                if (days > 0) {
+                    const remainingHours = hours % 24;
+                    const remainingMinutes = minutes % 60;
+                    return `${days}d ${remainingHours}h ${remainingMinutes}m`;
+                } else if (hours > 0) {
+                    const remainingMinutes = minutes % 60;
+                    return `${hours}h ${remainingMinutes}m`;
+                } else if (minutes > 0) {
+                    return `${minutes}m`;
+                } else {
+                    return `${seconds}s`;
+                }
+            }
+
+            async function fetchBasket() {
+                console.log('[Fetch] Getting basket contents');
+                
+                // Check if there's already a refresh in queue
+                if (apiQueue.hasRefreshInQueue()) {
+                    console.log('[Fetch] Refresh already queued, skipping');
+                    showFloatingMessage("Update already in progress...", 'info');
+                    return;
+                }
+
+                try {
+                    const data = await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "GET"
+                        }
+                    });
+
+                    console.log('[Fetch] Current basket data:', data);
+                    const cleanedData = cleanExpiredShares(data);
+                    console.log('[Fetch] Cleaned data:', cleanedData);
+                    
+                    if (cleanedData.updated) {
+                        console.log('[Fetch] Expired shares found, updating basket');
+                        await overwriteBasket(cleanedData.data);
+                    }
+
+                    localData = cleanedData.data;
+                    await renderTable(localData.shares);
+                    shareButton.disabled = false;
+                } catch (err) {
+                    console.error("[Fetch] Error:", err);
+                }
+            }
+
+            function cleanExpiredShares(data) {
+                const now = Date.now();
+                if (data === null || typeof data !== 'object') {
+                    data = { shares: [] };
+                }
+                if (!('shares' in data)) {
+                    data.shares = [];
+                }
+                const originalShares = Array.isArray(data.shares) ? data.shares : [];
+                const validShares = originalShares.filter(share =>
+                    (share.c || share.confirmed) || // Keep confirmed shares
+                    (share.e || share.expiration) > now // Keep unexpired shares
+                );
+                
+                const expiredCount = originalShares.length - validShares.length;
+                if (expiredCount > 0) {
+                    console.log('[Clean] Found expired shares:', expiredCount);
+                }
+
+                return {
+                    updated: expiredCount > 0,
+                    data: { ...data, shares: validShares }
+                };
+            }
+
+            async function overwriteBasket(newData) {
+                console.log('[Overwrite] Updating basket with:', newData);
+                try {
+                    // Clean and validate the data before sending
+                    const cleanedShares = newData.shares.map(share => {
+                        // Ensure all properties exist and are of correct type
+                        return {
+                            i: share.i || share.share_id || Date.now().toString(),
+                            d: share.d || share.discord_id,
+                            r: share.r || share.ranges,
+                            e: share.e || share.expiration || Date.now() + SHARE_DURATION,
+                            c: typeof share.c !== 'undefined' ? share.c : !!share.confirmed
+                        };
+                    });
+
+                    const payload = { shares: cleanedShares };
+                    console.log('[Overwrite] Sending payload:', payload);
+
+                    const response = await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "POST",
+                            body: JSON.stringify(payload)
+                        }
+                    });
+                    
+                    // Log internal details only in development
+                    console.log("[Overwrite] Success:", "Database updated successfully");
+                } catch (err) {
+                    console.error("[Overwrite] Error:", err);
+                    showFloatingMessage("Operation failed. Please try again.", 'error');
+                }
+            }
+
+            async function createShare() {
+                console.log('[Create] Creating new 10-minute share');
+                shareButton.disabled = true;
+                const discordInput = document.getElementById('discordId');
+                const discordId = cleanDiscordId(discordInput.value.trim());
+                console.log('[Discord] Cleaned ID:', discordId);
+
+                if (!discordId) {
+                    showFloatingMessage("Please enter a Discord User ID", 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Validate Discord ID first
+                let container = document.querySelector('.error-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'error-container';
+                    document.body.appendChild(container);
+                }
+
+                const messageElement = document.createElement('div');
+                messageElement.className = 'floating-message info';
+                messageElement.textContent = "Validating Discord ID...";
+                container.appendChild(messageElement);
+
+                const discordValidation = await validateDiscordId(discordId);
+                messageElement.remove();
+                if (container.children.length === 0) {
+                    container.remove();
+                }
+
+                if (!discordValidation.valid) {
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'floating-message error';
+                    errorElement.textContent = discordValidation.error;
+                    container = document.querySelector('.error-container') || container;
+                    container.appendChild(errorElement);
+                    errorElement.addEventListener('animationend', () => {
+                        errorElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Check if user has an unconfirmed active share
+                const now = Date.now();
+                const existingUnconfirmedShare = localData.shares.find(share =>
+                    (share.d === discordId) && // Only check new format
+                    (share.e > now) && // Only check new format
+                    !share.c // Only check new format
+                );
+                
+                if (existingUnconfirmedShare) {
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'floating-message error';
+                    errorElement.textContent = `${discordValidation.username} already has an active unconfirmed share`;
+                    container = document.querySelector('.error-container') || container;
+                    container.appendChild(errorElement);
+                    errorElement.addEventListener('animationend', () => {
+                        errorElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Validate requested code count
+                showFloatingMessage("Validating code count...", 'info');
+                const requestedCount = parseInt(document.getElementById('codeCount').value) || 1;
+                console.log('[Codes] Requested count:', requestedCount, 'MAX_CODES:', MAX_CODES);
+
+                // Check per-share limit first
+                console.log('[Validation] Checking per-share limit:', requestedCount, '>', MAX_CODES);
+                if (requestedCount > MAX_CODES) {
+                    console.log('[Validation] Exceeded per-share limit, showing error');
+                    // Create and show error message immediately
+                    let container = document.querySelector('.error-container');
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'error-container';
+                        document.body.appendChild(container);
+                    }
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'floating-message error';
+                    messageElement.textContent = `Created share would exceed ${MAX_CODES} Code/Share limit!`;
+                    container.appendChild(messageElement);
+                    messageElement.addEventListener('animationend', () => {
+                        messageElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                if (requestedCount < 1) {
+                    showFloatingMessage("Please enter a valid number of codes", 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Calculate total codes in use
+                let totalCodesInUse = 0;
+                localData.shares.forEach(share => {
+                    const ranges = share.r || share.ranges;
+                    if (ranges) {
+                        const count = getTotalCodesFromRanges(ranges);
+                        console.log(`[Codes] Share ${share.d} uses ${count} codes with ranges:`, ranges);
+                        totalCodesInUse += count;
+                    }
+                });
+
+                console.log('[Codes] Current total in use:', totalCodesInUse);
+                console.log('[Codes] System limit:', MAX_TOTAL_CODES);
+                console.log('[Codes] Would use after request:', totalCodesInUse + requestedCount);
+
+                // Check against total system limit
+                console.log('[Validation] Checking total limit:', totalCodesInUse + requestedCount, '>', MAX_TOTAL_CODES);
+                if (totalCodesInUse + requestedCount > MAX_TOTAL_CODES) {
+                    const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
+                    console.log('[Validation] Exceeded total limit, showing error. Remaining:', remainingCodes);
+                    
+                    // Create and show error message immediately
+                    let container = document.querySelector('.error-container');
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'error-container';
+                        document.body.appendChild(container);
+                    }
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'floating-message error';
+                    messageElement.textContent = `Not enough available codes, ${remainingCodes} codes left in pool`;
+                    container.appendChild(messageElement);
+                    messageElement.addEventListener('animationend', () => {
+                        messageElement.remove();
+                        if (container.children.length === 0) {
+                            container.remove();
+                        }
+                    });
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                const codeCount = requestedCount;
+                showFloatingMessage("Allocating code range...", 'info');
+
+
+                // Check if adding new codes would exceed the maximum
+                if (totalCodesInUse + codeCount > MAX_TOTAL_CODES) {
+                    const remainingCodes = MAX_TOTAL_CODES - totalCodesInUse;
+                    showFloatingMessage(`Cannot create share. Only ${remainingCodes} codes remaining in the system.`, 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                // Find all used ranges and sort them
+                const usedRanges = [];
+                localData.shares.forEach(share => {
+                    const ranges = share.r || share.ranges;
+                    if (ranges) {
+                        ranges.split(',').forEach(range => {
+                            const [start, end] = range.split('-').map(Number);
+                            usedRanges.push([start, end]);
+                        });
+                    }
+                });
+                usedRanges.sort((a, b) => a[0] - b[0]);
+                console.log('[Range] Used ranges:', usedRanges);
+
+                // Merge overlapping or adjacent used ranges
+                const mergedUsedRanges = [];
+                for (const range of usedRanges) {
+                    if (mergedUsedRanges.length === 0) {
+                        mergedUsedRanges.push([...range]);
+                    } else {
+                        const lastRange = mergedUsedRanges[mergedUsedRanges.length - 1];
+                        if (range[0] <= lastRange[1] + 1) {
+                            lastRange[1] = Math.max(lastRange[1], range[1]);
+                        } else {
+                            mergedUsedRanges.push([...range]);
+                        }
+                    }
+                }
+                console.log('[Range] Merged used ranges:', mergedUsedRanges);
+
+                // Find available ranges by looking at gaps
+                let availableRanges = [];
+                
+                // Find gaps between used ranges
+                availableRanges = [];
+                if (mergedUsedRanges.length === 0) {
+                    // No ranges used yet, everything is available up to MAX_TOTAL_CODES
+                    availableRanges.push([0, MAX_TOTAL_CODES - 1]);
+                    console.log('[Range] No used ranges, all codes available');
+                } else {
+                    // Check gaps between ranges
+                    for (let i = 0; i < mergedUsedRanges.length - 1; i++) {
+                        const [_, currentEnd] = mergedUsedRanges[i];
+                        const [nextStart] = mergedUsedRanges[i + 1];
+                        if (nextStart > currentEnd + 1) {
+                            availableRanges.push([currentEnd + 1, nextStart - 1]);
+                            console.log(`[Range] Found gap: ${currentEnd + 1}-${nextStart - 1}`);
+                        }
+                    }
+
+                    // Check if there's space before the first range
+                    const firstStart = mergedUsedRanges[0][0];
+                    if (firstStart > 0) {
+                        availableRanges.unshift([0, firstStart - 1]);
+                        console.log(`[Range] Found initial gap: 0-${firstStart - 1}`);
+                    }
+
+                    // Check if there's space after the last range
+                    const lastEnd = mergedUsedRanges[mergedUsedRanges.length - 1][1];
+                    if (lastEnd < MAX_TOTAL_CODES - 1) {
+                        availableRanges.push([lastEnd + 1, MAX_TOTAL_CODES - 1]);
+                        console.log(`[Range] Found final gap: ${lastEnd + 1}-${MAX_TOTAL_CODES - 1}`);
+                    }
+                }
+
+                console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
+                console.log('[Range] Available ranges:', availableRanges);
+
+                console.log('[Range] Available ranges before allocation:', availableRanges);
+                
+                // Initialize variables for allocation
+                const allocatedRanges = [];
+                let codesNeeded = codeCount;
+
+                console.log('[Range] Starting allocation for', codeCount, 'codes');
+                console.log('[Range] Available ranges:', availableRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
+
+                // Sort available ranges by start index
+                availableRanges.sort((a, b) => a[0] - b[0]);
+
+                // Allocate from available ranges
+                for (const [start, end] of availableRanges) {
+                    if (codesNeeded <= 0) break;
+
+                    const rangeSize = end - start + 1;
+                    console.log(`[Range] Examining range ${start}-${end} (size: ${rangeSize})`);
+
+                    if (rangeSize >= codesNeeded) {
+                        // This range can fulfill the remaining requirement
+                        allocatedRanges.push([start, start + codesNeeded - 1]);
+                        console.log(`[Range] Allocated ${start}-${start + codesNeeded - 1} (${codesNeeded} codes)`);
+                        codesNeeded = 0;
+                    } else {
+                        // Use entire range and continue
+                        allocatedRanges.push([start, end]);
+                        console.log(`[Range] Allocated ${start}-${end} (${rangeSize} codes)`);
+                        codesNeeded -= rangeSize;
+                        console.log(`[Range] Still need ${codesNeeded} codes`);
+                    }
+                }
+
+                console.log('[Range] Final allocated ranges:', allocatedRanges.map(r => `${r[0]}-${r[1]}`).join(', '));
+
+                if (codesNeeded > 0) {
+                    console.log('[Range] Failed to allocate all needed codes');
+                    showFloatingMessage(`Unable to allocate requested codes. Only ${codeCount - codesNeeded} codes available.`, 'error');
+                    shareButton.disabled = false;
+                    return;
+                }
+
+                console.log('[Range] Final allocated ranges:', allocatedRanges);
+
+                // Format ranges into string
+                const rangeString = allocatedRanges
+                    .map(([start, end]) => `${start}-${end}`)
+                    .join(',');
+
+                const newShare = {
+                    i: Date.now().toString(),
+                    d: discordId,
+                    r: rangeString,
+                    e: Date.now() + SHARE_DURATION,
+                    c: false
+                };
+
+                console.log('[Create] New share:', newShare);
+
+                try {
+                    // Only send the new share for the PUT request since it's an append operation
+                    await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "PUT",
+                            body: JSON.stringify({ shares: [newShare] })
+                        }
+                    });
+                    console.log("[Create] Share added successfully");
+                    localData.shares.push(newShare);
+                    discordInput.value = ''; // Clear input after successful creation
+                } catch (err) {
+                    console.error("[Create] Error:", err);
+                    showFloatingMessage("Failed to create share", 'error');
+                }
+
+                shareButton.disabled = false;
+                await renderTable(localData.shares);
+            }
+
+            async function renderTable(shares) {
+                shares = Array.isArray(shares) ? shares : [];
+                if (!shareTable) {
+                    console.error("[Render] Error: shareTable element not found in the DOM.");
+                    return;
+                }
+
+                const showConfirmed = document.getElementById('showConfirmed').checked;
+                // Filter shares based on confirmation status
+                shares = shares.filter(share => showConfirmed ? (share.c || share.confirmed) : !(share.c || share.confirmed));
+
+                // First, get all unique Discord IDs that need usernames
+                const uniqueDiscordIds = [...new Set(shares.map(share => share.d || share.discord_id))];
+                
+                // Fetch usernames for all IDs
+                const usernamePromises = uniqueDiscordIds.map(async id => {
+                    let username = getCachedUsername(id);
+                    if (!username) {
+                        const validation = await validateDiscordId(id);
+                        username = validation.valid ? validation.username : id;
+                    }
+                    return [id, username];
+                });
+
+                // Wait for all username fetches to complete
+                const usernames = new Map(await Promise.all(usernamePromises));
+
+                shareTable.innerHTML = shares.length
+                    ? shares.map(share => {
+                        const timeLeft = Math.max(0, (share.e || share.expiration) - Date.now());
+                        const discordId = share.d || share.discord_id;
+                        const shareId = share.i || share.share_id;
+                        const ranges = share.r || share.ranges;
+                        const isConfirmed = share.c || share.confirmed;
+                        const username = usernames.get(discordId) || discordId;
+                        
+                        return `
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="copyToClipboard('<@${discordId}>'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${username}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" onclick="copyCodes('${shareId}'); return false;" style="color: #66a0ff; text-decoration: none;">
+                                        ${getTotalCodesFromRanges(ranges)} codes (${ranges})
+                                    </a>
+                                </td>
+                                <td>${formatTimeLeft(timeLeft)}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="square-button release-button"
+                                            onclick="releaseShare('${shareId}')"
+                                            title="Release">✕</button>
+                                        ${isConfirmed
+                                            ? `<button class="square-button confirm-button"
+                                                onclick="unconfirmShare('${shareId}')"
+                                                title="Unconfirm">↺</button>`
+                                            : `<button class="square-button confirm-button"
+                                                onclick="confirmShare('${shareId}')"
+                                                title="Confirm">✓</button>`
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("")
+                    : `<tr><td colspan="4">No ${showConfirmed ? 'confirmed' : 'active'} shares.</td></tr>`;
+            }
+
+            async function removeExpiredShares() {
+                // Skip if we're already processing expired shares
+                if (apiQueue.removingExpiredShares) return;
+
+                const now = Date.now();
+                if (!Array.isArray(localData.shares)) {
+                    localData.shares = [];
+                    return;
+                }
+
+                const expiredShares = localData.shares.filter(share =>
+                    !(share.c || share.confirmed) && // Don't count confirmed shares as expired
+                    (share.e || share.expiration) <= now
+                );
+                if (expiredShares.length === 0) return;
+
+                console.log('[Remove] Found expired shares:', expiredShares.length);
+                const validShares = localData.shares.filter(share =>
+                    (share.c || share.confirmed) || // Keep confirmed shares
+                    (share.e || share.expiration) > now // Keep unexpired shares
+                );
+                localData.shares = validShares;
+                renderTable(localData.shares);
+
+                // If there's already a request to remove expired shares, remove it as this one will handle those changes
+                if (apiQueue.hasExpiredShareRemovalInQueue()) {
+                    apiQueue.removeExpiredShareRequest();
+                }
+
+                // Mark that we're processing expired shares
+                apiQueue.removingExpiredShares = true;
+
+                try {
+                    await apiQueue.enqueue({
+                        url: `${PANTRY_URL}/basket/${BASKET_NAME}`,
+                        options: {
+                            method: "POST",
+                            body: JSON.stringify({ shares: validShares })
+                        }
+                    });
+                } catch (err) {
+                    console.error("[Remove] Error:", err);
+                } finally {
+                    // Clear the flag when we're done
+                    apiQueue.removingExpiredShares = false;
+                }
+            }
+
+            // Code management event listeners
+            codeInput.addEventListener('input', () => {
+                validateCodes();
+            });
+
+            codeInput.addEventListener('paste', (e) => {
+                // Allow paste event to complete, then validate
+                setTimeout(validateCodes, 0);
+            });
+
+            // Make code management functions globally available
+            window.switchMode = switchMode;
+            window.closeModal = closeModal;
+            window.toggleCodeSelection = toggleCodeSelection;
+            window.selectAllCodes = selectAllCodes;
+            window.deselectAllCodes = deselectAllCodes;
+            window.confirmCodeAction = confirmCodeAction;
+
+            // Event listeners
+            shareButton.addEventListener("click", createShare);
+            refreshButton.addEventListener("click", fetchBasket);
+            document.getElementById('showConfirmed').addEventListener('change', async () => {
+                await renderTable(localData.shares);
+            });
+
+            // Initialize page
+            console.log('[Init] Starting application');
+            fetchBasket();
+
+            // Timer update loop
+            setInterval(async () => {
+                await renderTable(localData.shares);
+                await removeExpiredShares();
+            }, 1000);
+        });
+    </script>
+
+    <!-- Code Management Modal -->
+    <div id="codeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Code Management</h2>
+            
+            <div id="customShareFields" class="custom-share-fields" style="display: none;">
+                <div class="input-field">
+                    <label for="modalDiscordId" class="input-label">Discord User ID</label>
+                    <input type="text" id="modalDiscordId" placeholder="e.g., 120842877046751234" />
+                </div>
+                <div id="modalDiscordValidation" class="validation-message"></div>
+            </div>
+
+            <div class="code-entry">
+                <div class="code-entry-header">
+                    <h3>Code Entry</h3>
+                    <div class="code-mode-toggle">
+                        <button id="addMode" class="mode-button active" onclick="switchMode('add')">Add Codes</button>
+                        <button id="removeMode" class="mode-button" onclick="switchMode('remove')">Remove Codes</button>
+                    </div>
+                </div>
+
+                <textarea id="codeInput" placeholder="Enter codes (one per line)..."></textarea>
+                <div id="validationSummary" class="validation-summary">
+                    <!-- Validation results will be shown here -->
+                </div>
+
+                <div id="codeList" class="code-list">
+                    <!-- Codes will be inserted here with validation status -->
+                </div>
+            </div>
+
+            <div class="share-preview">
+                <div class="share-preview-header">
+                    <span>Share Preview</span>
+                    <span id="shareCodeCount">0 codes</span>
+                </div>
+                <div id="shareRanges" class="share-preview-ranges">
+                    <!-- Share ranges will be shown here -->
+                </div>
+            </div>
+
+            <div class="code-actions">
+                <button id="saveChanges" onclick="saveChanges()">Save Changes</button>
+                <button onclick="discardChanges()">Discard Changes</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
