@@ -202,10 +202,10 @@ export async function renderTable(shares) {
     }
 
     const showConfirmed = document.getElementById('showConfirmed').checked;
-    console.log('[Render] Filtering shares:', {
-        total: shares.length,
-        showConfirmed
-    });
+    // console.log('[Render] Filtering shares:', {
+    //     total: shares.length,
+    //     showConfirmed
+    // });
     
     // Filter shares based on confirmation status and expiration
     const now = Date.now();
@@ -223,7 +223,7 @@ export async function renderTable(shares) {
         return showConfirmed ? isConfirmed : (!isConfirmed && !isExpired);
     });
     
-    console.log('[Render] Filtered shares:', shares.length);
+    // console.log('[Render] Filtered shares:', shares.length);
 
     // First, get all unique Discord IDs that need usernames
     const uniqueDiscordIds = [...new Set(shares.map(share => share.d || share.discord_id))];
@@ -423,7 +423,7 @@ async function removeExpiredShares(localData, apiQueue, renderTable) {
         return;
     }
 
-    console.log('[Remove] Checking for expired shares at:', new Date(now).toISOString());
+    // console.log('[Remove] Checking for expired shares at:', new Date(now).toISOString());
     
     const expiredShares = localData.shares.filter(share => {
         const isConfirmed = share.c || share.confirmed;
@@ -442,7 +442,7 @@ async function removeExpiredShares(localData, apiQueue, renderTable) {
     });
     
     if (expiredShares.length === 0) {
-        console.log('[Remove] No expired shares found');
+        // console.log('[Remove] No expired shares found');
         return;
     }
 
