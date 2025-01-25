@@ -1,4 +1,15 @@
-import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION, DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes, generateCodesFromRanges } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
+import {
+    formatTimeLeft,
+    getTotalCodesFromRanges,
+    showFloatingMessage,
+    cleanDiscordId,
+    getCachedUsername,
+    SHARE_DURATION,
+    DIGIT_LENGTH,
+    REQUIRED_DIGITS,
+    generateValidCodes,
+    generateCodesFromRanges as generateCodes
+} from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
 import { APIQueue, PANTRY_URL, BASKET_NAME, validateDiscordId, cleanExpiredShares, overwriteBasket } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 import { showCodeManagement } from 'https://galygious.github.io/CherryTreeInfo/codeshare/codeManagement.js';
 
@@ -99,7 +110,6 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
         });
     };
 
-    // Initialize share clipboard function with access to localData
     window.copyShareToClipboard = async function(shareId) {
         try {
             const share = localData.shares.find(s => s.i === shareId);
@@ -110,7 +120,8 @@ export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) 
 
             console.log('[Copy] Generating codes for share:', share);
             const groupSize = parseInt(document.getElementById('groupSize').value) || 5;
-            const codes = generateCodesFromRanges(share.r || share.ranges);
+            const codes = generateCodes(share.r || share.ranges || '');
+            console.log('[Copy] Generated codes:', codes);
             
             if (!codes || codes.length === 0) {
                 showFloatingMessage("No codes found in share", 'error');
