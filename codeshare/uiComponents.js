@@ -1,5 +1,5 @@
 import { formatTimeLeft, getTotalCodesFromRanges, showFloatingMessage, cleanDiscordId, getCachedUsername, SHARE_DURATION, DIGIT_LENGTH, REQUIRED_DIGITS, generateValidCodes } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
-import { validateDiscordId, cleanExpiredShares, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
+import { APIQueue, PANTRY_URL, BASKET_NAME, validateDiscordId, cleanExpiredShares, overwriteBasket } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 import { showCodeManagement } from 'https://galygious.github.io/CherryTreeInfo/codeshare/codeManagement.js';
 
 export function initializeUI(localData, apiQueue, overwriteBasket, renderTable) {

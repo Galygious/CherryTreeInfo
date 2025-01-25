@@ -8,7 +8,7 @@ import {
     MAX_TOTAL_CODES,
     cleanDiscordId
 } from 'https://galygious.github.io/CherryTreeInfo/codeshare/utils.js';
-import { validateDiscordId, PANTRY_URL, BASKET_NAME } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
+import { APIQueue, PANTRY_URL, BASKET_NAME, validateDiscordId, cleanExpiredShares, overwriteBasket } from 'https://galygious.github.io/CherryTreeInfo/codeshare/api.js';
 
 // Initialize constants
 const SHARE_DURATION_VALUE = SHARE_DURATION;
