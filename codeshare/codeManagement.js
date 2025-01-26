@@ -327,18 +327,25 @@ function updateSharePreview(share) {
 }
 
 function validateInputCodes(codes, localData) {
-    // Check for duplicate codes in existing shares
+    // Check for duplicate codes in all shares (active and historical)
     const existingCodes = new Set();
-    if (isCustomShare && localData) {
+    if (localData) {
         const now = Date.now();
-        const activeShares = localData.shares.filter(share =>
-            !share.c && // Only check unconfirmed shares
-            share.e > now // Only check active shares
+        
+        // Get all shares that are either:
+        // 1. Active (not expired) and unconfirmed
+        // 2. Confirmed (historical)
+        const relevantShares = localData.shares.filter(share =>
+            ((!share.c && share.e > now) || // Active unconfirmed shares
+             share.c) // Confirmed shares (historical)
         );
         
-        for (const share of activeShares) {
+        for (const share of relevantShares) {
             const shareCodes = generateCodesFromRanges(share.r);
-            shareCodes.forEach(code => existingCodes.add(code));
+            shareCodes.forEach(code => {
+                existingCodes.add(code);
+                console.log(`[Validation] Found existing code: ${code} in share ${share.i} (${share.c ? 'confirmed' : 'active'})`);
+            });
         }
     }
     
@@ -371,6 +378,20 @@ function validateInputCodes(codes, localData) {
         // Check for duplicates
         const isDuplicate = existingCodes.has(code);
         
+        // Get detailed duplicate information if it exists
+        let duplicateInfo = '';
+        if (isDuplicate && localData) {
+            const duplicateShare = localData.shares.find(share => {
+                const shareCodes = generateCodesFromRanges(share.r);
+                return shareCodes.includes(code);
+            });
+            if (duplicateShare) {
+                duplicateInfo = duplicateShare.c
+                    ? 'Code has been previously confirmed'
+                    : 'Code is currently in use by an active share';
+            }
+        }
+
         return {
             code,
             isValid: isValidLength && hasRequiredDigits && isGeneratable && !isDuplicate,
@@ -378,7 +399,7 @@ function validateInputCodes(codes, localData) {
                 !isValidLength && `Must be ${DIGIT_LENGTH} digits`,
                 !hasRequiredDigits && `Must contain all required digits: ${REQUIRED_DIGITS.join(', ')}`,
                 (isValidLength && hasRequiredDigits && !isGeneratable) && 'Not a valid vault code',
-                isDuplicate && 'Code already exists in another active share'
+                isDuplicate && (duplicateInfo || 'Code is already in use')
             ].filter(Boolean)
         };
     });

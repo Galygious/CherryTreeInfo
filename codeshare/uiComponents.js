@@ -309,18 +309,32 @@ async function createShare(localData, apiQueue, renderTable, shareButton, discor
         return;
     }
 
-    // Check if user has an unconfirmed active share
+    // Get current time for all checks
     const now = Date.now();
-    const existingUnconfirmedShare = localData.shares.find(share =>
-        (share.d === discordId) && // Only check new format
-        (share.e > now) && // Only check new format
-        !share.c // Only check new format
+
+    // Check for existing shares and code conflicts
+    showFloatingMessage("Checking code availability...", 'info');
+    const existingCodes = new Set();
+    const relevantShares = localData.shares.filter(share =>
+        ((!share.c && share.e > now) || // Active unconfirmed shares
+         share.c) // Confirmed shares (historical)
+    );
+
+    // Check if user has an unconfirmed active share
+    const existingUnconfirmedShare = relevantShares.find(share =>
+        share.d === discordId && !share.c
     );
     
     if (existingUnconfirmedShare) {
         showFloatingMessage(`${discordValidation.username} already has an active unconfirmed share`, 'error');
         shareButton.disabled = false;
         return;
+    }
+
+    // Get all existing codes from active and historical shares
+    for (const share of relevantShares) {
+        const shareCodes = generateCodesFromRanges(share.r);
+        shareCodes.forEach(code => existingCodes.add(code));
     }
 
     // Validate requested code count
@@ -333,25 +347,45 @@ async function createShare(localData, apiQueue, renderTable, shareButton, discor
         return;
     }
 
-    // Generate codes
+    // Generate unique codes that aren't in use
     const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
     let count = 0;
     let codes = [];
+    let position = 0;
+    let conflictFound = false;
+
     while (count < requestedCount && count < 100) { // Add safety check for 100 limit
         const { value, done } = generator.next();
         if (done) break;
-        codes.push(value);
-        count++;
+        
+        if (!existingCodes.has(value)) {
+            codes.push(value);
+            count++;
+        } else {
+            conflictFound = true;
+            console.log(`[Create] Skipping code ${value} - already in use`);
+        }
+        
+        position++;
+        if (position >= 1000) { // Safety limit for generation attempts
+            showFloatingMessage("Unable to find enough available codes", 'error');
+            shareButton.disabled = false;
+            return;
+        }
     }
 
     if (codes.length === 0) {
-        showFloatingMessage("Failed to generate codes", 'error');
+        showFloatingMessage("Failed to generate unique codes", 'error');
         shareButton.disabled = false;
         return;
     }
 
+    if (conflictFound) {
+        console.log('[Create] Some codes were skipped due to conflicts');
+    }
+
     // Create range from generated codes
-    const range = `0-${requestedCount - 1}`;
+    const range = `${position - codes.length}-${position - 1}`;
 
     const newShare = {
         i: Date.now().toString(),
