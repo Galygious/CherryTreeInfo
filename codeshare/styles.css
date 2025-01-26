@@ -121,8 +121,130 @@ button:disabled {
 }
 
 @media (max-width: 768px) {
+    /* Base layout adjustments */
+    body {
+        padding: 10px;
+    }
+
+    .page-container {
+        padding: 10px;
+    }
+
+    /* Input container */
     .input-container {
         grid-template-columns: 1fr;
+    }
+
+    /* Table adjustments */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        padding: 8px;
+        min-width: 100px;
+    }
+
+    /* Controls section */
+    .controls-section {
+        padding: 15px;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .refresh-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .group-size-control {
+        justify-content: center;
+    }
+
+    /* Button adjustments */
+    button {
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 300px;
+        margin: 5px auto;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        margin: 2% auto;
+        padding: 15px;
+    }
+
+    /* Code list adjustments */
+    .code-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+    }
+
+    .code-item {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    /* Input field adjustments */
+    .input-field {
+        min-width: 100%;
+    }
+
+    .number-input {
+        width: 100%;
+    }
+
+    /* Action buttons in table */
+    .action-buttons {
+        flex-direction: row;
+        gap: 3px;
+    }
+
+    .square-button {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    /* Code management modal */
+    .code-entry-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .code-mode-toggle {
+        justify-content: center;
+    }
+
+    .code-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Additional adjustments for very small screens */
+@media (max-width: 480px) {
+    .input-group {
+        flex-direction: column;
+    }
+
+    .code-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .floating-message {
+        width: 90%;
+        white-space: normal;
+        left: 5%;
+        right: 5%;
     }
 }
 
