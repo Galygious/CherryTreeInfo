@@ -307,7 +307,6 @@ function updateSharePreview(share) {
             <div class="code-item ${isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
                 <input type="checkbox">
                 <span>${code}</span>
-                <span class="validation-status">${isValid ? '✓' : '✕'}</span>
                 ${!isValid ? `<div class="validation-errors">Invalid vault code</div>` : ''}
             </div>
         `;
