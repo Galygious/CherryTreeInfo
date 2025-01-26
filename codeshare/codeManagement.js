@@ -73,6 +73,9 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     // Close modal when clicking X
     document.querySelector('.close-modal').onclick = closeModal;
 
+    // Store references for bulk operations
+    const bulkOpsContext = { localData, apiQueue, overwriteBasket, renderTable };
+
     // Code input validation
     let validationTimeout;
     codeInput.addEventListener('input', () => {
@@ -85,7 +88,7 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
                 const codes = inputText.split('\n')
                     .map(code => code.trim())
                     .filter(code => code);
-                const validationResults = validateInputCodes(codes);
+                const validationResults = validateInputCodes(codes, localData);
                 updateValidationSummary(validationResults);
             } else {
                 validationSummary.classList.remove('visible');
@@ -98,9 +101,9 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     window.toggleCodeSelection = toggleCodeSelection;
     window.selectAllCodes = selectAllCodes;
     window.deselectAllCodes = deselectAllCodes;
-    window.addBulkCodes = () => addBulkCodes(localData, apiQueue, overwriteBasket, renderTable);
-    window.removeBulkCodes = () => removeBulkCodes(localData, apiQueue, overwriteBasket, renderTable);
-    window.removeSelectedCodes = () => removeSelectedCodes(localData, apiQueue, overwriteBasket, renderTable);
+    window.addBulkCodes = () => addBulkCodes(bulkOpsContext);
+    window.removeBulkCodes = () => removeBulkCodes(bulkOpsContext);
+    window.removeSelectedCodes = () => removeSelectedCodes(bulkOpsContext);
     window.copyCodes = (shareId) => {
         // Get existing share
         const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
@@ -141,7 +144,8 @@ function closeModal() {
     document.querySelector('.share-preview').classList.remove('changes-pending');
 }
 
-function addBulkCodes() {
+function addBulkCodes(context) {
+    const { localData } = context;
     const inputText = codeInput.value.trim();
     if (!inputText) {
         showFloatingMessage("Please enter codes to add", 'error');
@@ -153,7 +157,7 @@ function addBulkCodes() {
         .filter(code => code);
 
     // Validate codes
-    const validationResults = validateInputCodes(codes);
+    const validationResults = validateInputCodes(codes, localData);
     const validCodes = validationResults.filter(r => r.isValid).map(r => r.code);
     const invalidCodes = validationResults.filter(r => !r.isValid).map(r => r.code);
 
@@ -179,7 +183,8 @@ function addBulkCodes() {
     }
 }
 
-function removeBulkCodes() {
+function removeBulkCodes(context) {
+    const { localData } = context;
     const inputText = codeInput.value.trim();
     if (!inputText) {
         showFloatingMessage("Please enter codes to remove", 'error');
@@ -222,7 +227,8 @@ function removeBulkCodes() {
     showFloatingMessage(`Removed ${validRemovals.length} codes successfully`, 'success');
 }
 
-function removeSelectedCodes() {
+function removeSelectedCodes(context) {
+    const { localData } = context;
     const selectedElements = document.querySelectorAll('.code-item.selected');
     if (selectedElements.length === 0) {
         showFloatingMessage("No codes selected to remove", 'error');
@@ -320,10 +326,10 @@ function updateSharePreview(share) {
     }
 }
 
-function validateInputCodes(codes) {
+function validateInputCodes(codes, localData) {
     // Check for duplicate codes in existing shares
     const existingCodes = new Set();
-    if (isCustomShare) {
+    if (isCustomShare && localData) {
         const now = Date.now();
         const activeShares = localData.shares.filter(share =>
             !share.c && // Only check unconfirmed shares
