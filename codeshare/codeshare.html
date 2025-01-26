@@ -80,18 +80,6 @@
 
             <div class="code-entry">
                 <div class="code-management">
-                    <div class="code-selection">
-                        <h3>Available Codes</h3>
-                        <div class="code-actions">
-                            <button onclick="selectAllCodes()">Select All</button>
-                            <button onclick="deselectAllCodes()">Deselect All</button>
-                            <button onclick="removeSelectedCodes()">Remove Selected</button>
-                        </div>
-                        <div id="codeList" class="code-list">
-                            <!-- Codes will be inserted here with validation status -->
-                        </div>
-                    </div>
-                    
                     <div class="bulk-operations">
                         <h3>Bulk Operations</h3>
                         <textarea id="codeInput" placeholder="Enter codes (one per line) to add or remove..."></textarea>
@@ -101,6 +89,18 @@
                         </div>
                         <div id="validationSummary" class="validation-summary">
                             <!-- Validation results will be shown here -->
+                        </div>
+                    </div>
+
+                    <div class="code-selection">
+                        <h3>Available Codes</h3>
+                        <div class="code-actions">
+                            <button onclick="selectAllCodes()">Select All</button>
+                            <button onclick="deselectAllCodes()">Deselect All</button>
+                            <button onclick="removeSelectedCodes()">Remove Selected</button>
+                        </div>
+                        <div id="codeList" class="code-list">
+                            <!-- Codes will be inserted here with validation status -->
                         </div>
                     </div>
                 </div>

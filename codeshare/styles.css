@@ -557,8 +557,8 @@ input:disabled {
 }
 
 .code-management {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
@@ -566,6 +566,7 @@ input:disabled {
     background: #1e2530;
     padding: 15px;
     border-radius: 4px;
+    width: 100%;
 }
 
 .code-selection h3, .bulk-operations h3 {
