@@ -1,7 +1,7 @@
 // Constants
 export const DIGIT_LENGTH = 8;
 export const REQUIRED_DIGITS = [8,1,0,2,5,3];
-export const SHARE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+export const SHARE_DURATION = 24 * 60 * 60 * 1000; // 10 minutes in milliseconds
 export const USERNAME_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 // Calculate maximum possible codes based on digit length and required digits
