@@ -213,12 +213,12 @@ export async function renderTable(shares) {
         const isConfirmed = share.c || share.confirmed;
         const isExpired = (share.e || share.expiration) <= now;
         
-        console.log('[Render] Share status:', {
-            id: share.i,
-            isConfirmed,
-            isExpired,
-            expiration: new Date(share.e || share.expiration).toISOString()
-        });
+        // console.log('[Render] Share status:', {
+        //     id: share.i,
+        //     isConfirmed,
+        //     isExpired,
+        //     expiration: new Date(share.e || share.expiration).toISOString()
+        // });
         
         return showConfirmed ? isConfirmed : (!isConfirmed && !isExpired);
     });
@@ -412,7 +412,7 @@ async function fetchBasket(localData, apiQueue, renderTable, shareButton) {
         // Update localData properties instead of reassigning
         localData.shares = cleanedData.data.shares;
         await renderTable(localData.shares);
-        console.log('[Fetch] Updated local data:', localData);
+        // console.log('[Fetch] Updated local data:', localData);
         shareButton.disabled = false;
     } catch (err) {
         console.error("[Fetch] Error:", err);
@@ -436,13 +436,13 @@ async function removeExpiredShares(localData, apiQueue, renderTable) {
         const expiration = share.e || share.expiration;
         const isExpired = expiration <= now;
         
-        console.log('[Remove] Share status:', {
-            id: share.i,
-            isConfirmed,
-            expiration: new Date(expiration).toISOString(),
-            isExpired,
-            timeLeft: expiration - now
-        });
+        // console.log('[Remove] Share status:', {
+        //     id: share.i,
+        //     isConfirmed,
+        //     expiration: new Date(expiration).toISOString(),
+        //     isExpired,
+        //     timeLeft: expiration - now
+        // });
         
         return !isConfirmed && isExpired;
     });
