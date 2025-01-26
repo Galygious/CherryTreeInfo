@@ -327,8 +327,8 @@ async function createShare(localData, apiQueue, renderTable, shareButton, discor
     showFloatingMessage("Validating code count...", 'info');
     const requestedCount = parseInt(document.getElementById('codeCount').value) || 1;
 
-    if (requestedCount < 1) {
-        showFloatingMessage("Please enter a valid number of codes", 'error');
+    if (requestedCount < 1 || requestedCount > 100) {
+        showFloatingMessage("Please enter a valid number of codes (1-100)", 'error');
         shareButton.disabled = false;
         return;
     }
@@ -337,11 +337,17 @@ async function createShare(localData, apiQueue, renderTable, shareButton, discor
     const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
     let count = 0;
     let codes = [];
-    while (count < requestedCount) {
+    while (count < requestedCount && count < 100) { // Add safety check for 100 limit
         const { value, done } = generator.next();
         if (done) break;
         codes.push(value);
         count++;
+    }
+
+    if (codes.length === 0) {
+        showFloatingMessage("Failed to generate codes", 'error');
+        shareButton.disabled = false;
+        return;
     }
 
     // Create range from generated codes

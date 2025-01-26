@@ -549,6 +549,13 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             previewShare.r = `${start}-${end}`;
             console.log('[Range] Created range:', previewShare.r);
             
+            // Verify code count doesn't exceed maximum
+            const totalCodes = positions.length;
+            if (totalCodes > 100) {
+                showFloatingMessage("Cannot exceed 100 codes per share", 'error');
+                return;
+            }
+
             // Update preview and return
             originalShare.r = previewShare.r;
             updateSharePreview(originalShare);
@@ -677,6 +684,13 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         }
         newRanges.push(`${rangeStart}-${rangeEnd}`);
         previewShare.r = newRanges.join(',');
+
+        // Verify code count doesn't exceed maximum
+        const totalCodes = positions.length;
+        if (totalCodes > 100) {
+            showFloatingMessage("Cannot exceed 100 codes per share", 'error');
+            return;
+        }
     }
 
     // Update originalShare with the preview changes
@@ -728,6 +742,13 @@ async function saveChanges(localData, apiQueue, overwriteBasket, renderTable) {
         }
         
         const newCodes = generateCodesFromRanges(originalShare.r);
+        
+        // Check code count limit
+        if (newCodes.length > 100) {
+            showFloatingMessage("Cannot exceed 100 codes per share", 'error');
+            return;
+        }
+
         const duplicates = newCodes.filter(code => existingCodes.has(code));
         
         if (duplicates.length > 0) {
