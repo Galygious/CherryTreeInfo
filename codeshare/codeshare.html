@@ -79,24 +79,30 @@
             </div>
 
             <div class="code-entry">
-                <div class="code-entry-header">
-                    <h3>Code Entry</h3>
-                    <div class="code-mode-toggle">
-                        <button id="addMode" class="mode-button active" onclick="switchMode('add')">Add Mode</button>
-                        <button id="removeMode" class="mode-button" onclick="switchMode('remove')">Remove Mode</button>
+                <div class="code-management">
+                    <div class="code-selection">
+                        <h3>Available Codes</h3>
+                        <div class="code-actions">
+                            <button onclick="selectAllCodes()">Select All</button>
+                            <button onclick="deselectAllCodes()">Deselect All</button>
+                            <button onclick="removeSelectedCodes()">Remove Selected</button>
+                        </div>
+                        <div id="codeList" class="code-list">
+                            <!-- Codes will be inserted here with validation status -->
+                        </div>
                     </div>
-                </div>
-                <div class="code-actions">
-                    <button id="confirmAction" onclick="confirmCodeAction()">Add Codes</button>
-                </div>
-
-                <textarea id="codeInput" placeholder="Enter codes (one per line)..."></textarea>
-                <div id="validationSummary" class="validation-summary">
-                    <!-- Validation results will be shown here -->
-                </div>
-
-                <div id="codeList" class="code-list">
-                    <!-- Codes will be inserted here with validation status -->
+                    
+                    <div class="bulk-operations">
+                        <h3>Bulk Operations</h3>
+                        <textarea id="codeInput" placeholder="Enter codes (one per line) to add or remove..."></textarea>
+                        <div class="bulk-actions">
+                            <button id="addBulkCodes" onclick="addBulkCodes()">Add Codes</button>
+                            <button id="removeBulkCodes" onclick="removeBulkCodes()">Remove Codes</button>
+                        </div>
+                        <div id="validationSummary" class="validation-summary">
+                            <!-- Validation results will be shown here -->
+                        </div>
+                    </div>
                 </div>
             </div>
 

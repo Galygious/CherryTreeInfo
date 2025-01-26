@@ -14,10 +14,10 @@ import { APIQueue, PANTRY_URL, BASKET_NAME, validateDiscordId, cleanExpiredShare
 const SHARE_DURATION_VALUE = SHARE_DURATION;
 
 let currentShareId = null;
-let currentMode = 'add';
 let isCustomShare = false;
 let pendingChanges = false;
 let originalShare = null;
+let unusedCodes = new Set(); // Track codes that weren't used in operations
 
 // DOM Elements
 const codeModal = document.getElementById('codeModal');
@@ -28,6 +28,8 @@ const shareCodeCount = document.getElementById('shareCodeCount');
 const modalDiscordId = document.getElementById('modalDiscordId');
 const modalDiscordValidation = document.getElementById('modalDiscordValidation');
 const customShareFields = document.getElementById('customShareFields');
+const addBulkCodesBtn = document.getElementById('addBulkCodes');
+const removeBulkCodesBtn = document.getElementById('removeBulkCodes');
 
 export function initializeCodeManagement(localData, apiQueue, overwriteBasket, renderTable) {
     // Modal Discord ID validation
@@ -71,46 +73,34 @@ export function initializeCodeManagement(localData, apiQueue, overwriteBasket, r
     // Close modal when clicking X
     document.querySelector('.close-modal').onclick = closeModal;
 
-    // Code input event listeners
+    // Code input validation
     let validationTimeout;
-    
     codeInput.addEventListener('input', () => {
-        const inputText = codeInput.value.trim();
-        if (!inputText) {
-            // When input is cleared, show original codes
-            updateSharePreview(originalShare);
-            validationSummary.classList.remove('visible');
-            return;
-        }
-        
-        // Clear any pending validation
         if (validationTimeout) {
             clearTimeout(validationTimeout);
         }
-        
-        // Schedule validation after typing stops
         validationTimeout = setTimeout(() => {
-            validateCodes();
+            const inputText = codeInput.value.trim();
+            if (inputText) {
+                const codes = inputText.split('\n')
+                    .map(code => code.trim())
+                    .filter(code => code);
+                const validationResults = validateInputCodes(codes);
+                updateValidationSummary(validationResults);
+            } else {
+                validationSummary.classList.remove('visible');
+            }
         }, 300);
     });
 
-    codeInput.addEventListener('paste', (e) => {
-        // Allow paste event to complete, then validate
-        if (validationTimeout) {
-            clearTimeout(validationTimeout);
-        }
-        validationTimeout = setTimeout(() => {
-            validateCodes();
-        }, 100);
-    });
-
     // Make functions globally available
-    window.switchMode = (mode) => switchMode(mode, localData);
     window.closeModal = closeModal;
     window.toggleCodeSelection = toggleCodeSelection;
     window.selectAllCodes = selectAllCodes;
     window.deselectAllCodes = deselectAllCodes;
-    window.confirmCodeAction = () => confirmCodeAction(localData, apiQueue, overwriteBasket, renderTable);
+    window.addBulkCodes = () => addBulkCodes(localData, apiQueue, overwriteBasket, renderTable);
+    window.removeBulkCodes = () => removeBulkCodes(localData, apiQueue, overwriteBasket, renderTable);
+    window.removeSelectedCodes = () => removeSelectedCodes(localData, apiQueue, overwriteBasket, renderTable);
     window.copyCodes = (shareId) => {
         // Get existing share
         const share = localData.shares.find(s => s.i === shareId || s.share_id === shareId);
@@ -151,63 +141,117 @@ function closeModal() {
     document.querySelector('.share-preview').classList.remove('changes-pending');
 }
 
-function switchMode(mode, localData) {
-    if (pendingChanges) {
-        if (!confirm("You have unsaved changes. Are you sure you want to switch modes?")) {
-            return;
-        }
+function addBulkCodes() {
+    const inputText = codeInput.value.trim();
+    if (!inputText) {
+        showFloatingMessage("Please enter codes to add", 'error');
+        return;
     }
 
-    currentMode = mode;
-    document.getElementById('addMode').classList.toggle('active', mode === 'add');
-    document.getElementById('removeMode').classList.toggle('active', mode === 'remove');
-    
-    // Update modal title and button text
-    document.getElementById('modalTitle').textContent = mode === 'add' ? 'Add Codes' : 'Remove Codes';
-    document.getElementById('confirmAction').textContent = mode === 'add' ? 'Add Codes' : 'Remove Selected';
-    
-    // Store textarea state
-    const wasFocused = document.activeElement === codeInput;
-    const cursorPosition = codeInput.selectionStart;
-    
-    // Clear input and validation
-    codeInput.value = '';
-    codeInput.disabled = false;
-    validationSummary.innerHTML = '';
-    validationSummary.classList.remove('visible');
-    
-    // Restore focus if needed
-    if (wasFocused) {
-        requestAnimationFrame(() => {
-            codeInput.focus();
-            codeInput.setSelectionRange(cursorPosition, cursorPosition);
-        });
+    const codes = inputText.split('\n')
+        .map(code => code.trim())
+        .filter(code => code);
+
+    // Validate codes
+    const validationResults = validateInputCodes(codes);
+    const validCodes = validationResults.filter(r => r.isValid).map(r => r.code);
+    const invalidCodes = validationResults.filter(r => !r.isValid).map(r => r.code);
+
+    if (validCodes.length === 0) {
+        showFloatingMessage("No valid codes to add", 'error');
+        return;
     }
-    
-    // Update placeholder text
-    codeInput.placeholder = mode === 'add'
-        ? "Enter codes to add (one per line)..."
-        : "Enter codes to remove (one per line)...";
-    
-    // Reset selection state
-    deselectAllCodes();
-    
-    // Reset changes tracking
-    pendingChanges = false;
-    document.querySelector('.share-preview').classList.remove('changes-pending');
-    
-    // Update share preview to original state
-    if (!isCustomShare && originalShare) {
-        updateSharePreview(originalShare);
+
+    // Add valid codes
+    const positions = findCodePositions(validCodes);
+    if (positions.length > 0) {
+        updateShareWithNewCodes(positions);
+        
+        // Update text area to show only invalid codes
+        if (invalidCodes.length > 0) {
+            codeInput.value = invalidCodes.join('\n');
+            showFloatingMessage(`${invalidCodes.length} invalid codes remain in the text area`, 'error');
+        } else {
+            codeInput.value = '';
+        }
+        
+        showFloatingMessage(`Added ${validCodes.length} codes successfully`, 'success');
     }
-    
-    validateCodes();
+}
+
+function removeBulkCodes() {
+    const inputText = codeInput.value.trim();
+    if (!inputText) {
+        showFloatingMessage("Please enter codes to remove", 'error');
+        return;
+    }
+
+    const codes = inputText.split('\n')
+        .map(code => code.trim())
+        .filter(code => code);
+
+    // Get current codes
+    const currentCodes = generateCodesFromRanges(originalShare.r || originalShare.ranges);
+    const validRemovals = codes.filter(code => currentCodes.includes(code));
+    const invalidRemovals = codes.filter(code => !currentCodes.includes(code));
+
+    if (validRemovals.length === 0) {
+        showFloatingMessage("No valid codes to remove", 'error');
+        return;
+    }
+
+    // Remove valid codes
+    const remainingCodes = currentCodes.filter(code => !validRemovals.includes(code));
+    if (remainingCodes.length === 0) {
+        showFloatingMessage("Cannot remove all codes from a share", 'error');
+        return;
+    }
+
+    // Update ranges with remaining codes
+    const positions = findCodePositions(remainingCodes);
+    updateShareWithNewCodes(positions);
+
+    // Update text area to show only invalid removals
+    if (invalidRemovals.length > 0) {
+        codeInput.value = invalidRemovals.join('\n');
+        showFloatingMessage(`${invalidRemovals.length} codes not found in current selection`, 'error');
+    } else {
+        codeInput.value = '';
+    }
+
+    showFloatingMessage(`Removed ${validRemovals.length} codes successfully`, 'success');
+}
+
+function removeSelectedCodes() {
+    const selectedElements = document.querySelectorAll('.code-item.selected');
+    if (selectedElements.length === 0) {
+        showFloatingMessage("No codes selected to remove", 'error');
+        return;
+    }
+
+    const selectedCodes = Array.from(selectedElements)
+        .map(element => element.querySelector('span').textContent);
+
+    // Get current codes and filter out selected ones
+    const currentCodes = generateCodesFromRanges(originalShare.r || originalShare.ranges);
+    const remainingCodes = currentCodes.filter(code => !selectedCodes.includes(code));
+
+    if (remainingCodes.length === 0) {
+        showFloatingMessage("Cannot remove all codes from a share", 'error');
+        return;
+    }
+
+    // Update ranges with remaining codes
+    const positions = findCodePositions(remainingCodes);
+    updateShareWithNewCodes(positions);
+    showFloatingMessage(`Removed ${selectedCodes.length} codes successfully`, 'success');
 }
 
 export function showCodeManagement(shareId = null, localData, customShare = false) {
     currentShareId = shareId;
     pendingChanges = false;
     isCustomShare = customShare;
+    unusedCodes.clear();
     
     if (customShare) {
         // Show custom share fields
@@ -231,57 +275,37 @@ export function showCodeManagement(shareId = null, localData, customShare = fals
         originalShare = { ...share };
     }
 
-    // Reset to add mode
-    currentMode = 'add';
-    document.getElementById('addMode').classList.add('active');
-    document.getElementById('removeMode').classList.remove('active');
-    
-    // Update button text
-    const confirmButton = document.getElementById('confirmAction');
-    if (confirmButton) {
-        confirmButton.textContent = 'Add Codes';
-        confirmButton.disabled = false;
-    }
-
     // Update share preview
     updateSharePreview(originalShare);
 
     // Reset code input
     codeInput.value = '';
-    codeInput.disabled = false;
+    validationSummary.classList.remove('visible');
     
     // Show modal
     codeModal.style.display = "block";
     
     // For custom shares, show message about adding codes
     if (customShare) {
-        showFloatingMessage("Please add codes using the Add Codes button before saving", 'info');
+        showFloatingMessage("Add codes using the bulk operations or select codes to remove", 'info');
     }
 }
 
 function updateSharePreview(share) {
-    // Store textarea state
-    const wasFocused = document.activeElement === codeInput;
-    const cursorPosition = codeInput.selectionStart;
-    
-    // Ensure textarea stays enabled
-    codeInput.disabled = false;
-    
     const codes = generateCodesFromRanges(share.r || share.ranges);
     shareCodeCount.textContent = `${codes.length} codes`;
     shareRanges.textContent = share.r || share.ranges;
 
-    // Generate codes and populate list with validation status
+    // Generate codes and populate list with validation status and selection state
     const codeList = document.getElementById('codeList');
     codeList.innerHTML = codes.map(code => {
-        // Validate code
         const digits = code.split('').map(Number);
         const hasRequiredDigits = REQUIRED_DIGITS.every(digit => digits.includes(digit));
         const isValid = code.length === DIGIT_LENGTH && hasRequiredDigits;
         
         return `
             <div class="code-item ${isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
-                <input type="checkbox" ${isValid ? '' : 'disabled'}>
+                <input type="checkbox">
                 <span>${code}</span>
                 <span class="validation-status">${isValid ? '✓' : '✕'}</span>
                 ${!isValid ? `<div class="validation-errors">Invalid vault code</div>` : ''}
@@ -289,41 +313,15 @@ function updateSharePreview(share) {
         `;
     }).join('');
 
-    // Track changes for both custom and existing shares
+    // Track changes
     if (originalShare) {
         const hasChanges = share.r !== originalShare.r;
-        pendingChanges = hasChanges || (isCustomShare && share.r); // For custom shares, having any ranges means changes
+        pendingChanges = hasChanges || (isCustomShare && share.r);
         document.querySelector('.share-preview').classList.toggle('changes-pending', pendingChanges);
-    }
-
-    // Restore textarea focus and cursor position if it was focused
-    if (wasFocused) {
-        requestAnimationFrame(() => {
-            codeInput.focus();
-            codeInput.setSelectionRange(cursorPosition, cursorPosition);
-        });
     }
 }
 
-function validateCodes() {
-    // Store current cursor position
-    const cursorPosition = codeInput.selectionStart;
-    
-    // Ensure textarea stays enabled
-    codeInput.disabled = false;
-    
-    const inputText = codeInput.value.trim();
-    if (!inputText) {
-        validationSummary.classList.remove('visible');
-        return;
-    }
-
-    const codes = inputText.split('\n')
-        .map(code => code.trim())
-        .filter(code => code);
-
-    console.log('[Validate] Checking codes:', codes);
-    
+function validateInputCodes(codes) {
     // Check for duplicate codes in existing shares
     const existingCodes = new Set();
     if (isCustomShare) {
@@ -339,7 +337,7 @@ function validateCodes() {
         }
     }
     
-    const validationResults = codes.map(code => {
+    return codes.map(code => {
         // Check length
         const isValidLength = code.length === DIGIT_LENGTH;
         
@@ -347,21 +345,14 @@ function validateCodes() {
         const digits = code.split('').map(Number);
         const hasRequiredDigits = REQUIRED_DIGITS.every(digit => digits.includes(digit));
         
-        console.log('[Validate] Code:', code, {
-            length: isValidLength,
-            digits: hasRequiredDigits
-        });
-        
         // Check if code would be generated by our generator
         let isGeneratable = false;
         if (isValidLength && hasRequiredDigits) {
-            // Create a generator starting from 0 to check if this code would be generated
             const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
             let result;
             let position = 0;
             
-            // Keep generating codes until we find a match or run out of codes
-            while (!isGeneratable) {
+            while (!isGeneratable && position < MAX_TOTAL_CODES) {
                 result = generator.next();
                 if (result.done) break;
                 if (result.value === code) {
@@ -369,8 +360,6 @@ function validateCodes() {
                     break;
                 }
                 position++;
-                // Break if we've checked more codes than theoretically possible
-                if (position >= MAX_TOTAL_CODES) break;
             }
         }
 
@@ -388,8 +377,9 @@ function validateCodes() {
             ].filter(Boolean)
         };
     });
+}
 
-    // Update validation summary
+function updateValidationSummary(validationResults) {
     const validCount = validationResults.filter(r => r.isValid).length;
     const invalidCount = validationResults.length - validCount;
 
@@ -398,17 +388,59 @@ function validateCodes() {
         ${invalidCount > 0 ? `<div>Invalid codes: ${invalidCount}</div>` : ''}
     `;
     validationSummary.classList.add('visible');
+}
 
-    // Update code list with validation status
-    const codeList = document.getElementById('codeList');
-    codeList.innerHTML = validationResults.map(result => `
-        <div class="code-item ${result.isValid ? 'valid' : 'invalid'}" onclick="toggleCodeSelection(this)">
-            <input type="checkbox" ${result.isValid ? '' : 'disabled'}>
-            <span>${result.code}</span>
-            <span class="validation-status">${result.isValid ? '✓' : '✕'}</span>
-            ${!result.isValid ? `<div class="validation-errors">${result.errors.join(', ')}</div>` : ''}
-        </div>
-    `).join('');
+function findCodePositions(codes) {
+    const positions = [];
+    const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
+    const allGeneratedCodes = [];
+    let position = 0;
+    
+    // Generate all possible codes first
+    while (true) {
+        const {value, done} = generator.next();
+        if (done) break;
+        allGeneratedCodes.push({ code: value, position });
+        position++;
+        if (position >= MAX_TOTAL_CODES) break;
+    }
+
+    // Find positions of input codes
+    for (const code of codes) {
+        const match = allGeneratedCodes.find(gc => gc.code === code);
+        if (match) {
+            positions.push(match.position);
+        }
+    }
+
+    return positions;
+}
+
+function updateShareWithNewCodes(positions) {
+    if (positions.length === 0) return;
+
+    // Sort positions and create ranges
+    positions.sort((a, b) => a - b);
+    const ranges = [];
+    let rangeStart = positions[0];
+    let rangeEnd = positions[0];
+
+    for (let i = 1; i < positions.length; i++) {
+        if (positions[i] === rangeEnd + 1) {
+            rangeEnd = positions[i];
+        } else {
+            ranges.push(`${rangeStart}-${rangeEnd}`);
+            rangeStart = positions[i];
+            rangeEnd = positions[i];
+        }
+    }
+    ranges.push(`${rangeStart}-${rangeEnd}`);
+
+    // Update share
+    originalShare.r = ranges.join(',');
+    updateSharePreview(originalShare);
+    pendingChanges = true;
+    document.querySelector('.share-preview').classList.toggle('changes-pending', true);
 }
 
 function toggleCodeSelection(element) {

@@ -214,19 +214,37 @@ button:disabled {
     }
 
     /* Code management modal */
-    .code-entry-header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+    .code-management {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
-    .code-mode-toggle {
-        justify-content: center;
+    .code-selection, .bulk-operations {
+        padding: 10px;
     }
 
     .code-actions {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 5px;
+    }
+
+    .code-actions button {
+        flex: 1;
+        min-width: 120px;
+        margin: 2px;
+    }
+
+    .bulk-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .bulk-actions button {
+        flex: 1;
+        min-width: 120px;
+        margin: 2px;
     }
 }
 
@@ -495,18 +513,74 @@ input:disabled {
     border-color: #66ff8f;
 }
 
+.code-item.modified {
+    background-color: #2a3444;
+    border-color: #66a0ff;
+}
+
+.code-item.modified::after {
+    content: '•';
+    position: absolute;
+    right: 24px;
+    color: #66a0ff;
+}
+
 .code-actions {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
-    justify-content: flex-end;
+    margin: 10px 0;
+    justify-content: flex-start;
 }
 
-.manual-code-entry {
-    margin: 20px 0;
+.bulk-actions button {
+    padding: 8px 16px;
+    background-color: #3a4456;
+    color: #b8c7dc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.code-entry textarea {
+.bulk-actions button:hover {
+    background-color: #4a5466;
+}
+
+.bulk-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.validation-summary.has-errors {
+    border-left: 3px solid #ff6666;
+    padding-left: 12px;
+}
+
+.code-management {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.code-selection, .bulk-operations {
+    background: #1e2530;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.code-selection h3, .bulk-operations h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #66a0ff;
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.bulk-operations textarea {
     width: 100%;
     height: 100px;
     margin: 10px 0;
