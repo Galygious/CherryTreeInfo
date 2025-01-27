@@ -67,8 +67,8 @@ export function* generateValidCodes(length, digits, startIndex) {
         // Check if current code is valid (contains all digits)
         const usedDigits = new Set(code);
         if (sortedDigits.every(digit => usedDigits.has(digit))) {
-            // Only yield if we've reached startIndex and position is valid
-            if (position >= startIndex && isValidPosition(position)) {
+            // Only yield if we've reached startIndex
+            if (position >= startIndex) {
                 yield code.join("");
             }
             position++;
