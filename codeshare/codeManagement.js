@@ -167,9 +167,10 @@ function addBulkCodes(context) {
     }
 
     // Add valid codes
-    const positions = findCodePositions(validCodes);
+    const existingRanges = originalShare.r || originalShare.ranges || '';
+    const positions = findCodePositions(validCodes, existingRanges);
     if (positions.length > 0) {
-        updateShareWithNewCodes(positions);
+        updateShareWithNewCodes(positions, existingRanges);
         
         // Update text area to show only invalid codes
         if (invalidCodes.length > 0) {
@@ -213,8 +214,9 @@ function removeBulkCodes(context) {
     }
 
     // Update ranges with remaining codes
-    const positions = findCodePositions(remainingCodes);
-    updateShareWithNewCodes(positions);
+    const currentRanges = originalShare.r || originalShare.ranges || '';
+    const positions = findCodePositions(remainingCodes, currentRanges);
+    updateShareWithNewCodes(positions, currentRanges);
 
     // Update text area to show only invalid removals
     if (invalidRemovals.length > 0) {
@@ -248,8 +250,9 @@ function removeSelectedCodes(context) {
     }
 
     // Update ranges with remaining codes
-    const positions = findCodePositions(remainingCodes);
-    updateShareWithNewCodes(positions);
+    const currentRanges = originalShare.r || originalShare.ranges || '';
+    const positions = findCodePositions(remainingCodes, currentRanges);
+    updateShareWithNewCodes(positions, currentRanges);
     showFloatingMessage(`Removed ${selectedCodes.length} codes successfully`, 'success');
 }
 
@@ -416,7 +419,7 @@ function updateValidationSummary(validationResults) {
     validationSummary.classList.add('visible');
 }
 
-function findCodePositions(codes) {
+function findCodePositions(codes, existingRanges = '') {
     const positions = [];
     const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
     const allGeneratedCodes = [];
@@ -432,32 +435,74 @@ function findCodePositions(codes) {
     }
 
     // Find positions of input codes
+    const codePositions = [];
     for (const code of codes) {
         const match = allGeneratedCodes.find(gc => gc.code === code);
         if (match) {
-            positions.push(match.position);
+            codePositions.push(match.position);
         }
+    }
+
+    // If no existing ranges, return positions directly
+    if (!existingRanges) {
+        return codePositions;
+    }
+
+    // Find available gaps that can accommodate our codes
+    const gaps = findAvailableGaps(existingRanges, codePositions.length);
+    
+    // Map code positions to gap positions
+    let usedPositions = 0;
+    for (const gap of gaps) {
+        const remainingCodes = codePositions.length - usedPositions;
+        const codesInGap = Math.min(gap.count, remainingCodes);
+        
+        for (let i = 0; i < codesInGap; i++) {
+            positions.push(gap.start + i);
+            usedPositions++;
+        }
+        
+        if (usedPositions >= codePositions.length) break;
     }
 
     return positions;
 }
 
-function updateShareWithNewCodes(positions) {
+function updateShareWithNewCodes(positions, existingRanges = '') {
     if (positions.length === 0) return;
 
-    // Sort positions and create ranges
-    positions.sort((a, b) => a - b);
+    // Parse existing ranges and new positions
+    const existingRangesArray = parseRanges(existingRanges);
+    const newPositions = new Set(positions);
+    
+    // Combine existing ranges with new positions
+    const allPositions = new Set();
+    
+    // Add positions from existing ranges
+    existingRangesArray.forEach(range => {
+        for (let i = range.start; i <= range.end; i++) {
+            allPositions.add(i);
+        }
+    });
+    
+    // Add new positions
+    newPositions.forEach(pos => allPositions.add(pos));
+    
+    // Convert back to array and sort
+    const sortedPositions = Array.from(allPositions).sort((a, b) => a - b);
+    
+    // Create optimized ranges
     const ranges = [];
-    let rangeStart = positions[0];
-    let rangeEnd = positions[0];
+    let rangeStart = sortedPositions[0];
+    let rangeEnd = sortedPositions[0];
 
-    for (let i = 1; i < positions.length; i++) {
-        if (positions[i] === rangeEnd + 1) {
-            rangeEnd = positions[i];
+    for (let i = 1; i < sortedPositions.length; i++) {
+        if (sortedPositions[i] === rangeEnd + 1) {
+            rangeEnd = sortedPositions[i];
         } else {
             ranges.push(`${rangeStart}-${rangeEnd}`);
-            rangeStart = positions[i];
-            rangeEnd = positions[i];
+            rangeStart = sortedPositions[i];
+            rangeEnd = sortedPositions[i];
         }
     }
     ranges.push(`${rangeStart}-${rangeEnd}`);
@@ -541,46 +586,12 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
 
-        // Find positions of new codes
-        const positions = [];
-        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
-        const allGeneratedCodes = [];
-        let position = 0;
+        // Find positions of new codes using existing ranges
+        const shareRanges = previewShare.r || previewShare.ranges || '';
+        console.log('[Position] Finding positions for codes with existing ranges:', shareRanges);
+        const positions = findCodePositions(newCodes, shareRanges);
         
-        // Generate all possible codes first
-        console.log('[Generate] Starting code generation');
-        let generatedCount = 0;
-        while (true) {
-            const {value, done} = generator.next();
-            if (done) {
-                console.log('[Generate] Generation complete, total codes:', generatedCount);
-                break;
-            }
-            allGeneratedCodes.push({ code: value, position });
-            position++;
-            generatedCount++;
-            
-            // Log progress every 1000 codes
-            if (generatedCount % 1000 === 0) {
-                console.log('[Generate] Generated', generatedCount, 'codes');
-            }
-        }
-        console.log('[Generate] First few codes:', allGeneratedCodes.slice(0, 5));
-
-        // Find positions of input codes
-        console.log('[Position] Finding positions for codes:', newCodes);
-        for (const code of newCodes) {
-            console.log('[Position] Looking for code:', code);
-            const match = allGeneratedCodes.find(gc => gc.code === code);
-            if (match) {
-                console.log('[Position] Found position:', match.position);
-                positions.push(match.position);
-            } else {
-                console.log('[Position] No position found for code:', code);
-            }
-        }
-
-        console.log('[Position] All found positions:', positions);
+        console.log('[Position] Found positions:', positions);
         if (positions.length === 0) {
             console.error('[Position] No valid positions found');
             showFloatingMessage("No valid vault codes found", 'error');
@@ -627,14 +638,14 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         }
         
         // Initialize ranges array
-        const currentRanges = [];
+        const rangeList = [];
         
         // Parse existing ranges if any
-        const existingRanges = (previewShare.r || previewShare.ranges || '').split(',').filter(r => r);
-        if (existingRanges.length > 0) {
-            existingRanges.forEach(range => {
+        const parsedRanges = (previewShare.r || previewShare.ranges || '').split(',').filter(r => r);
+        if (parsedRanges.length > 0) {
+            parsedRanges.forEach(range => {
                 const [start, end] = range.split('-').map(Number);
-                currentRanges.push({ start, end });
+                rangeList.push({ start, end });
             });
         }
 
@@ -643,8 +654,8 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             let merged = false;
             
             // Try to merge with existing ranges
-            for (let i = 0; i < currentRanges.length; i++) {
-                const range = currentRanges[i];
+            for (let i = 0; i < rangeList.length; i++) {
+                const range = rangeList[i];
                 
                 // Position is within or adjacent to range
                 if (pos >= range.start - 1 && pos <= range.end + 1) {
@@ -657,24 +668,24 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             
             // If position couldn't be merged, create new range
             if (!merged) {
-                currentRanges.push({ start: pos, end: pos });
+                rangeList.push({ start: pos, end: pos });
             }
         });
 
         // Sort ranges and merge overlapping ones
-        currentRanges.sort((a, b) => a.start - b.start);
+        rangeList.sort((a, b) => a.start - b.start);
         const mergedRanges = [];
         
-        if (currentRanges.length > 0) {
-            let currentRange = currentRanges[0];
-            for (let i = 1; i < currentRanges.length; i++) {
-                if (currentRanges[i].start <= currentRange.end + 1) {
+        if (rangeList.length > 0) {
+            let currentRange = rangeList[0];
+            for (let i = 1; i < rangeList.length; i++) {
+                if (rangeList[i].start <= currentRange.end + 1) {
                     // Ranges overlap or are adjacent, merge them
-                    currentRange.end = Math.max(currentRange.end, currentRanges[i].end);
+                    currentRange.end = Math.max(currentRange.end, rangeList[i].end);
                 } else {
                     // Ranges don't overlap, start new range
                     mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
-                    currentRange = currentRanges[i];
+                    currentRange = rangeList[i];
                 }
             }
             mergedRanges.push(`${currentRange.start}-${currentRange.end}`);
@@ -707,41 +718,18 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
 
-        // Find positions of remaining codes
-        const positions = [];
-        for (const code of remainingCodes) {
-            const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
-            let position = 0;
-            let found = false;
-            
-            while (!found) {
-                const {value, done} = generator.next();
-                if (done) break;
-                if (value === code) {
-                    positions.push(position);
-                    found = true;
-                }
-                position++;
-            }
+        // Find positions of remaining codes using existing ranges
+        const currentRanges = previewShare.r || previewShare.ranges || '';
+        const positions = findCodePositions(remainingCodes, currentRanges);
+        
+        if (positions.length === 0) {
+            showFloatingMessage("Failed to process remaining codes", 'error');
+            return;
         }
 
-        // Create new ranges
-        positions.sort((a, b) => a - b);
-        const newRanges = [];
-        let rangeStart = positions[0];
-        let rangeEnd = positions[0];
-
-        for (let i = 1; i < positions.length; i++) {
-            if (positions[i] === rangeEnd + 1) {
-                rangeEnd = positions[i];
-            } else {
-                newRanges.push(`${rangeStart}-${rangeEnd}`);
-                rangeStart = positions[i];
-                rangeEnd = positions[i];
-            }
-        }
-        newRanges.push(`${rangeStart}-${rangeEnd}`);
-        previewShare.r = newRanges.join(',');
+        // Update preview share with new positions
+        updateShareWithNewCodes(positions, currentRanges);
+        previewShare.r = originalShare.r;
 
         // Verify code count doesn't exceed maximum
         const totalCodes = positions.length;
