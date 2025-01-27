@@ -167,10 +167,9 @@ function addBulkCodes(context) {
     }
 
     // Add valid codes
-    const existingRanges = originalShare.r || originalShare.ranges || '';
-    const positions = findCodePositions(validCodes, existingRanges);
+    const positions = findCodePositions(validCodes, localData);
     if (positions.length > 0) {
-        updateShareWithNewCodes(positions, existingRanges);
+        updateShareWithNewCodes(positions);
         
         // Update text area to show only invalid codes
         if (invalidCodes.length > 0) {
@@ -214,9 +213,8 @@ function removeBulkCodes(context) {
     }
 
     // Update ranges with remaining codes
-    const currentRanges = originalShare.r || originalShare.ranges || '';
-    const positions = findCodePositions(remainingCodes, currentRanges);
-    updateShareWithNewCodes(positions, currentRanges);
+    const positions = findCodePositions(remainingCodes, localData);
+    updateShareWithNewCodes(positions);
 
     // Update text area to show only invalid removals
     if (invalidRemovals.length > 0) {
@@ -250,9 +248,8 @@ function removeSelectedCodes(context) {
     }
 
     // Update ranges with remaining codes
-    const currentRanges = originalShare.r || originalShare.ranges || '';
-    const positions = findCodePositions(remainingCodes, currentRanges);
-    updateShareWithNewCodes(positions, currentRanges);
+    const positions = findCodePositions(remainingCodes, localData);
+    updateShareWithNewCodes(positions);
     showFloatingMessage(`Removed ${selectedCodes.length} codes successfully`, 'success');
 }
 
@@ -419,7 +416,7 @@ function updateValidationSummary(validationResults) {
     validationSummary.classList.add('visible');
 }
 
-function findCodePositions(codes, existingRanges = '') {
+function findCodePositions(codes, localData) {
     const positions = [];
     const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, 0);
     const allGeneratedCodes = [];
@@ -435,74 +432,33 @@ function findCodePositions(codes, existingRanges = '') {
     }
 
     // Find positions of input codes
-    const codePositions = [];
     for (const code of codes) {
         const match = allGeneratedCodes.find(gc => gc.code === code);
         if (match) {
-            codePositions.push(match.position);
+            positions.push(match.position);
         }
     }
 
-    // If no existing ranges, return positions directly
-    if (!existingRanges) {
-        return codePositions;
-    }
-
-    // Find available gaps that can accommodate our codes
-    const gaps = findAvailableGaps(existingRanges, codePositions.length);
-    
-    // Map code positions to gap positions
-    let usedPositions = 0;
-    for (const gap of gaps) {
-        const remainingCodes = codePositions.length - usedPositions;
-        const codesInGap = Math.min(gap.count, remainingCodes);
-        
-        for (let i = 0; i < codesInGap; i++) {
-            positions.push(gap.start + i);
-            usedPositions++;
-        }
-        
-        if (usedPositions >= codePositions.length) break;
-    }
-
+    // Sort positions to ensure sequential allocation
+    positions.sort((a, b) => a - b);
     return positions;
 }
 
-function updateShareWithNewCodes(positions, existingRanges = '') {
+function updateShareWithNewCodes(positions) {
     if (positions.length === 0) return;
 
-    // Parse existing ranges and new positions
-    const existingRangesArray = parseRanges(existingRanges);
-    const newPositions = new Set(positions);
-    
-    // Combine existing ranges with new positions
-    const allPositions = new Set();
-    
-    // Add positions from existing ranges
-    existingRangesArray.forEach(range => {
-        for (let i = range.start; i <= range.end; i++) {
-            allPositions.add(i);
-        }
-    });
-    
-    // Add new positions
-    newPositions.forEach(pos => allPositions.add(pos));
-    
-    // Convert back to array and sort
-    const sortedPositions = Array.from(allPositions).sort((a, b) => a - b);
-    
-    // Create optimized ranges
+    // Create optimized ranges from sorted positions
     const ranges = [];
-    let rangeStart = sortedPositions[0];
-    let rangeEnd = sortedPositions[0];
+    let rangeStart = positions[0];
+    let rangeEnd = positions[0];
 
-    for (let i = 1; i < sortedPositions.length; i++) {
-        if (sortedPositions[i] === rangeEnd + 1) {
-            rangeEnd = sortedPositions[i];
+    for (let i = 1; i < positions.length; i++) {
+        if (positions[i] === rangeEnd + 1) {
+            rangeEnd = positions[i];
         } else {
             ranges.push(`${rangeStart}-${rangeEnd}`);
-            rangeStart = sortedPositions[i];
-            rangeEnd = sortedPositions[i];
+            rangeStart = positions[i];
+            rangeEnd = positions[i];
         }
     }
     ranges.push(`${rangeStart}-${rangeEnd}`);
@@ -718,9 +674,8 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
             return;
         }
 
-        // Find positions of remaining codes using existing ranges
-        const currentRanges = previewShare.r || previewShare.ranges || '';
-        const positions = findCodePositions(remainingCodes, currentRanges);
+        // Find positions of remaining codes
+        const positions = findCodePositions(remainingCodes, localData);
         
         if (positions.length === 0) {
             showFloatingMessage("Failed to process remaining codes", 'error');
@@ -728,8 +683,7 @@ async function confirmCodeAction(localData, apiQueue, overwriteBasket, renderTab
         }
 
         // Update preview share with new positions
-        updateShareWithNewCodes(positions, currentRanges);
-        previewShare.r = originalShare.r;
+        updateShareWithNewCodes(positions);
 
         // Verify code count doesn't exceed maximum
         const totalCodes = positions.length;

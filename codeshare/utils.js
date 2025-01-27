@@ -13,50 +13,18 @@ export function parseRanges(rangeStr) {
     return rangeStr.split(',').map(range => {
         const [start, end] = range.split('-').map(Number);
         return { start, end: end || start }; // Handle single numbers (e.g., "13" becomes "13-13")
-    }).sort((a, b) => a.start - b.start); // Ensure ranges are sorted
+    });
 }
 
-// Find available gaps in existing ranges
-export function findAvailableGaps(existingRanges, count) {
-    if (!existingRanges || existingRanges.length === 0) return [{ start: 0, count }];
+// Count total codes in all shares to find next available position
+export function findNextAvailablePosition(shares) {
+    if (!shares || shares.length === 0) return 0;
     
-    const parsedRanges = parseRanges(existingRanges);
-    const gaps = [];
-    let currentPosition = 0;
-    let remainingCount = count;
+    const allRanges = shares.flatMap(share => parseRanges(share.r || share.ranges));
+    if (allRanges.length === 0) return 0;
     
-    // Check gap before first range
-    if (parsedRanges[0].start > 0) {
-        const gapSize = parsedRanges[0].start;
-        const allocatedCount = Math.min(gapSize, remainingCount);
-        if (allocatedCount > 0) {
-            gaps.push({ start: 0, count: allocatedCount });
-            remainingCount -= allocatedCount;
-        }
-    }
-    
-    // Check gaps between ranges
-    for (let i = 0; i < parsedRanges.length - 1; i++) {
-        if (remainingCount <= 0) break;
-        
-        const gapStart = parsedRanges[i].end + 1;
-        const gapEnd = parsedRanges[i + 1].start - 1;
-        const gapSize = gapEnd - gapStart + 1;
-        
-        if (gapSize > 0) {
-            const allocatedCount = Math.min(gapSize, remainingCount);
-            gaps.push({ start: gapStart, count: allocatedCount });
-            remainingCount -= allocatedCount;
-        }
-    }
-    
-    // If we still need more positions, add them after the last range
-    if (remainingCount > 0) {
-        const lastRange = parsedRanges[parsedRanges.length - 1];
-        gaps.push({ start: lastRange.end + 1, count: remainingCount });
-    }
-    
-    return gaps;
+    // Find the highest end position
+    return Math.max(...allRanges.map(r => r.end)) + 1;
 }
 
 // Helper function to validate ranges format
