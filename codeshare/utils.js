@@ -1,11 +1,31 @@
 // Constants
 export const DIGIT_LENGTH = 8;
 export const REQUIRED_DIGITS = [8,1,0,2,5,3];
-export const SHARE_DURATION = 24 * 60 * 60 * 1000; // 10 minutes in milliseconds
+export const SHARE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 export const USERNAME_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 // Calculate maximum possible codes based on digit length and required digits
 export const MAX_TOTAL_CODES = calculateCombinationsWithAllDigits(DIGIT_LENGTH, REQUIRED_DIGITS);
+
+// Helper function to parse range string into array of ranges
+export function parseRanges(rangeStr) {
+    if (!rangeStr) return [];
+    return rangeStr.split(',').map(range => {
+        const [start, end] = range.split('-').map(Number);
+        return { start, end: end || start }; // Handle single numbers (e.g., "13" becomes "13-13")
+    });
+}
+
+// Helper function to validate ranges format
+export function validateRanges(rangeStr) {
+    if (!rangeStr) return false;
+    const ranges = parseRanges(rangeStr);
+    return ranges.every(range =>
+        !isNaN(range.start) &&
+        !isNaN(range.end) &&
+        range.start <= range.end
+    );
+}
 
 // Calculate total possible combinations with required digits
 export function calculateCombinationsWithAllDigits(length, digits) {
@@ -41,16 +61,17 @@ export function* generateValidCodes(length, digits, startIndex) {
     // Sort digits to ensure consistent ordering
     const sortedDigits = [...digits].sort((a, b) => a - b);
     const code = new Array(length).fill(sortedDigits[0]);
-    let count = 0;
+    let position = 0;
     
     while (true) {
         // Check if current code is valid (contains all digits)
         const usedDigits = new Set(code);
         if (sortedDigits.every(digit => usedDigits.has(digit))) {
-            if (count >= startIndex) {
+            // Only yield if we've reached startIndex and position is valid
+            if (position >= startIndex && isValidPosition(position)) {
                 yield code.join("");
             }
-            count++;
+            position++;
         }
         
         // Generate next code
@@ -71,26 +92,29 @@ export function* generateValidCodes(length, digits, startIndex) {
 export function generateCodesFromRanges(ranges) {
     if (!ranges) return [];
     const codes = [];
-    ranges.split(',').forEach(range => {
-        const [start, end] = range.split('-').map(Number);
-        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, start);
+    const parsedRanges = parseRanges(ranges);
+    
+    // Generate codes for each range
+    for (const range of parsedRanges) {
+        const generator = generateValidCodes(DIGIT_LENGTH, REQUIRED_DIGITS, range.start);
+        let position = range.start;
         
-        // Generate codes for this range
-        for (let i = start; i <= end; i++) {
-            const {value, done} = generator.next();
+        while (position <= range.end) {
+            const { value, done } = generator.next();
             if (done) break;
             codes.push(value);
+            position++;
         }
-    });
+    }
+
     return codes;
 }
 
 export function getTotalCodesFromRanges(ranges) {
     if (!ranges) return 0;
-    return ranges.split(',').reduce((total, range) => {
-        const [start, end] = range.split('-').map(Number);
-        return total + (end - start + 1);
-    }, 0);
+    const parsedRanges = parseRanges(ranges);
+    return parsedRanges.reduce((total, range) =>
+        total + (range.end - range.start + 1), 0);
 }
 
 export function formatTimeLeft(milliseconds) {
